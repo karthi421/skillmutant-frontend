@@ -13,35 +13,34 @@ export default function Home() {
   });
 
   /* ================= PASSWORD LOGIN ================= */
-  const handlePasswordLogin = async () => {
-    if (!form.email || !form.password) {
-      alert("Email and password required");
+ const handlePasswordLogin = async () => {
+  if (!form.email || !form.password) {
+    alert("Email and password required");
+    return;
+  }
+
+  try {
+    const data = await apiFetch("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email: form.email,
+        password: form.password,
+      }),
+    });
+
+    if (!data?.token) {
+      alert(data?.error || "Login failed");
       return;
     }
 
-    try {
-      const res = await apiFetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password,
-        }),
-      });
+    localStorage.setItem("token", data.token);
+    router.push("/dashboard");
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.error || "Login failed");
-        return;
-      }
-
-      localStorage.setItem("token", data.token);
-      router.push("/dashboard");
-    } catch (err) {
-      alert("Server error");
-    }
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
+  }
+};
 
   /* ================= INPUT HANDLER ================= */
   const handleChange = (e) => {
