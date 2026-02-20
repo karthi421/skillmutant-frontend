@@ -12,47 +12,49 @@ export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
-   async signIn({ user }) {
-   /* 
-  const res = await fetch("http://localhost:5000/api/auth/google", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: user.email,
-      googleId: user.id,
-    }),
-  });
-*/
-const res = await fetch(
-  `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/google`,
-  {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: user.email,
-      googleId: user.id,
-    }),
-  }
-);
-  const data = await res.json();
+  async signIn({ user }) {
+  try {
+    const BASE_URL =
+      process.env.NEXT_PUBLIC_BACKEND_URL ||
+      "http://localhost:5000";
 
-  // 🔑 SAVE BACKEND JWT
-  if (data.token) {
-    // ❗ runs only on client
-    if (typeof window !== "undefined") {
-      localStorage.setItem("token", data.token);
+    const res = await fetch(
+      `${BASE_URL}/api/auth/google`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: user.email,
+          googleId: user.id,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error("Backend auth failed:", data);
+      return false;
     }
+
+    // ⚠️ DO NOT use localStorage here
+    // This runs on the server
+
+    user.backendToken = data.token;
+    user.isNewUser = !data.existing;
+
+    return true;
+  } catch (err) {
+    console.error("Google sign-in error:", err);
+    return false;
   }
-
-  user.isNewUser = !data.existing;
-  return true;
 },
-
 
     async jwt({ token, user }) {
       if (user) {
         token.email = user.email;
         token.isNewUser = user.isNewUser;
+         token.backendToken = user.backendToken;
       }
       return token;
     },
@@ -60,6 +62,7 @@ const res = await fetch(
     async session({ session, token }) {
       session.user.email = token.email;
       session.user.isNewUser = token.isNewUser;
+      session.backendToken = token.backendToken;
       return session;
     },
 
