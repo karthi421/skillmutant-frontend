@@ -3,7 +3,7 @@ import InterviewAvatar from "../components/interview/InterviewAvatar";
 import InterviewScore from "../components/interview/InterviewScore";
 import InterviewReplay from "../components/interview/InterviewReplay";
 import InterviewFeedback from "../components/interview/InterviewFeedback";
-import { logActivity } from "../lib/logActivity";
+import { logActivity } from "../../lib/logActivity";
 
 
 

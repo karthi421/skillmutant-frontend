@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import JobCarousel from "./JobCarousel";
 import { useEffect, useState } from "react";
-import { apiFetch } from "../lib/api";
+import { apiFetch } from "../../lib/api";
 export default function JobsPanel({ onClose }) {
   const [savedJobs, setSavedJobs] = useState([]);
   const [interviews, setInterviews] = useState([]);

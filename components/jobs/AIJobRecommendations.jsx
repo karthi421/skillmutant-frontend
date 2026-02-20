@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import JobCarousel from "./JobCarousel";
-import { apiFetch } from "../lib/api";
+import { apiFetch } from "../../lib/api";
 export default function AIJobRecommendations({ analysis }) {
   const [jobs, setJobs] = useState([]);
  const [savedJobs, setSavedJobs] = useState([]);
