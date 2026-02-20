@@ -12,65 +12,68 @@ export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
-    async signIn({ user, account, profile }) {
-  try {
-    if (!profile?.email || !profile?.sub) {
-      console.error("Missing Google profile data");
-      return false;
-    }
+    async signIn({ user, profile }) {
+      try {
+        // ✅ Validate Google profile
+        if (!profile?.email || !profile?.sub) {
+          console.error("Google profile missing data");
+          return false;
+        }
 
-    const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+        const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-    if (!BASE_URL) {
-      console.error("NEXT_PUBLIC_BACKEND_URL missing");
-      return false;
-    }
+        if (!BASE_URL) {
+          console.error("NEXT_PUBLIC_BACKEND_URL not set");
+          return false;
+        }
 
-    const res = await fetch(`${BASE_URL}/api/auth/google`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: profile.email,
-        googleId: profile.sub,
-      }),
-    });
+        // ✅ Call backend
+        const res = await fetch(`${BASE_URL}/api/auth/google`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: profile.email,
+            googleId: profile.sub,
+          }),
+        });
 
-    const text = await res.text();
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error("Backend returned error:", errorText);
+          return false;
+        }
 
-    if (!res.ok) {
-      console.error("Backend error:", text);
-      return false;
-    }
+        const data = await res.json();
 
-    const data = JSON.parse(text);
+        if (!data?.token) {
+          console.error("Backend did not return token");
+          return false;
+        }
 
-    if (!data.token) {
-      console.error("No token from backend:", data);
-      return false;
-    }
+        // ✅ Attach backend data to user
+        user.backendToken = data.token;
+        user.isNewUser = !data.existing;
 
-    user.isNewUser = !data.existing;
-    user.backendToken = data.token;
+        return true;
+      } catch (error) {
+        console.error("SignIn callback error:", error);
+        return false;
+      }
+    },
 
-    return true;
-  } catch (err) {
-    console.error("SignIn crash:", err);
-    return false;
-  }
-},
     async jwt({ token, user }) {
       if (user) {
-        token.email = user.email;
-        token.isNewUser = user.isNewUser;
         token.backendToken = user.backendToken;
+        token.isNewUser = user.isNewUser;
+        token.email = user.email;
       }
       return token;
     },
 
     async session({ session, token }) {
+      session.backendToken = token.backendToken;
       session.user.email = token.email;
       session.user.isNewUser = token.isNewUser;
-      session.backendToken = token.backendToken;
       return session;
     },
 
