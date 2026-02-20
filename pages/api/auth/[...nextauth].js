@@ -13,50 +13,51 @@ export default NextAuth({
 
   callbacks: {
     async signIn({ user, account, profile }) {
-      try {
-        const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+  try {
+    if (!profile?.email || !profile?.sub) {
+      console.error("Missing Google profile data");
+      return false;
+    }
 
-        if (!BASE_URL) {
-          console.error("❌ NEXT_PUBLIC_BACKEND_URL is not defined");
-          return false;
-        }
+    const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-        const response = await fetch(
-          `${BASE_URL}/api/auth/google`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: profile?.email,
-              googleId: profile?.sub,
-            }),
-          }
-        );
+    if (!BASE_URL) {
+      console.error("NEXT_PUBLIC_BACKEND_URL missing");
+      return false;
+    }
 
-        // If backend sleeping or failing
-        if (!response.ok) {
-          console.error("❌ Backend returned error:", response.status);
-          return false;
-        }
+    const res = await fetch(`${BASE_URL}/api/auth/google`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: profile.email,
+        googleId: profile.sub,
+      }),
+    });
 
-        const data = await response.json();
+    const text = await res.text();
 
-        if (!data || !data.token) {
-          console.error("❌ Invalid backend response:", data);
-          return false;
-        }
+    if (!res.ok) {
+      console.error("Backend error:", text);
+      return false;
+    }
 
-        // Attach backend info to user
-        user.isNewUser = !data.existing;
-        user.backendToken = data.token;
+    const data = JSON.parse(text);
 
-        return true;
-      } catch (error) {
-        console.error("❌ Google login failed:", error);
-        return false;
-      }
-    },
+    if (!data.token) {
+      console.error("No token from backend:", data);
+      return false;
+    }
 
+    user.isNewUser = !data.existing;
+    user.backendToken = data.token;
+
+    return true;
+  } catch (err) {
+    console.error("SignIn crash:", err);
+    return false;
+  }
+},
     async jwt({ token, user }) {
       if (user) {
         token.email = user.email;
