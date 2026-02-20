@@ -12,7 +12,7 @@ export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
-  async signIn({ user }) {
+  async signIn({ user, account, profile }) {
   try {
     const BASE_URL =
       process.env.NEXT_PUBLIC_BACKEND_URL ||
@@ -24,8 +24,8 @@ export default NextAuth({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: user.email,
-          googleId: user.id,
+          email: profile.email,     // ✅ correct
+          googleId: profile.sub,    // ✅ THIS IS THE REAL GOOGLE ID
         }),
       }
     );
@@ -33,23 +33,19 @@ export default NextAuth({
     const data = await res.json();
 
     if (!res.ok) {
-      console.error("Backend auth failed:", data);
+      console.error("Backend error:", data);
       return false;
     }
 
-    // ⚠️ DO NOT use localStorage here
-    // This runs on the server
-
-    user.backendToken = data.token;
     user.isNewUser = !data.existing;
+    user.backendToken = data.token;
 
     return true;
   } catch (err) {
-    console.error("Google sign-in error:", err);
+    console.error("Google login failed:", err);
     return false;
   }
 },
-
     async jwt({ token, user }) {
       if (user) {
         token.email = user.email;
