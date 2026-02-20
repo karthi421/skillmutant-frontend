@@ -11,51 +11,43 @@ export default function StudentAccountPanel({ open, onClose }) {
   const [college, setCollege] = useState("");
   const [bio, setBio] = useState("");
   const [profileFile, setProfileFile] = useState(null);
- const [token, setToken] = useState(null);
-
-
-
-useEffect(() => {
-  if (typeof window !== "undefined") {
-    setToken(localStorage.getItem("token"));
-  }
-}, []);
+ 
 
   /* ================= FETCH ACCOUNT ================= */
   useEffect(() => {
-    if (!open) return;
-    if (typeof window !== "undefined") {
-    const t = localStorage.getItem("token");
-    setToken(t);
+  if (!open) return;
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    setError("Not authenticated");
+    setLoading(false);
+    return;
   }
-    if (!token) {
-      setError("Not authenticated");
-      setLoading(false);
-      return;
-    }
 
-    setLoading(true);
-    setError("");
+  setLoading(true);
+  setError("");
 
-    apiFetch("/api/auth/me", {
-      headers: { Authorization: `Bearer ${token}` },
+  apiFetch("/api/auth/me", {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+    .then(res => {
+      if (!res.ok) throw new Error();
+      return res.json();
     })
-      .then(res => {
-        if (!res.ok) throw new Error();
-        return res.json();
-      })
-      .then(data => {
-        setUser(data);
-        setName(data.name || "");
-        setCollege(data.college || "");
-        setBio(data.bio || "");
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("Unable to load account data");
-        setLoading(false);
-      });
-  }, [open]);
+    .then(data => {
+      setUser(data);
+      setName(data.name || "");
+      setCollege(data.college || "");
+      setBio(data.bio || "");
+      setLoading(false);
+    })
+    .catch(() => {
+      setError("Unable to load account data");
+      setLoading(false);
+    });
+
+}, [open]);
 
   /* ================= SAVE PROFILE ================= */
   const handleSave = async () => {
