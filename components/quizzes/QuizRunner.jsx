@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { logActivity} from "../../lib/logActivity";
-import { apiFetch } from "../lib/api";
+import { apiFetch } from "../../lib/api";
 export default function QuizRunner({ topic, questions, onFinish }) {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState(null);

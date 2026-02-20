@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CourseCarousel from "./CourseCarousel";
 import { logProgress } from "../../lib/logProgress";
-import { apiFetch } from "../lib/api";
+import { apiFetch } from "../../lib/api";
 const PLATFORMS = [
   "All",
   "freeCodeCamp",

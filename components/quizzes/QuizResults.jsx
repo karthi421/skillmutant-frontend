@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { apiFetch } from "../lib/api";
+import { apiFetch } from "../../lib/api";
 export default function QuizResults({ result, onRetry }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +12,7 @@ export default function QuizResults({ result, onRetry }) {
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch(
+      const res = await apiFetch(
         "/api/quiz-results/my-results",
         {
           headers: {

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { logProgress } from "../../lib/logProgress";
-import { apiFetch } from "../lib/api";
+import { apiFetch } from "../../lib/api";
 // after API success
 
 export default function DailyCodingGoal() {

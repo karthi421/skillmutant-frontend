@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { logActivity } from "../../lib/logActivity";
-import { apiFetch } from "../lib/api";
+import { apiFetch } from "../../lib/api";
 //const ICE_SERVERS = {
 //  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
 //};
