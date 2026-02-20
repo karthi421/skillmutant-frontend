@@ -11,7 +11,7 @@ export default function CollaborativeLearningRooms() {
     setStatus("");
 
     try {
-      const res = await fetch("http://localhost:8000/rooms/create", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_AI_BACKEND_URL}/rooms/create`, {
         method: "POST",
       });
       const data = await res.json();
@@ -47,7 +47,7 @@ export default function CollaborativeLearningRooms() {
     setStatus("");
 
     try {
-      const res = await fetch("http://localhost:8000/rooms/join", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_AI_BACKEND_URL}/rooms/join`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

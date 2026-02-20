@@ -99,9 +99,15 @@ export default function VideoRoom({ roomId }) {
   useEffect(() => {
     if (!mediaReady) return;
 
-    socketRef.current = new WebSocket(
-      `ws://localhost:8000/ws/rooms/${roomId}/${USER_ID}`
-    );
+    const baseUrl = process.env.NEXT_PUBLIC_AI_BACKEND_URL;
+
+const wsUrl = baseUrl
+  .replace("https://", "wss://")
+  .replace("http://", "ws://");
+
+socketRef.current = new WebSocket(
+  `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`
+);
    socketRef.current.onopen = () => {
   console.log("Room connected ✅");
 
@@ -425,7 +431,7 @@ pc.oniceconnectionstatechange = () => {
     setAiMessages(prev => [...prev, { role: "user", content: question }]);
 
     try {
-      const res = await fetch("http://localhost:8000/ai/room-chat", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_AI_BACKEND_URL}/ai/room-chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ room_id: roomId, question, notes }),
