@@ -3,40 +3,25 @@ export default async function handler(req, res) {
     return res.status(405).end();
   }
 
-  const { messages } = req.body;
-
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.setHeader("Connection", "keep-alive");
-
-  const ollamaRes = await fetch(
-    "http://localhost:11434/api/chat",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "phi3:mini",
-
-        messages,
-        stream: true, // 🔥 STREAMING
-        options: {
-          temperature: 0.3,
-          num_predict: 200,
+  try {
+    const response = await fetch(
+      `${process.env.AI_BACKEND_URL}/ai/room-chat`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      }),
-    }
-  );
+        body: JSON.stringify(req.body),
+      }
+    );
 
-  const reader = ollamaRes.body.getReader();
-  const decoder = new TextDecoder();
+    const data = await response.json();
+    return res.status(200).json(data);
 
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-
-    const chunk = decoder.decode(value);
-    res.write(chunk);
+  } catch (error) {
+    console.error("AI proxy error:", error);
+    return res.status(500).json({
+      answer: "AI service unavailable."
+    });
   }
-
-  res.end();
 }
