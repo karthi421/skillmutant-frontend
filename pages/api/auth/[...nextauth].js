@@ -20,13 +20,12 @@ export default NextAuth({
           return false;
         }
 
-        const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+        const BASE_URL = process.env.BACKEND_URL;
 
         if (!BASE_URL) {
-          console.error("NEXT_PUBLIC_BACKEND_URL not set");
-          return false;
+          console.error("BACKEND_URL not set");
+          throw new Error("Backend URL missing");
         }
-
         // ✅ Call backend
         const res = await fetch(`${BASE_URL}/api/auth/google`, {
           method: "POST",
