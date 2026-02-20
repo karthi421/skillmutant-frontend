@@ -12,45 +12,56 @@ export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
-  async signIn({ user, account, profile }) {
-  try {
-    const BASE_URL =
-      process.env.NEXT_PUBLIC_BACKEND_URL ||
-      "http://localhost:5000";
+    async signIn({ user, account, profile }) {
+      try {
+        const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-    const res = await fetch(
-      `${BASE_URL}/api/auth/google`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: profile.email,     // ✅ correct
-          googleId: profile.sub,    // ✅ THIS IS THE REAL GOOGLE ID
-        }),
+        if (!BASE_URL) {
+          console.error("❌ NEXT_PUBLIC_BACKEND_URL is not defined");
+          return false;
+        }
+
+        const response = await fetch(
+          `${BASE_URL}/api/auth/google`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: profile?.email,
+              googleId: profile?.sub,
+            }),
+          }
+        );
+
+        // If backend sleeping or failing
+        if (!response.ok) {
+          console.error("❌ Backend returned error:", response.status);
+          return false;
+        }
+
+        const data = await response.json();
+
+        if (!data || !data.token) {
+          console.error("❌ Invalid backend response:", data);
+          return false;
+        }
+
+        // Attach backend info to user
+        user.isNewUser = !data.existing;
+        user.backendToken = data.token;
+
+        return true;
+      } catch (error) {
+        console.error("❌ Google login failed:", error);
+        return false;
       }
-    );
+    },
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.error("Backend error:", data);
-      return false;
-    }
-
-    user.isNewUser = !data.existing;
-    user.backendToken = data.token;
-
-    return true;
-  } catch (err) {
-    console.error("Google login failed:", err);
-    return false;
-  }
-},
     async jwt({ token, user }) {
       if (user) {
         token.email = user.email;
         token.isNewUser = user.isNewUser;
-         token.backendToken = user.backendToken;
+        token.backendToken = user.backendToken;
       }
       return token;
     },
