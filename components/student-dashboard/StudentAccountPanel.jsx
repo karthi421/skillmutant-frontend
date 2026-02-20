@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { apiFetch } from "../lib/api";
 export default function StudentAccountPanel({ open, onClose }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -37,7 +37,7 @@ useEffect(() => {
     setLoading(true);
     setError("");
 
-    fetch("http://localhost:5000/api/auth/me", {
+    apiFetch("/api/auth/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => {
@@ -70,8 +70,9 @@ useEffect(() => {
     if (profileFile) fd.append("profile_pic", profileFile);
 
     try {
-      const res = await fetch(
-        "http://localhost:5000/api/auth/update-profile",
+      const res = await apiFetch(
+          "/api/auth/update-profile",
+
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` },
@@ -95,7 +96,7 @@ useEffect(() => {
   const handleDelete = async () => {
     if (!confirm("Delete account permanently?")) return;
 
-    await fetch("http://localhost:5000/api/auth/delete-account", {
+    await apiFetch("api/auth/delete-account", {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -139,7 +140,7 @@ useEffect(() => {
                  <img
   src={
     user.profile_pic
-      ? `http://localhost:5000/uploads/${user.profile_pic}?t=${Date.now()}`
+      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${user.profile_pic}?t=${Date.now()}`
       : "/default-profile.png"
   }
   className="w-32 h-32 rounded-full object-cover border border-cyan-400/40"

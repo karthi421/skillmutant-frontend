@@ -1,6 +1,7 @@
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { apiFetch } from "../lib/api";
 
 export default function Home() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function Home() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await apiFetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -118,7 +119,7 @@ export default function Home() {
     const sessionRes = await fetch("/api/auth/session");
     const session = await sessionRes.json();
 
-    const backendRes = await fetch("http://localhost:5000/api/auth/google", {
+    const backendRes = await apiFetch("/api/auth/google", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

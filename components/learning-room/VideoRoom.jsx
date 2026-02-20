@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { logActivity } from "../../lib/logActivity";
-
+import { apiFetch } from "../lib/api";
 //const ICE_SERVERS = {
 //  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
 //};
@@ -123,7 +123,7 @@ export default function VideoRoom({ roomId }) {
   });
 
   // ✅ Log learning room join to backend
-  fetch("http://localhost:5000/api/jobs/learning-room", {
+ apiFetch("/api/jobs/learning-room", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-
+import { apiFetch } from "../lib/api";
 export default function QuizResults({ result, onRetry }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ export default function QuizResults({ result, onRetry }) {
   const fetchHistory = async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/quiz-results/my-results",
+        "/api/quiz-results/my-results",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

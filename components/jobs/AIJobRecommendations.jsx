@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import JobCarousel from "./JobCarousel";
-
+import { apiFetch } from "../lib/api";
 export default function AIJobRecommendations({ analysis }) {
   const [jobs, setJobs] = useState([]);
  const [savedJobs, setSavedJobs] = useState([]);
@@ -26,16 +26,15 @@ useEffect(() => {
   const token = localStorage.getItem("token");
   if (!token) return;
 
-  fetch("http://localhost:5000/api/auth/me", {
-    headers: { Authorization: `Bearer ${token}` },
+apiFetch("/api/auth/me", {
+  headers: { Authorization: `Bearer ${token}` },
+})
+  .then(user => {
+    setResolvedAnalysis({
+      current_skills: user.skills || [],
+    });
   })
-    .then(res => res.json())
-    .then(user => {
-      setResolvedAnalysis({
-        current_skills: user.skills || [],
-      });
-    })
-    .catch(() => {});
+  .catch(() => {});
 }, [analysis]);
 
 
@@ -68,11 +67,10 @@ useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    fetch("http://localhost:5000/api/jobs/saved", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => res.json())
-      .then(data => {
+   apiFetch("/api/jobs/saved", {
+  headers: { Authorization: `Bearer ${token}` },
+})
+  .then(data => {
         if (Array.isArray(data)) {
           setSavedJobs(data);
           localStorage.setItem("savedJobs", JSON.stringify(data));
@@ -105,8 +103,8 @@ useEffect(() => {
   try {
    await fetch(
   exists
-    ? `http://localhost:5000/api/jobs/saved/${jobId}`
-    : "http://localhost:5000/api/jobs/save",
+     ? `/api/jobs/saved/${jobId}`
+    : "/api/jobs/save",
   {
     method: exists ? "DELETE" : "POST",
     headers: {

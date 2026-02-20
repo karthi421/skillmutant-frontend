@@ -1,25 +1,26 @@
 import { useEffect, useState } from "react";
-
+import { apiFetch } from "../lib/api";
 import ProgressNotifications from "./progress/ProgressNotifications";
 
 function StudentHeader() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
- useEffect(() => {
+useEffect(() => {
   const token = localStorage.getItem("token");
   if (!token) return;
 
-  fetch("http://localhost:5000/api/notifications/unread-count", {
+  apiFetch("/api/notifications/unread-count", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   })
-    .then(res => res.json())
     .then(data => {
       setUnreadCount(data.count || 0);
+    })
+    .catch(err => {
+      console.error("Failed to fetch unread count:", err);
     });
 }, []);
-
   return (
     <div className="flex justify-between items-center mb-10">
       <div>

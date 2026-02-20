@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiFetch } from "../lib/api";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -10,7 +11,7 @@ export default function ForgotPassword() {
 
     setLoading(true);
 
-    await fetch("http://localhost:5000/api/auth/forgot-password", {
+    await apiFetch("/api/auth/forgot-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),

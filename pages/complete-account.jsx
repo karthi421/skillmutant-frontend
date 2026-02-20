@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { apiFetch } from "../lib/api";
 
 export default function CompleteAccount() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function CompleteAccount() {
 
     setLoading(true);
 
-    const res = await fetch("http://localhost:5000/api/auth/complete-account", {
+    const res = await apiFetch("/api/auth/complete-account", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, username, password }),

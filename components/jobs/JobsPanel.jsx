@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import JobCarousel from "./JobCarousel";
 import { useEffect, useState } from "react";
-
+import { apiFetch } from "../lib/api";
 export default function JobsPanel({ onClose }) {
   const [savedJobs, setSavedJobs] = useState([]);
   const [interviews, setInterviews] = useState([]);
@@ -17,13 +17,13 @@ export default function JobsPanel({ onClose }) {
   useEffect(() => {
     if (!token) return;
 
-    fetch("http://localhost:5000/api/jobs/saved", {
+    apiFetch("/api/jobs/saved", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
       .then(setSavedJobs);
 
-    fetch("http://localhost:5000/api/jobs/interviews/feedbacks", {
+    apiFetch("/api/jobs/interviews/feedbacks", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -34,7 +34,7 @@ export default function JobsPanel({ onClose }) {
 
   const removeJob = async (job) => {
     await fetch(
-      `http://localhost:5000/api/jobs/saved/${job.job_id}`,
+       `/api/jobs/saved/${job.job_id}`,
       {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
@@ -51,7 +51,7 @@ export default function JobsPanel({ onClose }) {
 
     if (!item.is_read) {
       await fetch(
-        `http://localhost:5000/api/jobs/interviews/feedbacks/${item.id}/read`,
+        `/api/jobs/interviews/feedbacks/${item.id}/read`,
         { 
            method: "PATCH",
           headers: { Authorization: `Bearer ${token}` }
@@ -75,7 +75,7 @@ const saveJob = async (job) => {
   try {
     if (exists) {
       await fetch(
-        `http://localhost:5000/api/jobs/saved/${jobId}`,
+        `/api/jobs/saved/${jobId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -83,7 +83,7 @@ const saveJob = async (job) => {
       );
     } else {
       await fetch(
-        "http://localhost:5000/api/jobs/save",
+        "/api/jobs/save",
         {
           method: "POST",
           headers: {
@@ -105,7 +105,7 @@ const saveJob = async (job) => {
   }
 
   // refresh saved jobs from backend
-  const res = await fetch("http://localhost:5000/api/jobs/saved", {
+  const res = await apiFetch("/api/jobs/saved", {
     headers: { Authorization: `Bearer ${token}` },
   });
 

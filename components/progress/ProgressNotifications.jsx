@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { apiFetch } from "../lib/api";
 const isToday = (date) => {
   if (!date) return false;
   const d = new Date(date);
@@ -20,7 +20,7 @@ export default function ProgressNotifications({ open, onClose, onUnreadChange })
 
     setLoading(true);
 
-    fetch("http://localhost:5000/api/notifications", {
+    apiFetch("/api/notifications", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -37,7 +37,7 @@ export default function ProgressNotifications({ open, onClose, onUnreadChange })
   onUnreadChange?.(unread);
 
   // ✅ MARK AS READ
-  fetch("http://localhost:5000/api/notifications/mark-read", {
+  apiFetch("/api/notifications/mark-read", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

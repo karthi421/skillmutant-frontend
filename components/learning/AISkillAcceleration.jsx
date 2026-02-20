@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CourseCarousel from "./CourseCarousel";
 import { logProgress } from "../../lib/logProgress";
-
+import { apiFetch } from "../lib/api";
 const PLATFORMS = [
   "All",
   "freeCodeCamp",
@@ -68,7 +68,7 @@ export default function AISkillAcceleration({ analysis }) {
   });
 const markCourseCompleted = async (courseId) => {
   try {
-    await fetch("http://localhost:5000/api/course-results/complete", {
+    await apiFetch("/api/course-results/complete", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { logProgress } from "../../lib/logProgress";
-
+import { apiFetch } from "../lib/api";
 // after API success
 
 export default function DailyCodingGoal() {
@@ -17,7 +17,7 @@ export default function DailyCodingGoal() {
       return;
     }
 
-    fetch("http://localhost:5000/api/daily-goals", {
+    apiFetch("/api/daily-goals", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -37,7 +37,7 @@ const markDone = async (problemId) => {
   console.log("CLICKED MARK DONE", problemId);
 
   await fetch(
-    `http://localhost:5000/api/daily-goals/${problemId}/complete`,
+    `/api/daily-goals/${problemId}/complete`,
     {
       method: "POST",
       headers: {
@@ -46,9 +46,7 @@ const markDone = async (problemId) => {
     }
   );
 
-  const res = await fetch(
-    "http://localhost:5000/api/daily-goals",
-    {
+  const res = await apiFetch("/api/daily-goals", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },

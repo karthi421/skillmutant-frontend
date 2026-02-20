@@ -8,6 +8,7 @@ import { logActivity } from "../lib/logActivity";
 
 
 import { useRouter } from "next/router";
+import { apiFetch } from "../lib/api";
 
 
 export default function MockInterviewRoom() {
@@ -290,8 +291,7 @@ const endInterview = async () => {
           : "More practice is recommended before interviews.",
     };
     // 🔹 SAVE INTERVIEW FEEDBACK TO DATABASE
-await fetch(
-  "http://localhost:5000/api/jobs/interviews/feedbacks",
+await apiFetch("/api/jobs/interviews/feedbacks",
   {
     method: "POST",
     headers: {

@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import { apiFetch } from "../lib/api";
 export default function Achievements() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/achievements", {
+     apiFetch("/api/achievements",  {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },

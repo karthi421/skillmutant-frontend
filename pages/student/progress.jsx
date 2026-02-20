@@ -15,6 +15,7 @@ import ProgressEmptyState from "../../components/progress/ProgressEmptyState";
 import DailyCodingGoal from "../../components/progress/DailyCodingGoal";
 import MonthlyInsights from "../../components/progress/MonthlyInsights";
 import ChatWidget from "../../components/chat/ChatWidget";
+import { apiFetch } from "../../lib/api.js";
 
 /* ================= HELPERS ================= */
 
@@ -178,7 +179,7 @@ export default function ProgressPage() {
       return;
     }
 
-    fetch("http://localhost:5000/api/auth/me", {
+    apiFetch("/api/auth/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -191,7 +192,7 @@ export default function ProgressPage() {
       })
       .catch(() => setLoading(false));
 
-    fetch("http://localhost:5000/api/progress/analytics", {
+    apiFetch("/api/progress/analytics", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -205,7 +206,7 @@ useEffect(() => {
   const token = localStorage.getItem("token");
   if (!token) return;
 
-  fetch("http://localhost:5000/api/activity/all", {
+  apiFetch("/api/activity/all", {
 
     headers: { Authorization: `Bearer ${token}` },
   })
