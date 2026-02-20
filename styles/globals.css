@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-[#020617] text-white;
+}
+/* PREMIUM GLASS SYSTEM */
+.glass-card {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.06),
+    rgba(255,255,255,0.02)
+  );
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 2.5rem;
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* SUBTLE AI GLOW (USED SPARINGLY) */
+.glow-cyan::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    rgba(34,211,238,0.35),
+    transparent 40%
+  );
+  opacity: 0.35;
+  pointer-events: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
+/*mock interview*/
+/* ===== AI AVATAR ===== */
+.ai-avatar {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22d3ee, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.ai-face {
+  width: 120px;
+  height: 120px;
+  position: relative;
+}
+
+.ai-eye {
+  width: 14px;
+  height: 14px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 30px;
+}
+
+.ai-eye.left {
+  left: 25px;
+}
+
+.ai-eye.right {
+  right: 25px;
+}
+
+.ai-mouth {
+  width: 40px;
+  height: 8px;
+  background: white;
+  border-radius: 0 0 20px 20px;
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.15s ease;
+}
+
+/* Talking animation */
+.ai-mouth.talking {
+  height: 26px;
+  animation: talk 0.18s infinite alternate;
+}
+
+@keyframes talk {
+  from {
+    height: 10px;
+  }
+  to {
+    height: 28px;
+  }
+}
+/* ===== HIDE SCROLLBAR (ALL BROWSERS) ===== */
+.no-scrollbar {
+  -ms-overflow-style: none;   /* IE & Edge */
+  scrollbar-width: none;      /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari */
+}
+.input-modern {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+  outline: none;
+  transition: 0.2s;
+}
+.input-modern:focus {
+  border-color: #22d3ee;
+  box-shadow: 0 0 0 1px #22d3ee;
+}
+
+.textarea-modern {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+  resize: none;
+  outline: none;
+}
+.textarea-modern:focus {
+  border-color: #22d3ee;
+  box-shadow: 0 0 0 1px #22d3ee;
+}
+.shadow-cyan-glow {
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+}
+html, body {
+  overflow-x: hidden;
+}
+/* Hide scrollbar but allow scrolling */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+* {
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE & Edge */
+}
