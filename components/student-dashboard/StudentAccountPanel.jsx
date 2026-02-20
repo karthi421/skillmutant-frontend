@@ -14,7 +14,7 @@ export default function StudentAccountPanel({ open, onClose }) {
  
 
   /* ================= FETCH ACCOUNT ================= */
-  useEffect(() => {
+useEffect(() => {
   if (!open) return;
 
   const token = localStorage.getItem("token");
@@ -31,10 +31,6 @@ export default function StudentAccountPanel({ open, onClose }) {
   apiFetch("/api/auth/me", {
     headers: { Authorization: `Bearer ${token}` },
   })
-    .then(res => {
-      if (!res.ok) throw new Error();
-      return res.json();
-    })
     .then(data => {
       setUser(data);
       setName(data.name || "");
