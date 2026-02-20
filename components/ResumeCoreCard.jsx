@@ -19,7 +19,7 @@ export default function ResumeCoreCard({ onAnalyze }) {
     try {
       setLoading(true);
 
-      const res = await fetch("http://127.0.0.1:8000/analyze-resume", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_AI_BACKEND_URL}/analyze-resume`, {
         method: "POST",
         body: formData,
       });
