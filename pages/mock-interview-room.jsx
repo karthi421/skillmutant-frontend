@@ -202,7 +202,7 @@ recognition.onend = () => {
     setPhase("ASKING");
 
     const res = await fetch(
-      "http://127.0.0.1:8000/ai/mock-interview/question",
+      `${process.env.NEXT_PUBLIC_AI_BACKEND_URL}/ai/mock-interview/question`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -253,7 +253,7 @@ const endInterview = async () => {
 
   try {
     const res = await fetch(
-      "http://127.0.0.1:8000/ai/mock-interview/final-evaluation",
+      `${process.env.NEXT_PUBLIC_AI_BACKEND_URL}/ai/mock-interview/final-evaluation`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

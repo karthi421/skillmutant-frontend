@@ -109,7 +109,7 @@ const fetchLearningPath = async (skill = null) => {
   try {
     setLearningLoading(true);
 
-    const res = await fetch("http://127.0.0.1:8000/ai/recommend-courses", {
+    const res = await fetch( `${process.env.NEXT_PUBLIC_AI_BACKEND_URL}/ai/recommend-courses`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

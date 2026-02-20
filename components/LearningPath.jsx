@@ -28,7 +28,7 @@ export default function LearningPath({
         setError(null);
 
         const res = await fetch(
-          "http://127.0.0.1:8000/ai/recommend-courses",
+           `${process.env.NEXT_PUBLIC_AI_BACKEND_URL}/ai/recommend-courses`,
           {
             method: "POST",
             headers: {

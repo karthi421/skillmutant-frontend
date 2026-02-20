@@ -19,7 +19,7 @@ export default function QuizPanel({ onClose }) {
     setMode("idle");
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/ai/generate-quiz", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_AI_BACKEND_URL}/ai/generate-quiz`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic, count: 5 }),
