@@ -99,7 +99,15 @@ export default function VideoRoom({ roomId }) {
   useEffect(() => {
     if (!mediaReady) return;
 
-    console.log("WS MESSAGE:", event.data);
+    const baseUrl = process.env.NEXT_PUBLIC_AI_BACKEND_URL;
+
+const wsUrl = baseUrl
+  .replace("https://", "wss://")
+  .replace("http://", "ws://");
+
+socketRef.current = new WebSocket(
+  `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`
+);
    socketRef.current.onopen = () => {
   console.log("Room connected ✅");
 
@@ -111,14 +119,10 @@ export default function VideoRoom({ roomId }) {
       console.log("WS MESSAGE:", event.data);
       const msg = JSON.parse(event.data);
 
-   if (msg.type === "init") {
+      if (msg.type === "init") {
   const capped = msg.members.slice(0, 8);
-
-  if (!capped.includes(USER_ID)) {
-    capped.push(USER_ID);
-  }
-
   setMembers(capped);
+
   capped.forEach(id => {
     if (id !== USER_ID) {
       createPeer(id, false);
