@@ -74,45 +74,35 @@ const saveJob = async (job) => {
 
   try {
     if (exists) {
-      await fetch(
-        `/api/jobs/saved/${jobId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await apiFetch(`/api/jobs/saved/${jobId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
     } else {
-      await fetch(
-        "/api/jobs/save",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            job_id: jobId,
-            platform: job.platform,
-            title: job.title,
-            company: job.company,
-            data: job,
-          }),
-        }
-      );
+      await apiFetch("/api/jobs/save", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          job_id: jobId,
+          platform: job.platform,
+          title: job.title,
+          company: job.company,
+          data: job,
+        }),
+      });
     }
+
+    // refresh saved jobs
+    const data = await apiFetch("/api/jobs/saved", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    setSavedJobs(data);
+
   } catch (e) {
     console.error(e);
   }
-
-  // refresh saved jobs from backend
-  const res = await apiFetch("/api/jobs/saved", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  const data = await res.json();
-  setSavedJobs(data);
 };
-
   /* ================= UI ================= */
 return (
   <>

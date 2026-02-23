@@ -99,33 +99,32 @@ apiFetch("/api/auth/me", {
   const token = localStorage.getItem("token");
   if (!token) return;
 
+ 
   // 🔁 Backend sync
-  try {
-   await fetch(
-  exists
-     ? `/api/jobs/saved/${jobId}`
-    : "/api/jobs/save",
-  {
-    method: exists ? "DELETE" : "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: exists
-      ? undefined
-      : JSON.stringify({
-          job_id: jobId,
-          platform: job.platform,
-          title: job.title,
-          company: job.company,
-          data: job,
-        }),
-  }
-);
-
-  } catch (e) {
-    console.error(e);
-  }
+try {
+  await apiFetch(
+    exists
+      ? `/api/jobs/saved/${jobId}`
+      : "/api/jobs/save",
+    {
+      method: exists ? "DELETE" : "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: exists
+        ? undefined
+        : JSON.stringify({
+            job_id: jobId,
+            platform: job.platform,
+            title: job.title,
+            company: job.company,
+            data: job,
+          }),
+    }
+  );
+} catch (e) {
+  console.error(e);
+}
 };
 
   /* ================= EFFECT (UNCHANGED) ================= */
