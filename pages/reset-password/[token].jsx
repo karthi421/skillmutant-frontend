@@ -9,12 +9,13 @@ export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const submit = async () => {
-    if (!password || !token) return;
+const submit = async () => {
+  if (!password || !token) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    const res = await apiFetch("/api/auth/reset-password", {
+  try {
+    await apiFetch("/api/auth/reset-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -23,15 +24,14 @@ export default function ResetPassword() {
       }),
     });
 
-    setLoading(false);
+    alert("✅ Password reset successful");
+    router.push("/login");
+  } catch (err) {
+    alert("❌ Invalid or expired reset link");
+  }
 
-    if (res.ok) {
-      alert("✅ Password reset successful");
-      router.push("/login");
-    } else {
-      alert("❌ Invalid or expired reset link");
-    }
-  };
+  setLoading(false);
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
