@@ -99,24 +99,36 @@ export default function VideoRoom({ roomId }) {
   useEffect(() => {
     if (!mediaReady) return;
 
-    const baseUrl = process.env.NEXT_PUBLIC_AI_BACKEND_URL;
+const baseUrl =
+    process.env.NEXT_PUBLIC_AI_BACKEND_URL ||
+    "http://localhost:8000";
 
-const wsUrl = baseUrl
-  .replace("https://", "wss://")
-  .replace("http://", "ws://");
+  const wsUrl = baseUrl
+    .replace(/^https/, "wss")
+    .replace(/^http/, "ws");
 
-socketRef.current = new WebSocket(
-  `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`
-);
-   socketRef.current.onopen = () => {
-  console.log("Room connected ✅");
+  const fullUrl = `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`;
 
-  // 🔥 LOG ACTIVITY HERE
-  logActivity("learning_room", "Joined Learning Room");
-};
+  console.log("Connecting to:", fullUrl);
 
-    socketRef.current.onmessage = async (event) => {
-      console.log("WS MESSAGE:", event.data);
+  const socket = new WebSocket(fullUrl);
+  socketRef.current = socket;
+
+  socket.onopen = () => {
+    console.log("Room connected ✅");
+    logActivity("learning_room", "Joined Learning Room");
+  };
+
+  socket.onerror = (err) => {
+    console.error("WebSocket error:", err);
+  };
+
+  socket.onclose = () => {
+    console.log("WebSocket closed");
+  };
+
+  socket.onmessage = async (event) => {
+    console.log("WS MESSAGE:", event.data);
       const msg = JSON.parse(event.data);
 
       if (msg.type === "init") {
