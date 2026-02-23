@@ -25,7 +25,7 @@ const submit = async () => {
     });
 
     alert("✅ Password reset successful");
-    router.push("/login");
+    router.push("/");
   } catch (err) {
     alert("❌ Invalid or expired reset link");
   }
