@@ -61,6 +61,7 @@ useEffect(() => {
 }
 export default StudentHeader;
 */
+"use client";
 import { useEffect, useState } from "react";
 import { apiFetch } from "../lib/api";
 import ProgressNotifications from "./progress/ProgressNotifications";

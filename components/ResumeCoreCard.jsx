@@ -96,7 +96,8 @@ logProgress(
   );
 }
 */
-import { useState } from "react";
+"use client";
+import { useState} from "react";
 import { logProgress } from "../lib/logProgress";
 // Add a Lucide icon for a pro look (npm install lucide-react or use SVG)
 import { Upload, FileCheck, Loader2 } from "lucide-react"; 
