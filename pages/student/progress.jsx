@@ -182,7 +182,7 @@ export default function ProgressPage() {
     apiFetch("/api/auth/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then(res => res.json())
+      
       .then(data => {
         setUser({
           ...data,
@@ -195,7 +195,7 @@ export default function ProgressPage() {
     apiFetch("/api/progress/analytics", {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then(res => res.json())
+      
       .then(data => setAnalytics(data || null))
       .catch(() => {});
   }, []);
@@ -210,7 +210,7 @@ useEffect(() => {
 
     headers: { Authorization: `Bearer ${token}` },
   })
-    .then(res => res.json())
+    
     .then(data => {
       const activities = data.map(a => ({
         type: a.type,
