@@ -20,13 +20,13 @@ export default function JobsPanel({ onClose }) {
     apiFetch("/api/jobs/saved", {
       headers: { Authorization: `Bearer ${token}` }
     })
-      .then(res => res.json())
+      
       .then(setSavedJobs);
 
     apiFetch("/api/jobs/interviews/feedbacks", {
       headers: { Authorization: `Bearer ${token}` }
     })
-      .then(res => res.json())
+      
       .then(setInterviews);
     }, [token]);
 
