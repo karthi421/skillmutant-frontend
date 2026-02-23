@@ -507,16 +507,16 @@ const saveRoomNotes = () => {
 
   /* ================= UI ================= */
   return (
-    <div className="min-h-screen bg-[#020617] text-white flex flex-col">
+    <div className="h-screen bg-[#020617] text-white flex flex-col overflow-hidden">
 
       <header className="h-14 px-6 flex justify-between items-center border-b border-white/10">
         <span>Learning Room — <span className="text-slate-400">{roomId}</span></span>
         <span className="text-sm text-slate-400">{mm}:{ss} | {members.length}/8</span>
       </header>
 
-      <main className="flex flex-1">
+      <main className="flex flex-1 overflow-hidden">
 
-       <section className={`flex-1 grid ${gridCols} gap-4 p-4 auto-rows-fr`}>
+       <section className={`flex-1 grid ${gridCols} gap-4 p-4 overflow-hidden`}>
   {members.map(id => {
     const isLocal = id === USER_ID;
     const stream = isLocal
@@ -590,7 +590,7 @@ const saveRoomNotes = () => {
 
 
 
-        <aside className="w-80 border-l border-white/10 bg-black/40 p-4 flex flex-col">
+        <aside className="w-80 border-l border-white/10 bg-black/40 flex flex-col overflow-hidden">
           <div className="flex gap-2 mb-3">
             <button onClick={() => setActivePanel("notes")}>📝 Notes</button>
             <button onClick={() => setActivePanel("ai")}>🤖 AI</button>
@@ -617,7 +617,7 @@ const saveRoomNotes = () => {
 
           {activePanel === "ai" && (
             <>
-              <div className="flex-1 overflow-y-auto text-sm space-y-2">
+              <div className="flex-1 overflow-y-auto p-4 text-sm space-y-2">
                 {aiMessages.map((m, i) => (
                   <div key={i} className={m.role === "assistant" ? "text-cyan-400" : ""}>
                     <b>{m.role === "user" ? "Q:" : "AI:"}</b> {m.content}

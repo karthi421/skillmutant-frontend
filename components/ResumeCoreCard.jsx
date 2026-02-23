@@ -90,34 +90,69 @@ logProgress(
     }
   };
 
-  return (
-    <div className="glass-card max-w-xl mx-auto text-center p-6">
-      <h2 className="text-2xl font-bold mb-3">
-        AI Resume Intelligence
-      </h2>
+ return (
+  <div className="flex flex-col items-center mt-20 px-6">
 
-      <p className="text-slate-400 text-sm mb-6">
-        Upload your resume to unlock AI-powered insights.
+    {/* HERO */}
+    <div className="text-center max-w-2xl">
+      <h1 className="text-5xl font-bold tracking-tight">
+        SkillMutant
+      </h1>
+
+      <p className="mt-6 text-lg text-slate-400 leading-relaxed">
+        Upload your resume and discover your current skills and future skill
+        recommendations using AI-powered analysis.
+      </p>
+    </div>
+
+    {/* CARD */}
+    <div className="mt-14 w-full max-w-2xl 
+                    bg-[#0B1220] border border-white/10 
+                    rounded-2xl p-10 shadow-2xl backdrop-blur-xl">
+
+      <p className="text-xs tracking-[0.3em] text-cyan-400 mb-8">
+        RESUME UPLOAD
       </p>
 
-      <input
-        type="file"
-        accept=".pdf"
-        onChange={(e) => setFile(e.target.files[0])}
-        className="mb-4 block mx-auto text-sm"
-      />
+      {/* FILE SELECTOR */}
+      <div className="flex items-center gap-4 mb-10">
+        <label className="
+          bg-cyan-500 hover:bg-cyan-400 
+          text-black font-medium px-6 py-2 
+          rounded-full cursor-pointer transition
+        ">
+          Choose File
+          <input
+            type="file"
+            accept=".pdf"
+            hidden
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+        </label>
 
+        <span className="text-slate-400 text-sm truncate">
+          {file ? file.name : "No file chosen"}
+        </span>
+      </div>
+
+      {/* BUTTON */}
       <button
         onClick={handleUpload}
         disabled={loading}
-        className="w-full px-6 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-md font-medium disabled:opacity-60"
+        className="
+          w-full py-4 rounded-full
+          bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500
+          font-semibold text-black text-lg
+          transition-all duration-300
+          hover:shadow-[0_0_30px_rgba(56,189,248,0.6)]
+          disabled:opacity-50
+        "
       >
         {loading ? "Analyzing Resume..." : "Upload & Analyze"}
       </button>
-    </div>
-  );
 
-  console.log("ANALYSIS RESPONSE:", data);
-console.log("CONFIDENCE:", data.confidence);
+    </div>
+  </div>
+);
 
 }
