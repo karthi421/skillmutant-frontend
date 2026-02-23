@@ -250,7 +250,9 @@ useEffect(() => {
       setPopupAchievement(last);
     }
   }, [allActivities, streak]);
-
+   useEffect(() => {
+  console.log("ACTIVITIES FROM BACKEND:", allActivities);
+}, [allActivities]);
   /* ================= GUARDS ================= */
 
   if (loading) return <ProgressSkeleton />;
