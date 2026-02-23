@@ -78,7 +78,7 @@ Context:
     setInput("");
     setLoading(true);
 
-    const res = await fetch("/api/chat", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_AI_BACKEND_URL}/ai/dashboard-assistant`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages: newMessages }),
