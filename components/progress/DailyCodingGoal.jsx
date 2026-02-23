@@ -22,7 +22,7 @@ export default function DailyCodingGoal() {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then(res => res.json())
+      
       .then(data => {
         setGoals(data);
         setLoading(false);
@@ -36,31 +36,37 @@ export default function DailyCodingGoal() {
 const markDone = async (problemId) => {
   console.log("CLICKED MARK DONE", problemId);
 
-  await fetch(
-    `/api/daily-goals/${problemId}/complete`,
-    {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  try {
+    // 🔁 Mark as complete (USE apiFetch, NOT fetch)
+    await apiFetch(`/api/daily-goals/${problemId}/complete`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${token}`,
       },
-    }
-  );
+    });
 
-  const res = await apiFetch("/api/daily-goals", {
+    // 🔥 Log progress
+    await logProgress(
+      "daily_goal",
+      "Solved daily coding problem"
+    );
+
+    // 🔁 Refresh goals list
+    const data = await apiFetch("/api/daily-goals", {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${token}`,
       },
-    }
-  );
-  await logProgress(
-  "daily_goal",
-  "Solved daily coding problem"
-);
+    });
 
-  const data = await res.json();
-  setGoals(data);
+    setGoals(data);
+
+  } catch (err) {
+    console.error("markDone error:", err);
+  }
 };
-
 
   return (
     <div className="bg-[#020617]/80 border border-white/10 rounded-xl p-5 mb-10">

@@ -6,31 +6,30 @@ export default function Achievements() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-     apiFetch("/api/achievements",  {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then(res => res.json())
-      .then(setData)
-      .finally(() => setLoading(false));
+apiFetch("/api/achievements", {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+})
+  .then(data => {
+    setData(data);
 
     const seen = JSON.parse(
-  localStorage.getItem("seenAchievements") || "[]"
-);
+      localStorage.getItem("seenAchievements") || "[]"
+    );
 
-const newlyUnlocked = data.find(
-  a => a.unlocked && !seen.includes(a.id)
-);
+    const newlyUnlocked = data.find(
+      a => a.unlocked && !seen.includes(a.id)
+    );
 
-if (newlyUnlocked) {
-  setPopupAchievement(newlyUnlocked);
-  localStorage.setItem(
-    "seenAchievements",
-    JSON.stringify([...seen, newlyUnlocked.id])
-  );
-}
-  
+    if (newlyUnlocked) {
+      localStorage.setItem(
+        "seenAchievements",
+        JSON.stringify([...seen, newlyUnlocked.id])
+      );
+    }
+  })
+  .finally(() => setLoading(false)); 
   }, []);
 
   if (loading) {
