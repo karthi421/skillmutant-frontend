@@ -61,10 +61,30 @@ useEffect(() => {
 }
 export default StudentHeader;
 */
-
-// ... (keep your imports same)
-
+import { useEffect, useState } from "react";
+import { apiFetch } from "../lib/api";
+import ProgressNotifications from "./progress/ProgressNotifications";
 function StudentHeader() {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  apiFetch("/api/notifications/unread-count", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then(data => {
+      setUnreadCount(data.count || 0);
+    })
+    .catch(err => {
+      console.error("Failed to fetch unread count:", err);
+    });
+}, []);
+
+
   // ... (keep your state and useEffect same)
 
   return (
