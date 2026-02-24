@@ -73,99 +73,111 @@ const handlePasswordLogin = async () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#020617] to-[#0f172a] text-white">
-      <div className="w-[420px] p-8 rounded-2xl bg-white/10 backdrop-blur-xl shadow-2xl">
+  <div className="relative min-h-screen flex items-center justify-center bg-[#111111] text-white">
 
-        {/* LOGO */}
-        <div className="text-center mb-6">
-          <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-cyan-400 to-purple-500 flex items-center justify-center text-black font-extrabold text-xl shadow-lg">
-            SM
-          </div>
-          <h1 className="text-2xl font-bold mt-3">
-            Skill<span className="text-cyan-400">Mutant</span>
-          </h1>
-          <p className="text-slate-400 text-sm">
-            AI Skill Intelligence Platform
-          </p>
-        </div>
+    {/* SAME BACKGROUND AS DASHBOARD */}
+    <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#181818] via-[#111111] to-[#1c1c1c]" />
 
-        {/* EMAIL / PASSWORD LOGIN */}
-        <div className="space-y-3">
-       
-          <input
-            name="email"
-            placeholder="Email"
-            className="w-full px-4 py-2 rounded-lg bg-black/40 border border-white/10 outline-none"
-            value={form.email}
-            onChange={handleChange}
-          />
+    <div className="w-[420px] p-10 rounded-2xl bg-[#1c1c1c] border border-neutral-800 shadow-xl">
 
-          <input
-              name="password"
-              type="password"
-              placeholder="Password"
-              className="w-full px-4 py-2 rounded-lg bg-black/40 border border-white/10 outline-none"
-              value={form.password}
-              onChange={handleChange}
-          />
+      {/* LOGO */}
+      <div className="text-center mb-8">
+        <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
+          Skill<span className="font-semibold">Mutant</span>
+        </h1>
 
-          <button
-            onClick={handlePasswordLogin}
-            className="w-full py-2 rounded-full font-semibold bg-gradient-to-r from-cyan-400 to-purple-500 text-black"
-          >
-            Login
-          </button>
-          <div className="text-right">
-  <a
-    href="/forgot-password"
-    className="text-xs text-cyan-400 hover:underline"
-  >
-    Forgot password?
-  </a>
-</div>
+        <p className="text-neutral-400 text-sm mt-2">
+          AI Skill Intelligence Platform
+        </p>
+      </div>
 
-        </div>
+      {/* EMAIL / PASSWORD LOGIN */}
+      <div className="space-y-4">
 
-        <div className="my-6 text-center text-xs text-slate-400">OR</div>
+        <input
+          name="email"
+          placeholder="Email"
+          className="w-full px-4 py-3 rounded-lg bg-[#111111]
+                     border border-neutral-700
+                     outline-none focus:border-white
+                     transition-colors duration-200"
+          value={form.email}
+          onChange={handleChange}
+        />
 
-        {/* GOOGLE LOGIN */}
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          className="w-full px-4 py-3 rounded-lg bg-[#111111]
+                     border border-neutral-700
+                     outline-none focus:border-white
+                     transition-colors duration-200"
+          value={form.password}
+          onChange={handleChange}
+        />
+
         <button
-  onClick={async () => {
-    const res = await signIn("google", {
-      redirect: false,
-    });
+          onClick={handlePasswordLogin}
+          className="w-full py-3 rounded-full font-medium
+                     bg-white text-black
+                     transition-all duration-300
+                     hover:-translate-y-1
+                     hover:shadow-[0_8px_25px_rgba(0,0,0,0.25)]"
+        >
+          Login
+        </button>
 
-    // After Google login → call backend manually
-    const sessionRes = await fetch("/api/auth/session");
-    const session = await sessionRes.json();
-
-    const backendRes = await apiFetch("/api/auth/google", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: session.user.email,
-        googleId: session.user.sub,
-      }),
-    });
-
-    const data = await backendRes.json();
-
-    // ✅ STORE JWT (THIS NOW WORKS)
-    localStorage.setItem("token", data.token);
-
-    // 🔴 New user → complete account
-    if (!data.existing) {
-      window.location.href = `/complete-account?email=${session.user.email}`;
-    } else {
-      window.location.href = "/dashboard";
-    }
-  }}
-  className="w-full py-2 rounded-full bg-white text-black font-semibold"
->
-  Register / Continue with Google
-</button>
+        <div className="text-right">
+          <a
+            href="/forgot-password"
+            className="text-xs text-neutral-400 hover:text-white transition-colors"
+          >
+            Forgot password?
+          </a>
+        </div>
 
       </div>
+
+      <div className="my-8 text-center text-xs text-neutral-500">OR</div>
+
+      {/* GOOGLE LOGIN */}
+      <button
+        onClick={async () => {
+          const res = await signIn("google", { redirect: false });
+
+          const sessionRes = await fetch("/api/auth/session");
+          const session = await sessionRes.json();
+
+          const backendRes = await apiFetch("/api/auth/google", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: session.user.email,
+              googleId: session.user.sub,
+            }),
+          });
+
+          const data = await backendRes.json();
+
+          localStorage.setItem("token", data.token);
+
+          if (!data.existing) {
+            window.location.href = `/complete-account?email=${session.user.email}`;
+          } else {
+            window.location.href = "/dashboard";
+          }
+        }}
+        className="w-full py-3 rounded-full
+                   bg-white text-black font-medium
+                   transition-all duration-300
+                   hover:-translate-y-1
+                   hover:shadow-[0_8px_25px_rgba(0,0,0,0.25)]"
+      >
+        Register / Continue with Google
+      </button>
+
     </div>
-  );
+  </div>
+);
 }
