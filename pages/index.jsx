@@ -3,6 +3,36 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { apiFetch } from "../lib/api";
 
+/* ================= PREMIUM BUTTON ================= */
+function PremiumButton({ children, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="group relative w-full overflow-hidden rounded-full
+                 border border-white/20 bg-black text-white
+                 transition-all duration-300 active:translate-y-[1px]"
+    >
+      {/* rotating subtle edge shimmer */}
+      <div className="absolute inset-0 rounded-full p-[1px] opacity-0 
+                      group-hover:opacity-100 transition-opacity duration-500">
+        <div className="absolute inset-0 rounded-full
+                        animate-[spin_4s_linear_infinite]
+                        bg-[conic-gradient(from_0deg,transparent,rgba(255,255,255,0.4),transparent)]" />
+      </div>
+
+      {/* inner surface */}
+      <div className="relative z-10 rounded-full bg-[#111111] py-3
+                      shadow-[inset_0_-6px_10px_rgba(255,255,255,0.08)]
+                      group-hover:shadow-[inset_0_-6px_14px_rgba(255,255,255,0.15)]
+                      transition-all duration-300">
+        <span className="text-sm lg:text-base font-medium tracking-tight">
+          {children}
+        </span>
+      </div>
+    </button>
+  );
+}
+
 export default function Home() {
   const router = useRouter();
 
@@ -115,7 +145,6 @@ export default function Home() {
           </button>
         </div>
 
-        {/* FORM */}
         <div className="space-y-4">
 
           <input
@@ -157,7 +186,6 @@ export default function Home() {
             </span>
           </div>
 
-          {/* CONFIRM PASSWORD (REGISTER ONLY) */}
           {mode === "register" && (
             <div className="relative">
               <input
@@ -179,34 +207,33 @@ export default function Home() {
           )}
 
           {/* MAIN BUTTON */}
-          <button
+          <PremiumButton
             onClick={mode === "login" ? handlePasswordLogin : handleRegister}
-            className="w-full py-3 rounded-full bg-white text-black
-                       font-medium transition-all duration-300
-                       hover:-translate-y-1 hover:shadow-[0_8px_25px_rgba(0,0,0,0.25)]"
           >
             {mode === "login" ? "Login" : "Create Account"}
-          </button>
+          </PremiumButton>
 
           {/* GOOGLE ONLY FOR LOGIN */}
           {mode === "login" && (
             <>
               <div className="my-6 text-center text-xs text-neutral-500">OR</div>
 
-              <button
-                onClick={() => signIn("google")}
-                className="w-full py-3 rounded-full
-                           bg-[#111111] border border-neutral-700
-                           text-white font-medium
-                           hover:border-white transition"
-              >
+              <PremiumButton onClick={() => signIn("google")}>
                 Continue with Google
-              </button>
+              </PremiumButton>
             </>
           )}
 
         </div>
       </div>
+
+      <style jsx global>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
+
     </div>
   );
 }
