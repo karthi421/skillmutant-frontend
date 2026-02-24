@@ -6,40 +6,45 @@ export default function Home() {
   const router = useRouter();
   const [active, setActive] = useState("home");
 
-  const navItems = ["home", "features", "how", "contact"];
+  const navItems = [
+    { id: "home", label: "Home" },
+    { id: "features", label: "Features" },
+    { id: "workflow", label: "Workflow" },
+    { id: "contact", label: "Contact" },
+  ];
 
   return (
-    <div className="relative min-h-screen bg-[#0A0A0A] text-white overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#111111] text-white overflow-x-hidden">
 
-      {/* ===== Subtle Blur Background ===== */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0A0A0A] via-[#111111] to-[#0A0A0A]" />
+      {/* ===== Softer Blurred Background ===== */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#18181B] via-[#111111] to-[#18181B]" />
+      <div className="absolute top-[-150px] left-[-150px] w-[600px] h-[600px] bg-white/5 rounded-full blur-[160px]" />
+      <div className="absolute bottom-[-150px] right-[-150px] w-[600px] h-[600px] bg-white/5 rounded-full blur-[160px]" />
 
       {/* ===== NAVBAR ===== */}
       <div className="relative z-20 max-w-7xl mx-auto px-10 py-8 flex justify-between items-center">
 
-        {/* Stylish Slanted Logo */}
+        {/* Slanted Logo */}
         <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
           Skill<span className="font-semibold">Mutant</span>
         </h1>
 
-        {/* Center Nav */}
+        {/* Center Navigation */}
         <div className="hidden md:flex gap-10 text-sm relative">
           {navItems.map((item) => (
             <a
-              key={item}
-              href={`#${item}`}
-              onClick={() => setActive(item)}
+              key={item.id}
+              href={`#${item.id}`}
+              onClick={() => setActive(item.id)}
               className={`relative transition-all duration-300 ${
-                active === item
+                active === item.id
                   ? "text-white"
                   : "text-neutral-400 hover:text-white"
               }`}
             >
-              {item === "how"
-                ? "How it Works"
-                : item.charAt(0).toUpperCase() + item.slice(1)}
+              {item.label}
 
-              {active === item && (
+              {active === item.id && (
                 <motion.div
                   layoutId="navIndicator"
                   className="absolute -bottom-2 left-0 right-0 h-[2px] bg-white"
@@ -49,21 +54,20 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Clean Login Button (No Glow) */}
+        {/* Clean Login Button */}
         <button
           onClick={() => router.push("/login")}
-          className="font-normal text-lg bg-white rounded-full
-                     h-12 w-36 text-black
-                     hover:bg-[#0A0A0A] hover:text-white
+          className="font-medium text-sm bg-white rounded-full
+                     h-11 w-28 text-black
+                     hover:bg-black hover:text-white
                      hover:border hover:border-white
-                     transition-colors duration-300 ease-in-out"
+                     transition-colors duration-300"
         >
           Login
         </button>
-
       </div>
 
-      {/* ===== HERO ===== */}
+      {/* ===== HERO SECTION ===== */}
       <section id="home" className="relative z-10 text-center mt-32 px-6">
 
         <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold text-center
@@ -76,35 +80,28 @@ export default function Home() {
 
         <p className="text-neutral-400 mt-8 text-lg max-w-2xl mx-auto leading-relaxed">
           SkillMutant transforms resumes into predictive career insights,
-          learning paths, ATS scoring and workforce analytics.
+          structured learning paths, ATS scoring intelligence,
+          and long-term workforce analytics.
         </p>
 
-        {/* Clean 3D Button (No Glow) */}
+        {/* Premium Elevated Button (No Glow) */}
         <button
           onClick={() => router.push("/login")}
-          className="font-normal text-xl text-center bg-white rounded-full
-                     h-14 w-48 text-black px-4 py-3
-                     hover:bg-[#0A0A0A] hover:text-white
-                     hover:border hover:border-white
-                     flex items-center justify-center
-                     transition-colors duration-300 ease-in-out
-                     group mt-12"
+          className="relative mt-14 h-14 px-10
+                     bg-white text-black
+                     rounded-full
+                     text-lg font-medium
+                     flex items-center justify-center gap-3 mx-auto
+                     shadow-[0_8px_30px_rgba(0,0,0,0.25)]
+                     transition-all duration-300 ease-out
+                     hover:-translate-y-1
+                     hover:shadow-[0_15px_40px_rgba(0,0,0,0.35)]
+                     group"
         >
           Get Started
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            className="h-5 w-5 ml-2 transition-transform duration-500 ease-out group-hover:rotate-45"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"
-            />
-          </svg>
+          <span className="transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
         </button>
 
       </section>
@@ -115,11 +112,11 @@ export default function Home() {
         {[
           "AI Resume Analysis",
           "Personalized Learning Paths",
-          "Predictive Career Analytics"
+          "Predictive Career Analytics",
         ].map((title) => (
           <div
             key={title}
-            className="rounded-2xl bg-[#111111]
+            className="rounded-2xl bg-[#1A1A1A]
                        border border-neutral-800
                        p-8 hover:border-neutral-600
                        transition-all duration-300"
@@ -127,23 +124,32 @@ export default function Home() {
             <div className="h-40 bg-neutral-800 rounded-lg mb-6" />
             <h3 className="text-xl font-semibold mb-3">{title}</h3>
             <p className="text-neutral-400 text-sm">
-              Intelligent AI-powered module designed for workforce readiness.
+              Intelligent AI-powered module designed to enhance
+              career positioning and workforce readiness.
             </p>
           </div>
         ))}
 
       </section>
 
-      {/* ===== HOW IT WORKS ===== */}
-      <section id="how" className="relative z-10 mt-40 max-w-4xl mx-auto px-6 text-center">
+      {/* ===== INTELLIGENCE WORKFLOW ===== */}
+      <section id="workflow" className="relative z-10 mt-40 max-w-4xl mx-auto px-6 text-center">
 
-        <h3 className="text-3xl font-bold mb-10">How It Works</h3>
+        <h3 className="text-3xl font-semibold mb-8">
+          Intelligence Workflow
+        </h3>
+
+        <p className="text-neutral-400 leading-relaxed mb-12">
+          SkillMutant operates through a structured AI pipeline
+          that converts raw career data into strategic,
+          market-aligned insight.
+        </p>
 
         <div className="space-y-6 text-neutral-400 leading-relaxed">
-          <p>1. Upload your resume or workforce data.</p>
-          <p>2. AI analyzes skill gaps and market demand.</p>
-          <p>3. Get personalized learning and career projections.</p>
-          <p>4. Track progress with predictive analytics dashboard.</p>
+          <p><strong className="text-white">01.</strong> Resume and workforce data ingestion.</p>
+          <p><strong className="text-white">02.</strong> AI-driven skill mapping and market alignment.</p>
+          <p><strong className="text-white">03.</strong> Personalized learning pathway generation.</p>
+          <p><strong className="text-white">04.</strong> Predictive analytics for long-term growth.</p>
         </div>
 
       </section>
@@ -151,7 +157,7 @@ export default function Home() {
       {/* ===== CONTACT ===== */}
       <section id="contact" className="relative z-10 mt-40 mb-20 text-center">
 
-        <h3 className="text-3xl font-bold mb-6">Contact</h3>
+        <h3 className="text-3xl font-semibold mb-6">Contact</h3>
         <p className="text-neutral-400">Email: support@skillmutant.ai</p>
         <p className="text-neutral-400">LinkedIn: Kandelli Karthik</p>
 

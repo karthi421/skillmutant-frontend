@@ -160,3 +160,32 @@ export default function Dashboard() {
     </div>
   );
 }
+
+
+/*<button
+          onClick={() => router.push("/login")}
+          className="font-normal text-xl text-center bg-white rounded-full
+                     h-14 w-48 text-black px-4 py-3
+                     hover:bg-[#0A0A0A] hover:text-white
+                     hover:border hover:border-white
+                     flex items-center justify-center
+                     transition-colors duration-300 ease-in-out
+                     group mt-12"
+        >
+          Get Started
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="2"
+            stroke="currentColor"
+            className="h-5 w-5 ml-2 transition-transform duration-500 ease-out group-hover:rotate-45"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"
+            />
+          </svg>
+        </button>
+ */
