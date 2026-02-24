@@ -12,7 +12,10 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#141414] via-[#111111] to-[#1a1a1a] text-white">
+    <div className="relative min-h-screen w-full flex flex-col bg-[#111111] text-white">
+
+      {/* ===== FIXED BACKGROUND ===== */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#181818] via-[#111111] to-[#1c1c1c]" />
 
       {/* ===== NAVBAR ===== */}
       <div className="max-w-7xl mx-auto px-10 py-8 flex justify-between items-center">
@@ -151,7 +154,7 @@ export default function Home() {
       </section>
 
       {/* ===== CONTACT ===== */}
-      <section id="contact" className="mt-40 mb-20 text-center">
+      <section id="contact" className="mt-40 pb-32 text-center">
 
         <h3 className="text-3xl font-semibold mb-6">Contact</h3>
         <p className="text-neutral-400">Email: support@skillmutant.ai</p>

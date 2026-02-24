@@ -163,3 +163,9 @@ html, body {
 html {
   scroll-behavior: smooth;
 }
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #111111;
+  scroll-behavior: smooth;
+}
