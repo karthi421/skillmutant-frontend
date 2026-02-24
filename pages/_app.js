@@ -13,23 +13,26 @@ function AppContent({ Component, pageProps }) {
   const [mounted, setMounted] = useState(false);
 
   // 🔥 Ensure client-side only
-  useEffect(() => {
-    setMounted(true);
+useEffect(() => {
+  setMounted(true);
 
-    const wakeBackend = async () => {
-      setWarmingUp(true);
-      try {
-        await fetch("https://skillmutant-backend.onrender.com/ping");
-        await fetch("https://skillmutant-backend.onrender.com/warmup");
-      } catch (err) {
-        console.error("Warmup failed:", err);
-      } finally {
-        setWarmingUp(false);
-      }
-    };
+  const wakeBackend = async () => {
+    setWarmingUp(true);
 
-    wakeBackend();
-  }, []);
+    try {
+      await Promise.all([
+        fetch("https://skillmutant-backend.onrender.com/ping"),
+        fetch("https://skillmutant-backend.onrender.com/warmup"),
+      ]);
+    } catch (err) {
+      console.error("Warmup failed:", err);
+    } finally {
+      setWarmingUp(false);
+    }
+  };
+
+  wakeBackend();
+}, []);
 
   const hideChat =
     status !== "authenticated" ||
