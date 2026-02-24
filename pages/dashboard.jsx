@@ -17,38 +17,41 @@ export default function Home() {
       {/* ===== FIXED BACKGROUND ===== */}
       <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#181818] via-[#111111] to-[#1c1c1c]" />
 
-      {/* ===== NAVBAR ===== */}
-      <div className="max-w-7xl mx-auto px-10 py-8 flex justify-between items-center">
+      
+  {/* ===== NAVBAR ===== */}
+<div className="w-full px-12 py-8 flex items-center justify-between">
 
-        <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
-          Skill<span className="font-semibold">Mutant</span>
-        </h1>
+  {/* Left: Logo */}
+  <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
+    Skill<span className="font-semibold">Mutant</span>
+  </h1>
 
-        <div className="hidden md:flex gap-10 text-sm relative">
-          {navItems.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              onClick={() => setActive(item.id)}
-              className={`relative transition-all duration-300 ${
-                active === item.id
-                  ? "text-white"
-                  : "text-neutral-400 hover:text-white"
-              }`}
-            >
-              {item.label}
+  {/* Right: Navigation */}
+  <div className="hidden md:flex gap-10 text-sm relative">
+    {navItems.map((item) => (
+      <a
+        key={item.id}
+        href={`#${item.id}`}
+        onClick={() => setActive(item.id)}
+        className={`relative transition-all duration-300 ${
+          active === item.id
+            ? "text-white"
+            : "text-neutral-400 hover:text-white"
+        }`}
+      >
+        {item.label}
 
-              {active === item.id && (
-                <motion.div
-                  layoutId="navIndicator"
-                  className="absolute -bottom-2 left-0 right-0 h-[2px] bg-white"
-                />
-              )}
-            </a>
-          ))}
-        </div>
-      </div>
+        {active === item.id && (
+          <motion.div
+            layoutId="navIndicator"
+            className="absolute -bottom-2 left-0 right-0 h-[2px] bg-white"
+          />
+        )}
+      </a>
+    ))}
+  </div>
 
+</div>
       {/* ===== HERO ===== */}
       <section id="home" className="text-center mt-32 px-6">
 
@@ -67,6 +70,7 @@ export default function Home() {
         </p>
 
         <button
+          onClick={() => router.push("/student")}
           className="relative mt-14 h-14 px-10
                      bg-white text-black
                      rounded-full
