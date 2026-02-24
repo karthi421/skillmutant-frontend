@@ -1,159 +1,148 @@
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-export default function Dashboard() {
+export default function Home() {
   const router = useRouter();
 
+  useEffect(() => {
+    document.documentElement.style.scrollBehavior = "smooth";
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#020617] via-[#020617] to-[#0f172a] text-white flex justify-center">
-      
-      <div className="w-[90%] max-w-6xl py-20 space-y-24">
+    <div className="relative min-h-screen bg-black text-white overflow-hidden">
 
-        {/* ================= HEADER ================= */}
-        <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-wide">
-            Skill<span className="text-cyan-400">Mutant</span>
-          </h1>
-          <p className="text-slate-400 mt-3 max-w-2xl mx-auto">
-            AI Skill Intelligence & Career Evolution Platform
-          </p>
-        </div>
+      {/* ================= BACKGROUND GLOW ================= */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-black to-black"></div>
 
-        {/* ================= ROLE SELECTION ================= */}
-        <div className="flex justify-center gap-8">
+      <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-cyan-500/20 rounded-full blur-[160px]"></div>
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[160px]"></div>
 
-          {/* Student */}
-          <button
-            onClick={() => router.push("/student")}
-            className="glass-card w-72 text-left hover:border-cyan-400"
-          >
-            <h3 className="text-2xl font-bold mb-2">👨‍🎓 Student</h3>
-            <p className="card-text">
-              Upload resume, analyze skills, get learning paths and career insights.
-            </p>
-          </button>
+      {/* ================= NAVBAR ================= */}
+      <div className="relative flex justify-between items-center px-12 py-8 max-w-7xl mx-auto">
 
-          {/* HR */}
-          <button
-            onClick={() => router.push("/hr")}
-            className="glass-card w-72 text-left hover:border-purple-400"
-          >
-            <h3 className="text-2xl font-bold mb-2">🧑‍💼 HR</h3>
-            <p className="card-text">
-              Analyze talent, skill gaps, ATS scores, and workforce intelligence.
-            </p>
-          </button>
+        {/* Logo */}
+        <h1 className="text-xl font-light tracking-widest text-slate-300">
+          Skill<span className="text-cyan-400 font-medium">Mutant</span>
+        </h1>
+
+        {/* Center Pill Nav */}
+        <div className="hidden md:flex gap-8 items-center bg-white/5 px-10 py-3 rounded-full backdrop-blur-xl border border-white/10">
+
+          {["home", "features", "how", "contact"].map((id) => (
+            <a
+              key={id}
+              href={`#${id}`}
+              className="relative px-3 py-1 text-sm font-medium text-slate-300
+                         hover:text-cyan-400 transition-all duration-300"
+            >
+              {id === "how" ? "How it works" : id.charAt(0).toUpperCase() + id.slice(1)}
+            </a>
+          ))}
 
         </div>
 
-        {/* ================= FEATURE CARDS ================= */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-          <div className="glass-card">
-            <h3 className="card-title">Skill Analysis</h3>
-            <p className="card-text">
-              Resume-based skill extraction, grading, and intelligent visualization
-              to help users understand their true technical standing.
-            </p>
-          </div>
-
-          <div className="glass-card">
-            <h3 className="card-title">Learning Intelligence</h3>
-            <p className="card-text">
-              AI-powered learning paths with curated courses, certifications,
-              and future-ready skill recommendations.
-            </p>
-          </div>
-
-          <div className="glass-card">
-            <h3 className="card-title">Career Matching</h3>
-            <p className="card-text">
-              Smart job discovery aligned with your skills using real-time
-              data from global hiring platforms.
-            </p>
-          </div>
-
-          <div className="glass-card md:col-span-3">
-            <h3 className="card-title">Future Workspace</h3>
-            <p className="card-text">
-              Collaborative learning rooms, HR analytics dashboards, ATS scoring,
-              resume optimization, and enterprise-level workforce insights.
-            </p>
-          </div>
-
-        </div>
-
-        {/* ================= USER GUIDE ================= */}
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6">
-            How to Use SkillMutant
-          </h2>
-
-          <p className="text-slate-300 leading-relaxed text-[15px]">
-            SkillMutant is designed to evolve your career intelligently.  
-            Start by navigating to the Student or HR workspace depending on your role.
-            Students can upload resumes to unlock AI-powered skill analysis, personalized
-            learning paths, certification recommendations, job matches, and ATS scoring.
-            HR professionals can analyze employee skill distributions, identify gaps,
-            monitor growth, and make data-driven upskilling decisions.
-            <br /><br />
-            This platform is not limited to resume analysis—it is a complete learning
-            and career intelligence ecosystem. Users will soon be able to collaborate
-            in learning rooms, track progress over time, and adapt dynamically to
-            future industry demands with AI guidance.
-          </p>
-        </div>
-
-        {/* ================= SPECIAL FEATURE ================= */}
-        <div className="glass-card max-w-5xl mx-auto text-center">
-          <h3 className="text-2xl font-bold mb-3 text-cyan-400">
-            What Makes SkillMutant Different?
-          </h3>
-          <p className="text-slate-300 leading-relaxed">
-            SkillMutant is not just a resume analyzer—it is a career evolution engine.
-            By combining AI-driven insights, real-world hiring data, collaborative learning,
-            and enterprise HR intelligence, SkillMutant adapts with you as technology evolves.
-          </p>
-        </div>
-
-        {/* ================= FOOTER ================= */}
-        <div className="border-t border-white/10 pt-10 text-center">
-          <p className="text-slate-400 text-sm">
-            Developed by <span className="text-cyan-400 font-semibold">Kandelli Karthik</span>
-          </p>
-          <p className="text-slate-500 text-xs mt-2">
-            SkillMutant © 2025 · AI + Web Startup Project
-          </p>
-        </div>
+        {/* Animated Login Button */}
+        <button
+          onClick={() => router.push("/login")}
+          className="relative px-6 py-2 rounded-full font-medium
+                     border border-white/20 bg-white/5 backdrop-blur-xl
+                     hover:scale-105 transition-all duration-300
+                     shadow-[0_0_25px_rgba(56,189,248,0.4)]"
+        >
+          <span className="relative z-10">Login</span>
+          <span className="absolute inset-0 rounded-full animate-pulseGlow"></span>
+        </button>
 
       </div>
 
-      {/* ================= STYLES ================= */}
+      {/* ================= HERO ================= */}
+      <div id="home" className="relative text-center mt-32 px-6 max-w-5xl mx-auto">
+
+        <h2 className="text-6xl md:text-7xl font-extrabold leading-tight">
+          SkillMutant
+        </h2>
+
+        <h3 className="text-4xl md:text-5xl font-bold text-slate-300 mt-6">
+          Evolve Your Skills. Accelerate Your Career.
+        </h3>
+
+        <p className="text-slate-400 mt-8 text-lg leading-relaxed max-w-3xl mx-auto">
+          AI-powered skill intelligence, resume analysis, learning paths,
+          ATS scoring, and workforce analytics — all in one intelligent platform.
+        </p>
+
+        {/* Animated Get Started Button */}
+        <button
+          onClick={() => router.push("/login")}
+          className="mt-12 px-12 py-4 rounded-full
+                     bg-gradient-to-r from-cyan-500 to-blue-500
+                     text-white font-semibold text-lg
+                     hover:scale-105 transition-all duration-300
+                     shadow-[0_0_40px_rgba(56,189,248,0.6)]
+                     animate-gradientMove"
+        >
+          Get Started →
+        </button>
+
+      </div>
+
+      {/* ================= FEATURES SECTION ================= */}
+      <div id="features" className="relative mt-40 max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+
+        {[
+          {
+            title: "Skill Intelligence",
+            desc: "AI resume-based skill extraction and intelligent grading."
+          },
+          {
+            title: "Learning Evolution",
+            desc: "Personalized AI learning paths with certifications."
+          },
+          {
+            title: "Career Matching",
+            desc: "Smart job alignment powered by real-time hiring data."
+          }
+        ].map((item) => (
+          <div
+            key={item.title}
+            className="bg-white/5 backdrop-blur-xl p-8 rounded-2xl
+                       border border-white/10
+                       hover:shadow-[0_0_40px_rgba(56,189,248,0.2)]
+                       hover:-translate-y-2 transition-all duration-300"
+          >
+            <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+            <p className="text-slate-400">{item.desc}</p>
+          </div>
+        ))}
+
+      </div>
+
+      {/* ================= FOOTER ================= */}
+      <div className="mt-40 border-t border-white/10 py-10 text-center text-slate-400 text-sm">
+        SkillMutant © 2025 · Developed by Kandelli Karthik
+      </div>
+
+      {/* ================= ANIMATIONS ================= */}
       <style jsx>{`
-        .glass-card {
-          background: rgba(255, 255, 255, 0.06);
-          backdrop-filter: blur(18px);
-          border-radius: 20px;
-          padding: 28px;
-          box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          transition: all 0.3s ease;
+        @keyframes gradientMove {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
         }
 
-        .glass-card:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 40px 100px rgba(56, 189, 248, 0.15);
+        .animate-gradientMove {
+          background-size: 200% 200%;
+          animation: gradientMove 5s ease infinite;
         }
 
-        .card-title {
-          font-size: 20px;
-          font-weight: 700;
-          margin-bottom: 8px;
+        @keyframes pulseGlow {
+          0% { box-shadow: 0 0 0 rgba(56,189,248,0.0); }
+          50% { box-shadow: 0 0 25px rgba(56,189,248,0.6); }
+          100% { box-shadow: 0 0 0 rgba(56,189,248,0.0); }
         }
 
-        .card-text {
-          color: #cbd5f5;
-          font-size: 14px;
-          line-height: 1.6;
+        .animate-pulseGlow {
+          animation: pulseGlow 3s infinite;
         }
       `}</style>
 
