@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-
+import { useRouter } from "next/router";
 export default function Home() {
+  const router = useRouter();
   const [active, setActive] = useState("home");
-
+ 
   const navItems = [
     { id: "home", label: "Home" },
     { id: "features", label: "Features" },
