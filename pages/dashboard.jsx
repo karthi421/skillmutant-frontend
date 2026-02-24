@@ -1,169 +1,123 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const router = useRouter();
 
-  useEffect(() => {
-    document.documentElement.style.scrollBehavior = "smooth";
-  }, []);
-
   return (
-    <div className="relative min-h-screen bg-[#0a0a0f] text-white overflow-hidden">
+    <div className="relative min-h-screen bg-[#050508] text-white overflow-hidden">
 
-      {/* ===== Subtle Grid Background ===== */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
+      {/* ===== Animated Background Light ===== */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 2 }}
+        className="absolute inset-0"
+      >
+        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-cyan-500/10 rounded-full blur-[180px] animate-pulseSlow" />
+      </motion.div>
 
       {/* ===== NAVBAR ===== */}
-      <div className="relative max-w-7xl mx-auto px-10 py-8 flex justify-between items-center">
+      <div className="relative max-w-7xl mx-auto px-10 py-8 flex justify-between items-center z-10">
 
-        <h1 className="text-xl tracking-widest font-semibold">
-          Skill<span className="text-cyan-400">Mutant</span>
-        </h1>
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-xl tracking-widest font-light"
+        >
+          Skill<span className="text-cyan-400 font-medium">Mutant</span>
+        </motion.h1>
 
-        <div className="hidden md:flex gap-10 text-sm text-slate-400">
+        <div className="flex items-center gap-8 text-sm text-slate-400">
           <a href="#features" className="hover:text-white transition">Features</a>
-          <a href="#platform" className="hover:text-white transition">Platform</a>
           <a href="#about" className="hover:text-white transition">About</a>
-        </div>
 
-        <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            onClick={() => router.push("/login")}
+            className="px-6 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:border-cyan-400 transition-all"
+          >
+            Login
+          </motion.button>
+        </div>
+      </div>
+
+      {/* ===== HERO SECTION ===== */}
+      <div className="relative flex flex-col items-center justify-center text-center px-6 mt-32 z-10">
+
+        <motion.h2
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-6xl md:text-8xl font-extrabold leading-tight tracking-tight"
+        >
+          Intelligence for the
+          <br />
+          <span className="text-cyan-400">Future Workforce.</span>
+        </motion.h2>
+
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2 }}
+          className="text-slate-400 mt-8 text-lg max-w-2xl leading-relaxed"
+        >
+          SkillMutant transforms resumes into predictive career intelligence,
+          adaptive learning systems, and AI-powered workforce insights.
+        </motion.p>
+
+        {/* Premium Floating CTA */}
+        <motion.button
+          whileHover={{ scale: 1.07 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => router.push("/login")}
-          className="px-6 py-2 rounded-md border border-white/20
-                     hover:border-cyan-400 hover:text-cyan-400
+          className="mt-12 px-12 py-4 rounded-full text-lg font-semibold
+                     bg-gradient-to-r from-cyan-500 to-blue-500
+                     shadow-[0_0_50px_rgba(56,189,248,0.5)]
                      transition-all duration-300"
         >
-          Login
-        </button>
+          Get Started
+        </motion.button>
+
       </div>
 
-      {/* ===== HERO ===== */}
-      <div className="relative max-w-7xl mx-auto px-10 mt-24 grid md:grid-cols-2 gap-16 items-center">
+      {/* ===== FEATURES SECTION ===== */}
+      <div id="features" className="relative max-w-6xl mx-auto mt-48 px-6 grid md:grid-cols-3 gap-12 z-10">
 
-        {/* Left Content */}
-        <div>
-
-          <p className="text-cyan-400 text-sm tracking-wider uppercase">
-            AI Career Intelligence Platform
-          </p>
-
-          <h2 className="text-6xl md:text-7xl font-black mt-6 leading-tight tracking-tight">
-            Transform Skills
-            <br />
-            Into Strategic Advantage.
-          </h2>
-
-          <p className="text-slate-400 mt-8 text-lg leading-relaxed max-w-xl">
-            SkillMutant analyzes resumes, maps skill gaps, predicts career
-            trajectories, and delivers AI-driven learning intelligence —
-            built for the future workforce.
-          </p>
-
-          <div className="mt-10 flex gap-6">
-
-            <button
-              onClick={() => router.push("/login")}
-              className="px-8 py-4 bg-cyan-500 hover:bg-cyan-400
-                         text-black font-semibold rounded-md
-                         transition-all duration-300 hover:scale-105"
-            >
-              Get Started
-            </button>
-
-            <button
-              onClick={() => router.push("/student")}
-              className="px-8 py-4 border border-white/20
-                         hover:border-cyan-400
-                         rounded-md transition-all duration-300"
-            >
-              Explore Platform
-            </button>
-
-          </div>
-
-        </div>
-
-        {/* Right Visual Panel */}
-        <div className="relative">
-
-          <div className="bg-white/5 border border-white/10
-                          backdrop-blur-xl rounded-xl p-10
-                          shadow-[0_0_60px_rgba(0,255,255,0.08)]">
-
-            <h3 className="text-xl font-semibold mb-6">
-              Live Intelligence Snapshot
+        {[
+          {
+            title: "AI Skill Mapping",
+            desc: "Deep resume intelligence with predictive gap analysis."
+          },
+          {
+            title: "Adaptive Learning Engine",
+            desc: "Dynamic career pathways aligned with market demand."
+          },
+          {
+            title: "Predictive Career Analytics",
+            desc: "Future role alignment powered by AI modeling."
+          }
+        ].map((item, index) => (
+          <motion.div
+            key={item.title}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: index * 0.2 }}
+            viewport={{ once: true }}
+            className="p-8 rounded-2xl bg-white/5 backdrop-blur-md
+                       border border-white/10
+                       hover:border-cyan-400
+                       transition-all duration-300"
+          >
+            <h3 className="text-xl font-semibold mb-4">
+              {item.title}
             </h3>
-
-            <div className="space-y-4 text-slate-400 text-sm">
-
-              <div className="flex justify-between">
-                <span>Skill Match Score</span>
-                <span className="text-cyan-400 font-medium">87%</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span>Market Demand Index</span>
-                <span className="text-cyan-400 font-medium">High</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span>Learning Optimization</span>
-                <span className="text-cyan-400 font-medium">Active</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span>Career Projection</span>
-                <span className="text-cyan-400 font-medium">Upward</span>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* ===== FEATURES ===== */}
-      <div id="features" className="relative max-w-7xl mx-auto px-10 mt-40">
-
-        <h3 className="text-3xl font-bold mb-12">
-          Core Intelligence Modules
-        </h3>
-
-        <div className="grid md:grid-cols-3 gap-10">
-
-          {[
-            {
-              title: "Skill Mapping Engine",
-              desc: "Extract and visualize technical competencies with AI precision."
-            },
-            {
-              title: "Adaptive Learning System",
-              desc: "Personalized pathways aligned with global market trends."
-            },
-            {
-              title: "Predictive Career Analytics",
-              desc: "AI forecasting for role alignment and workforce readiness."
-            }
-          ].map((item) => (
-            <div
-              key={item.title}
-              className="border border-white/10 rounded-xl p-8
-                         hover:border-cyan-400
-                         transition-all duration-300"
-            >
-              <h4 className="text-lg font-semibold mb-4">
-                {item.title}
-              </h4>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                {item.desc}
-              </p>
-            </div>
-          ))}
-
-        </div>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              {item.desc}
+            </p>
+          </motion.div>
+        ))}
 
       </div>
 
@@ -171,6 +125,19 @@ export default function Home() {
       <div className="mt-40 border-t border-white/10 py-8 text-center text-slate-500 text-sm">
         SkillMutant © 2025 · Built by Kandelli Karthik
       </div>
+
+      {/* ===== EXTRA ANIMATION ===== */}
+      <style jsx>{`
+        @keyframes pulseSlow {
+          0% { transform: translate(-50%, 0) scale(1); }
+          50% { transform: translate(-50%, 20px) scale(1.05); }
+          100% { transform: translate(-50%, 0) scale(1); }
+        }
+
+        .animate-pulseSlow {
+          animation: pulseSlow 8s ease-in-out infinite;
+        }
+      `}</style>
 
     </div>
   );
