@@ -80,39 +80,37 @@ export default function ResumeCoreCard({ onAnalyze }) {
     }
   };
 
-  return (
-    <div className="max-w-2xl mx-auto mt-20 px-8 py-12
-                    rounded-2xl
-                    bg-[#1c1c1c]
-                    border border-neutral-800
-                    shadow-xl text-center">
+ return (
+  <div className="max-w-4xl mx-auto mt-24 px-10 py-12
+                  bg-[#141414]
+                  border border-neutral-800
+                  shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
 
-      {/* TITLE */}
-      <h2 className="text-3xl font-semibold mb-4">
-        Resume Intelligence Engine
+    {/* HEADER */}
+    <div className="border-b border-neutral-800 pb-6 mb-10">
+      <h2 className="text-2xl font-semibold tracking-wide">
+        Resume Intelligence Core
       </h2>
-
-      <p className="text-neutral-400 text-sm max-w-md mx-auto mb-10">
-        Upload your resume to generate structured AI insights,
-        skill mapping, ATS scoring, and predictive role alignment.
+      <p className="text-neutral-500 text-sm mt-2 max-w-lg">
+        Submit your resume to activate AI-powered structural parsing,
+        ATS diagnostics, and role prediction modeling.
       </p>
+    </div>
 
-      {/* FILE DROP ZONE */}
-      <label className="block cursor-pointer">
-        <div className="border-2 border-dashed border-neutral-700
-                        rounded-xl py-10 px-6
-                        transition-colors duration-300
+    {/* UPLOAD SECTION */}
+    <div className="flex flex-col md:flex-row items-center gap-6">
+
+      {/* FILE INPUT */}
+      <label className="flex-1 cursor-pointer">
+        <div className="h-14 flex items-center px-5
+                        border border-neutral-700
+                        bg-[#0f0f0f]
+                        transition-all duration-200
                         hover:border-white">
 
-          <p className="text-neutral-400 text-sm">
-            {file ? (
-              <span className="text-white font-medium">
-                {file.name}
-              </span>
-            ) : (
-              "Drag & drop your PDF resume here or click to browse"
-            )}
-          </p>
+          <span className="text-sm text-neutral-400 truncate">
+            {file ? file.name : "Select resume (PDF format only)"}
+          </span>
 
           <input
             type="file"
@@ -123,20 +121,23 @@ export default function ResumeCoreCard({ onAnalyze }) {
         </div>
       </label>
 
-      {/* BUTTON */}
+      {/* ANALYZE BUTTON */}
       <button
         onClick={handleUpload}
         disabled={loading}
-        className="mt-10 w-full py-3 rounded-full
-                   bg-white text-black font-medium
+        className="h-14 px-8
+                   bg-white text-black
+                   font-medium
                    transition-all duration-200
                    hover:-translate-y-[1px]
                    hover:shadow-md
                    disabled:opacity-50"
       >
-        {loading ? "Analyzing Resume..." : "Analyze Resume"}
+        {loading ? "Processing..." : "Run Analysis"}
       </button>
 
     </div>
-  );
+
+  </div>
+);
 }
