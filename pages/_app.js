@@ -1,5 +1,4 @@
 import "../styles/globals.css";
-
 import { SessionProvider, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -9,13 +8,21 @@ function AppContent({ Component, pageProps }) {
   const { status } = useSession();
   const router = useRouter();
   const path = router.asPath;
+  const [warmingUp, setWarmingUp] = useState(true);
     // 🔥 ADD THIS WAKEUP EFFECT
-  useEffect(() => {
-    fetch("https://skillmutant-backend.onrender.com/ping")
-      .catch(() => {});
+useEffect(() => {
+    const wakeBackend = async () => {
+      try {
+        await fetch("https://skillmutant-backend.onrender.com/ping");
+        await fetch("https://skillmutant-backend.onrender.com/warmup");
+      } catch (err) {
+        console.error("Warmup failed:", err);
+      } finally {
+        setWarmingUp(false);
+      }
+    };
 
-    fetch("https://skillmutant-backend.onrender.com/warmup")
-      .catch(() => {});
+    wakeBackend();
   }, []);
   // Hide chatbot when:
   // 1. User is NOT authenticated
@@ -24,6 +31,16 @@ function AppContent({ Component, pageProps }) {
     status !== "authenticated" ||
     path.startsWith("/room") ||
     path.startsWith("/mockinterview");
+  
+  // 🔥 Show spinner while warming up
+  if (warmingUp) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-emerald-500"></div>
+        <span className="ml-4">Waking up server...</span>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -13,20 +13,24 @@ export default function Home() {
   });
 
   /* ================= PASSWORD LOGIN ================= */
- const handlePasswordLogin = async () => {
+const handlePasswordLogin = async () => {
   if (!form.email || !form.password) {
     alert("Email and password required");
     return;
   }
 
-  try {
-    const data = await apiFetch("/api/auth/login", {
+  const attemptLogin = async () => {
+    return await apiFetch("/api/auth/login", {
       method: "POST",
       body: JSON.stringify({
         email: form.email,
         password: form.password,
       }),
     });
+  };
+
+  try {
+    const data = await attemptLogin();
 
     if (!data?.token) {
       alert(data?.error || "Login failed");
@@ -37,8 +41,25 @@ export default function Home() {
     router.push("/dashboard");
 
   } catch (err) {
-    console.error(err);
-    alert("Server error");
+    console.warn("First login attempt failed. Retrying...");
+
+    try {
+      // Wait 2 seconds before retry
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const retryData = await attemptLogin();
+
+      if (!retryData?.token) {
+        alert("Invalid credentials");
+        return;
+      }
+
+      localStorage.setItem("token", retryData.token);
+      router.push("/dashboard");
+
+    } catch (retryErr) {
+      alert("Server waking up. Please try again.");
+    }
   }
 };
 
