@@ -81,62 +81,60 @@ export default function ResumeCoreCard({ onAnalyze }) {
   };
 
  return (
-  <div className="max-w-4xl mx-auto mt-24 px-10 py-12
-                  bg-[#141414]
+  <div className="max-w-3xl mx-auto mt-20 px-10 py-12
+                  rounded-2xl
+                  bg-[#1c1c1c]
                   border border-neutral-800
-                  shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+                  shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
 
-    {/* HEADER */}
-    <div className="border-b border-neutral-800 pb-6 mb-10">
-      <h2 className="text-2xl font-semibold tracking-wide">
-        Resume Intelligence Core
-      </h2>
-      <p className="text-neutral-500 text-sm mt-2 max-w-lg">
-        Submit your resume to activate AI-powered structural parsing,
-        ATS diagnostics, and role prediction modeling.
-      </p>
-    </div>
+    {/* SMALL LABEL */}
+    <p className="text-xs tracking-widest text-neutral-500 mb-4">
+      RESUME UPLOAD
+    </p>
 
-    {/* UPLOAD SECTION */}
-    <div className="flex flex-col md:flex-row items-center gap-6">
+    {/* FILE ROW */}
+    <div className="flex items-center gap-6 mb-8">
 
-      {/* FILE INPUT */}
-      <label className="flex-1 cursor-pointer">
-        <div className="h-14 flex items-center px-5
+      <label className="cursor-pointer">
+        <div className="px-6 py-3
+                        bg-[#111111]
                         border border-neutral-700
-                        bg-[#0f0f0f]
+                        rounded-full
+                        text-sm
                         transition-all duration-200
                         hover:border-white">
-
-          <span className="text-sm text-neutral-400 truncate">
-            {file ? file.name : "Select resume (PDF format only)"}
-          </span>
-
-          <input
-            type="file"
-            accept=".pdf"
-            onChange={(e) => setFile(e.target.files[0])}
-            className="hidden"
-          />
+          Choose File
         </div>
+
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={(e) => setFile(e.target.files[0])}
+          className="hidden"
+        />
       </label>
 
-      {/* ANALYZE BUTTON */}
-      <button
-        onClick={handleUpload}
-        disabled={loading}
-        className="h-14 px-8
-                   bg-white text-black
-                   font-medium
-                   transition-all duration-200
-                   hover:-translate-y-[1px]
-                   hover:shadow-md
-                   disabled:opacity-50"
-      >
-        {loading ? "Processing..." : "Run Analysis"}
-      </button>
+      <span className="text-neutral-400 text-sm truncate max-w-xs">
+        {file ? file.name : "No file selected"}
+      </span>
 
     </div>
+
+    {/* ACTION BUTTON */}
+    <button
+      onClick={handleUpload}
+      disabled={loading}
+      className="w-full py-4
+                 rounded-full
+                 bg-white text-black
+                 font-medium
+                 transition-all duration-200
+                 hover:-translate-y-[1px]
+                 hover:shadow-md
+                 disabled:opacity-50"
+    >
+      {loading ? "Analyzing Resume..." : "Upload & Analyze"}
+    </button>
 
   </div>
 );
