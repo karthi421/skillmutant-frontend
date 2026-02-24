@@ -236,403 +236,265 @@ useEffect(() => {
 }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#020617] to-[#0f172a] text-white">
+  <div className="min-h-screen bg-[#111111] text-white">
+    <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#181818] via-[#111111] to-[#1c1c1c]" />
 
-      {/* ===== HEADER ===== */}
-      <StudentHeader />
+    {/* ===== HEADER ===== */}
+    <StudentHeader />
 
-      {/* ===== SIDEBAR (ONLY ONCE — FIXED) ===== */}
-      {sidebarOpen && (
-        <StudentSidebar
-  onClose={() => setSidebarOpen(false)}
-  onOpenAccount={() => {
-    setAccountOpen(true);
-    setSidebarOpen(false);
-  }}
-  onOpenJobs={() => {
-    setJobsOpen(true);
-    setSidebarOpen(false);
-  }}
-  interviewCount={interviewCount}
-   onOpenNotes={(mode) => {
-      setNotesMode(mode);     // ✅ now defined
-      setNotesOpen(true);
-      setSidebarOpen(false);
-    }}
-    onOpenQuizzes={() => {
-      setQuizzesOpen(true);
-    }}
-/>
-
+    {/* ===== SIDEBAR ===== */}
+    {sidebarOpen && (
+      <StudentSidebar
+        onClose={() => setSidebarOpen(false)}
+        onOpenAccount={() => {
+          setAccountOpen(true);
+          setSidebarOpen(false);
+        }}
+        onOpenJobs={() => {
+          setJobsOpen(true);
+          setSidebarOpen(false);
+        }}
+        interviewCount={interviewCount}
+        onOpenNotes={(mode) => {
+          setNotesMode(mode);
+          setNotesOpen(true);
+          setSidebarOpen(false);
+        }}
+        onOpenQuizzes={() => setQuizzesOpen(true)}
+      />
     )}
 
-      {/* ===== ACCOUNT PANEL ===== */}
-      {/* ===== ACCOUNT PANEL ===== */}
-<StudentAccountPanel
-  open={accountOpen}
-  onClose={() => setAccountOpen(false)}
-/>
+    <StudentAccountPanel
+      open={accountOpen}
+      onClose={() => setAccountOpen(false)}
+    />
 
-{/* ===== JOBS PANEL ===== */}
-{jobsOpen && (
-  <JobsPanel
-    onClose={() => setJobsOpen(false)}
-  />
-)}
-{notesOpen && (
-  <NotesPanel
-    mode={notesMode}
-    onClose={() => setNotesOpen(false)}
-  />
-)}
+    {jobsOpen && <JobsPanel onClose={() => setJobsOpen(false)} />}
+    {notesOpen && (
+      <NotesPanel mode={notesMode} onClose={() => setNotesOpen(false)} />
+    )}
+    {quizzesOpen && <QuizPanel onClose={() => setQuizzesOpen(false)} />}
 
-{quizzesOpen && (
-  <QuizPanel onClose={() => setQuizzesOpen(false)} />
-)}
-      {/* ===== SIDEBAR TOGGLE (AFTER RESUME ANALYSIS) ===== */}
-     
-        <button
-  onClick={() => setSidebarOpen(true)}
-  className="
-    fixed top-20 left-4 z-40
-    bg-slate-800/80 backdrop-blur
-    px-3 py-2 rounded-md
-    hover:bg-slate-700 transition
-  "
->
-  MENU ☰
-</button>
+    {/* ===== MENU BUTTON ===== */}
+    <button
+      onClick={() => setSidebarOpen(true)}
+      className="fixed top-20 left-6 z-40
+                 bg-[#1c1c1c] border border-neutral-700
+                 px-4 py-2 rounded-lg text-sm
+                 hover:border-white transition-all duration-200"
+    >
+      MENU ☰
+    </button>
 
-   
+    {/* ===== MAIN CONTENT ===== */}
+    <div className="max-w-7xl mx-auto px-6 py-16 space-y-24">
 
-      {/* ===== MAIN CONTENT ===== */}
-      <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
+      {/* ===== RESUME UPLOAD ===== */}
+      {!analysis && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+        >
+          <ResumeCoreCard onAnalyze={setAnalysis} />
+        </motion.div>
+      )}
 
-        {/* ===== RESUME UPLOAD ===== */}
-        {!analysis && (
-          <motion.div
+      {/* ===== ANALYSIS CONTENT ===== */}
+      {analysis && (
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="space-y-24"
+        >
+
+          {/* ===== CINEMATIC HERO SUMMARY ===== */}
+          <motion.section
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.8 }}
+            className="relative overflow-hidden rounded-3xl
+                       bg-gradient-to-br from-[#1a1a1a] to-[#111111]
+                       border border-neutral-800
+                       p-16"
           >
-            <ResumeCoreCard onAnalyze={setAnalysis} />
-          </motion.div>
-        )}
-        
-        
-        {analysis && (
-          <>
-          {/* ===== AI RESUME ANALYSIS ===== */}
-<motion.section {...scrollAnim}>
-  <ResumeAnalysis
-    skills={analysis.skills || analysis.extracted_skills || []}
-    skillQuality={skillQuality}
-    loading={false}
-  />
-</motion.section>
+            <div className="absolute inset-0
+                            bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_40%)]" />
 
-{/* ===== AI RESUME INSIGHTS ===== */}
-<motion.section {...scrollAnim}>
- <ResumeInsights
-  roleMatch={roleMatch}
-  loading={false}
-  onStartLearning={() => {
-    skillAccelerationRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  }}
-/>
+            <div className="relative z-10">
+              <p className="text-sm tracking-widest text-neutral-500 mb-4">
+                RESUME INTELLIGENCE ACTIVATED
+              </p>
 
+              <h1 className="text-5xl md:text-6xl font-bold mb-6">
+                {analysis.best_role}
+              </h1>
 
-
-</motion.section>
-{/* ===== TOGGLE BUTTON ===== */}
-<div className="flex justify-end mb-4">
-  <button
-    onClick={() => setShowSkillDetails(!showSkillDetails)}
-    className="
-      text-sm px-3 py-1 rounded-md
-      bg-slate-800 border border-slate-600
-      hover:bg-slate-700 transition
-    "
-  >
-    {showSkillDetails ? "Hide Skill Details" : "Explore Skill Details"}
-  </button>
-</div>
-
-<motion.section {...scrollAnim} className="space-y-6">
-  {/* ===== SUMMARY ROW ===== */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <SkillGraph score={analysis.ats_score} />
-
-    <SkillGraphAnalysis
-      roleMatch={roleMatch}
-      skillQuality={skillQuality}
-      atsScore={analysis.ats_score}
-    />
-  </div>
-
-  {/* ===== TOGGLE ===== */}
-  
-
-  {/* ===== DETAILS (OPTIONAL) ===== */}
-  <AnimatePresence>
-  {showSkillDetails && (
-    <motion.div
-      key="skill-details"
-      initial={{ height: 0, opacity: 0 }}
-      animate={{ height: "auto", opacity: 1 }}
-      exit={{ height: 0, opacity: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      className="overflow-hidden"
-    >
-      <SkillVisualization
-        categories={analysis.categories}
-        confidence={analysis.confidence}
-      />
-    </motion.div>
-  )}
-</AnimatePresence>
-
-</motion.section>
-
-
-    <motion.section {...scrollAnim}>
-        <LearningPath
-          currentSkills={analysis.current_skills}
-          targetRole={analysis.target_role}
-        />
-    </motion.section>
-
-   
-  
-           
-<motion.section
-  {...scrollAnim}
-  className="glass-card p-6 border border-cyan-400/15"
->
-  {/* ===== HEADER ===== */}
-  <h2 className="text-xl font-semibold mb-1">
-    ATS Compatibility
-  </h2>
-
-  <p className="text-xs text-slate-400 mb-3">
-    ATS systems analyze resume structure, keywords, and formatting — not visual design.
-  </p>
-
-  <div className="flex items-center gap-4 mb-6">
-    <p className="text-4xl font-bold text-cyan-400">
-      {analysis.ats_score}%
-    </p>
-
-    <p className="text-sm text-slate-400">
-      {analysis.ats_verdict}
-    </p>
-  </div>
-
-  {/* ===== BEFORE / AFTER GRID ===== */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-    {/* ❌ BEFORE — ATS ISSUES */}
-    <div className="border border-red-500/30 bg-red-500/5 rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-red-400 mb-3">
-        ❌ Uploaded Resume (ATS Issues)
-      </h3>
-
-      <ResumePDFPreview
-        title="Uploaded Resume"
-        accent="red"
-        mode="before"
-        checklist={analysis.ats_checklist}
-        description="Red tags highlight ATS-detected issues such as missing keywords, weak structure, or formatting problems."
-      />
-
-      <ul className="space-y-2 text-sm mt-4">
-        {analysis.ats_checklist.map((item, i) => (
-          <li key={i} className="flex flex-col">
-            <span
-              className={
-                item.status ? "text-slate-400" : "text-red-400"
-              }
-            >
-              {item.status ? "✔" : "✘"} {item.item}
-            </span>
-
-            {!item.status && item.fix && (
-              <span className="text-xs text-red-300 ml-4">
-                Problem: {item.fix}
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-
-    {/* ✅ AFTER — ATS OPTIMIZED */}
-    <div className="border border-green-500/30 bg-green-500/5 rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-green-400 mb-3">
-        ✅ ATS-Optimized View (Recommended)
-      </h3>
-
-      <ResumePDFPreview
-        title="ATS-Optimized Guidance"
-        accent="green"
-        mode="after"
-        checklist={analysis.ats_checklist}
-        description="Green tags represent how your resume aligns with ATS expectations after applying the recommended fixes."
-      />
-
-      <ul className="space-y-2 text-sm mt-4">
-        {analysis.ats_checklist.map((item, i) => (
-          <li key={i} className="text-green-400">
-            ✔ {item.item}
-          </li>
-        ))}
-      </ul>
-
-      <p className="text-xs text-slate-400 mt-3">
-        Apply these fixes to improve keyword matching, section clarity, and ATS readability.
-      </p>
-    </div>
-
-  </div>
-</motion.section>
-
- 
-<motion.section {...scrollAnim}>
-  <ResumeComparison />
-</motion.section>
-
-<motion.section {...scrollAnim}>
-  <SkillConfidenceGrowth />
-</motion.section>
-
-
-
-            <motion.section {...scrollAnim} className="glass-card p-6">
-              <h2 className="text-xl font-semibold mb-4">Project Intelligence</h2>
-              <ProjectIntelligence projects={analysis.projects} />
-            </motion.section>
-
-            <motion.section {...scrollAnim} className="glass-card p-6">
-  <h2 className="text-xl font-semibold mb-2">
-    Resume Optimization Insights
-  </h2>
-
-  <p className="text-xs text-slate-400 mb-4">
-    These insights are derived from ATS analysis, skill coverage,
-    and recruiter expectations — not generic advice.
-  </p>
-
-  <div className="space-y-3">
-    {insights.map((item, i) => (
-      <div
-        key={i}
-        className={`
-          flex gap-3 p-3 rounded-lg border
-          ${
-            item.level === "critical"
-              ? "border-red-500/30 bg-red-500/5"
-              : item.level === "improve"
-              ? "border-yellow-400/30 bg-yellow-400/5"
-              : "border-white/10 bg-white/5"
-          }
-        `}
-      >
-        <div className="text-lg">
-          {item.level === "critical"
-            ? "❌"
-            : item.level === "improve"
-            ? "⚠️"
-            : "ℹ️"}
-        </div>
-
-        <div>
-          <p className="text-sm leading-relaxed">
-            {item.text}
-          </p>
-
-          <p className="text-xs text-slate-400 mt-1">
-            {item.level === "critical"
-              ? "This issue significantly reduces ATS and recruiter confidence."
-              : item.level === "improve"
-              ? "Fixing this can noticeably improve your resume strength."
-              : "Optional optimization for stronger impact."}
-          </p>
-        </div>
-      </div>
-    ))}
-  </div>
-</motion.section>
-
-
-            <motion.section {...scrollAnim} className="glass-card p-6">
-              <h2 className="text-xl font-semibold mb-4">
-                AI-Generated Project Ideas
-              </h2>
-              {Object.entries(analysis.project_ideas).map(([level, ideas]) => (
-                <div key={level} className="mb-3">
-                  <p className="font-medium capitalize text-cyan-400 mb-1">
-                    {level}
+              <div className="flex flex-wrap gap-16 mt-6">
+                <div>
+                  <p className="text-neutral-500 text-sm mb-2">
+                    ATS SCORE
                   </p>
-                  <ul className="list-disc list-inside text-sm text-slate-300 space-y-1">
-                    {ideas.map((idea, i) => (
-                      <li key={i}>{idea}</li>
-                    ))}
-                  </ul>
+                  <p className="text-4xl font-bold">
+                    {analysis.ats_score}%
+                  </p>
                 </div>
-              ))}
-            {learningLoading && (
-            <motion.div
-              {...scrollAnim}
-                  className="glass-card p-6 border border-cyan-400/20"
+
+                <div>
+                  <p className="text-neutral-500 text-sm mb-2">
+                    ROLE MATCH
+                  </p>
+                  <p className="text-4xl font-bold">
+                    {roleMatch?.match || 0}%
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.section>
+
+          {/* ===== SKILL ANALYSIS ===== */}
+          <motion.section {...scrollAnim}>
+            <ResumeAnalysis
+              skills={analysis.skills || analysis.extracted_skills || []}
+              skillQuality={skillQuality}
+              loading={false}
+            />
+          </motion.section>
+
+          {/* ===== INSIGHTS ===== */}
+          <motion.section {...scrollAnim}>
+            <ResumeInsights
+              roleMatch={roleMatch}
+              loading={false}
+              onStartLearning={() =>
+                skillAccelerationRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                })
+              }
+            />
+          </motion.section>
+
+          {/* ===== SKILL GRAPH GRID ===== */}
+          <motion.section {...scrollAnim}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <SkillGraph score={analysis.ats_score} />
+              <SkillGraphAnalysis
+                roleMatch={roleMatch}
+                skillQuality={skillQuality}
+                atsScore={analysis.ats_score}
+              />
+            </div>
+          </motion.section>
+
+          {/* ===== SKILL DETAILS TOGGLE ===== */}
+          <div className="flex justify-end">
+            <button
+              onClick={() => setShowSkillDetails(!showSkillDetails)}
+              className="text-sm px-4 py-2 rounded-lg
+                         bg-[#1c1c1c] border border-neutral-700
+                         hover:border-white transition-all duration-200"
             >
-              <p className="text-cyan-300 animate-pulse">
-                🤖 AI is generating your personalized learning path...
-                </p>
-            </motion.div>
-        )}
- 
-            </motion.section>
+              {showSkillDetails
+                ? "Hide Skill Details"
+                : "Explore Skill Details"}
+            </button>
+          </div>
 
-         <motion.section {...scrollAnim}>
-              <AISkillAcceleration analysis={analysis} />
-        </motion.section>
+          <AnimatePresence>
+            {showSkillDetails && (
+              <motion.div
+                key="skill-details"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <SkillVisualization
+                  categories={analysis.categories}
+                  confidence={analysis.confidence}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
+          {/* ===== LEARNING ===== */}
+          <motion.section {...scrollAnim}>
+            <LearningPath
+              currentSkills={analysis.current_skills}
+              targetRole={analysis.target_role}
+            />
+          </motion.section>
 
+          {/* ===== ATS SECTION (CLEANED) ===== */}
+          <motion.section
+            {...scrollAnim}
+            className="p-10 rounded-3xl bg-[#1c1c1c] border border-neutral-800"
+          >
+            <h2 className="text-2xl font-semibold mb-6">
+              ATS Compatibility Report
+            </h2>
 
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <ResumePDFPreview
+                  title="Uploaded Resume"
+                  accent="red"
+                  mode="before"
+                  checklist={analysis.ats_checklist}
+                  description="ATS-detected structural and keyword issues."
+                />
+              </div>
 
-            <motion.section {...scrollAnim}>
-              <InterviewReadinessCard />
-            </motion.section>
+              <div>
+                <ResumePDFPreview
+                  title="Optimized Resume View"
+                  accent="green"
+                  mode="after"
+                  checklist={analysis.ats_checklist}
+                  description="How your resume should align with ATS systems."
+                />
+              </div>
+            </div>
+          </motion.section>
 
-            <motion.section {...scrollAnim}>
-              <InterviewRoadmap />
-            </motion.section>
+          {/* ===== REMAINING COMPONENTS ===== */}
+          <motion.section {...scrollAnim}>
+            <ResumeComparison />
+          </motion.section>
 
-            <motion.section {...scrollAnim}>
-              <AIJobRecommendations analysis={analysis} />
-            </motion.section>
+          <motion.section {...scrollAnim}>
+            <SkillConfidenceGrowth />
+          </motion.section>
 
-            <motion.section {...scrollAnim}>
-              <AIMockInterview analysis={analysis} />
-            </motion.section>
+          <motion.section {...scrollAnim}>
+            <AISkillAcceleration analysis={analysis} />
+          </motion.section>
 
-            <motion.section {...scrollAnim}>
-              <CollaborativeLearningRooms />
-            </motion.section>
+          <motion.section {...scrollAnim}>
+            <InterviewReadinessCard />
+          </motion.section>
 
-            
+          <motion.section {...scrollAnim}>
+            <InterviewRoadmap />
+          </motion.section>
 
-          </>
-  
+          <motion.section {...scrollAnim}>
+            <AIJobRecommendations analysis={analysis} />
+          </motion.section>
 
+          <motion.section {...scrollAnim}>
+            <AIMockInterview analysis={analysis} />
+          </motion.section>
 
-        )}
-      </div>
- 
+          <motion.section {...scrollAnim}>
+            <CollaborativeLearningRooms />
+          </motion.section>
+
+        </motion.div>
+      )}
     </div>
-  );
-
+  </div>
+);
 }
