@@ -1,17 +1,23 @@
 import "../styles/globals.css";
 import { SessionProvider, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ChatWidget from "../components/chat/ChatWidget";
 
 function AppContent({ Component, pageProps }) {
   const { status } = useSession();
   const router = useRouter();
   const path = router.asPath;
-  const [warmingUp, setWarmingUp] = useState(true);
-    // 🔥 ADD THIS WAKEUP EFFECT
-useEffect(() => {
+
+  const [warmingUp, setWarmingUp] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // 🔥 Ensure client-side only
+  useEffect(() => {
+    setMounted(true);
+
     const wakeBackend = async () => {
+      setWarmingUp(true);
       try {
         await fetch("https://skillmutant-backend.onrender.com/ping");
         await fetch("https://skillmutant-backend.onrender.com/warmup");
@@ -24,16 +30,14 @@ useEffect(() => {
 
     wakeBackend();
   }, []);
-  // Hide chatbot when:
-  // 1. User is NOT authenticated
-  // 2. On room or mockinterview pages
+
   const hideChat =
     status !== "authenticated" ||
     path.startsWith("/room") ||
     path.startsWith("/mockinterview");
-  
-  // 🔥 Show spinner while warming up
-  if (warmingUp) {
+
+  // 🔥 Only show spinner in browser (not during SSR build)
+  if (mounted && warmingUp) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-emerald-500"></div>
