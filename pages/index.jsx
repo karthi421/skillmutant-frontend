@@ -1,4 +1,3 @@
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { apiFetch } from "../lib/api";
@@ -6,31 +5,24 @@ import { apiFetch } from "../lib/api";
 export default function Home() {
   const router = useRouter();
 
-  /* ✅ SINGLE SOURCE OF TRUTH */
+  const [mode, setMode] = useState("login");
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  /* ================= PASSWORD LOGIN ================= */
-const handlePasswordLogin = async () => {
-  if (!form.email || !form.password) {
-    alert("Email and password required");
-    return;
-  }
+  /* ================= LOGIN ================= */
+  const handlePasswordLogin = async () => {
+    if (!form.email || !form.password) {
+      alert("Email and password required");
+      return;
+    }
 
-  const attemptLogin = async () => {
-    return await apiFetch("/api/auth/login", {
+    const data = await apiFetch("/api/auth/login", {
       method: "POST",
-      body: JSON.stringify({
-        email: form.email,
-        password: form.password,
-      }),
+      body: JSON.stringify(form),
     });
-  };
-
-  try {
-    const data = await attemptLogin();
 
     if (!data?.token) {
       alert(data?.error || "Login failed");
@@ -39,145 +31,145 @@ const handlePasswordLogin = async () => {
 
     localStorage.setItem("token", data.token);
     router.push("/dashboard");
+  };
 
-  } catch (err) {
-    console.warn("First login attempt failed. Retrying...");
-
-    try {
-      // Wait 2 seconds before retry
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const retryData = await attemptLogin();
-
-      if (!retryData?.token) {
-        alert("Invalid credentials");
-        return;
-      }
-
-      localStorage.setItem("token", retryData.token);
-      router.push("/dashboard");
-
-    } catch (retryErr) {
-      alert("Server waking up. Please try again.");
+  /* ================= REGISTER ================= */
+  const handleRegister = async () => {
+    if (!form.email || !form.password) {
+      alert("Email and password required");
+      return;
     }
-  }
-};
 
-  /* ================= INPUT HANDLER ================= */
+    const data = await apiFetch("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify(form),
+    });
+
+    if (!data?.success) {
+      alert(data?.error || "Registration failed");
+      return;
+    }
+
+    alert("Account created successfully");
+    setMode("login");
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
-  <div className="relative min-h-screen flex items-center justify-center bg-[#111111] text-white">
+    <div className="relative min-h-screen flex items-center justify-center bg-[#111111] text-white">
 
-    {/* SAME BACKGROUND AS DASHBOARD */}
-    <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#181818] via-[#111111] to-[#1c1c1c]" />
+      {/* DASHBOARD BACKGROUND */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#181818] via-[#111111] to-[#1c1c1c]" />
 
-    <div className="w-[420px] p-10 rounded-2xl bg-[#1c1c1c] border border-neutral-800 shadow-xl">
+      <div className="w-[440px] p-10 rounded-2xl bg-[#1c1c1c] border border-neutral-800 shadow-xl">
 
-      {/* LOGO */}
-      <div className="text-center mb-8">
-        <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
-          Skill<span className="font-semibold">Mutant</span>
-        </h1>
-
-        <p className="text-neutral-400 text-sm mt-2">
-          AI Skill Intelligence Platform
-        </p>
-      </div>
-
-      {/* EMAIL / PASSWORD LOGIN */}
-      <div className="space-y-4">
-
-        <input
-          name="email"
-          placeholder="Email"
-          className="w-full px-4 py-3 rounded-lg bg-[#111111]
-                     border border-neutral-700
-                     outline-none focus:border-white
-                     transition-colors duration-200"
-          value={form.email}
-          onChange={handleChange}
-        />
-
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          className="w-full px-4 py-3 rounded-lg bg-[#111111]
-                     border border-neutral-700
-                     outline-none focus:border-white
-                     transition-colors duration-200"
-          value={form.password}
-          onChange={handleChange}
-        />
-
-        <button
-          onClick={handlePasswordLogin}
-          className="w-full py-3 rounded-full font-medium
-                     bg-white text-black
-                     transition-all duration-300
-                     hover:-translate-y-1
-                     hover:shadow-[0_8px_25px_rgba(0,0,0,0.25)]"
-        >
-          Login
-        </button>
-
-        <div className="text-right">
-          <a
-            href="/forgot-password"
-            className="text-xs text-neutral-400 hover:text-white transition-colors"
-          >
-            Forgot password?
-          </a>
+        {/* LOGO */}
+        <div className="text-center mb-8">
+          <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
+            Skill<span className="font-semibold">Mutant</span>
+          </h1>
+          <p className="text-neutral-400 text-sm mt-2">
+            AI Skill Intelligence Platform
+          </p>
         </div>
 
+        {/* TOGGLE */}
+        <div className="flex mb-8 bg-[#111111] rounded-full p-1 border border-neutral-700">
+          <button
+            onClick={() => setMode("login")}
+            className={`flex-1 py-2 rounded-full text-sm transition ${
+              mode === "login"
+                ? "bg-white text-black"
+                : "text-neutral-400"
+            }`}
+          >
+            Login
+          </button>
+
+          <button
+            onClick={() => setMode("register")}
+            className={`flex-1 py-2 rounded-full text-sm transition ${
+              mode === "register"
+                ? "bg-white text-black"
+                : "text-neutral-400"
+            }`}
+          >
+            Register
+          </button>
+        </div>
+
+        {/* FORM */}
+        <div className="space-y-4">
+
+          <input
+            name="email"
+            placeholder="Email"
+            className="w-full px-4 py-3 rounded-lg bg-[#111111]
+                       border border-neutral-700
+                       outline-none focus:border-white
+                       transition"
+            value={form.email}
+            onChange={handleChange}
+          />
+
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            className="w-full px-4 py-3 rounded-lg bg-[#111111]
+                       border border-neutral-700
+                       outline-none focus:border-white
+                       transition"
+            value={form.password}
+            onChange={handleChange}
+          />
+
+          {/* SHIMMER INSPIRED BUTTON */}
+          <button
+            onClick={
+              mode === "login"
+                ? handlePasswordLogin
+                : handleRegister
+            }
+            className="group relative w-full py-3 rounded-full
+                       bg-black text-white border border-white/20
+                       overflow-hidden transition-all duration-300"
+          >
+            <span className="relative z-10 font-medium">
+              {mode === "login" ? "Login" : "Create Account"}
+            </span>
+
+            {/* shimmer layer */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_2s_linear_infinite]" />
+            </div>
+          </button>
+
+          {mode === "login" && (
+            <div className="text-right">
+              <a
+                href="/forgot-password"
+                className="text-xs text-neutral-400 hover:text-white transition"
+              >
+                Forgot password?
+              </a>
+            </div>
+          )}
+
+        </div>
       </div>
 
-      <div className="my-8 text-center text-xs text-neutral-500">OR</div>
-
-      {/* GOOGLE LOGIN */}
-      <button
-        onClick={async () => {
-          const res = await signIn("google", { redirect: false });
-
-          const sessionRes = await fetch("/api/auth/session");
-          const session = await sessionRes.json();
-
-          const backendRes = await apiFetch("/api/auth/google", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: session.user.email,
-              googleId: session.user.sub,
-            }),
-          });
-
-          const data = await backendRes.json();
-
-          localStorage.setItem("token", data.token);
-
-          if (!data.existing) {
-            window.location.href = `/complete-account?email=${session.user.email}`;
-          } else {
-            window.location.href = "/dashboard";
-          }
-        }}
-        className="w-full py-3 rounded-full
-                   bg-white text-black font-medium
-                   transition-all duration-300
-                   hover:-translate-y-1
-                   hover:shadow-[0_8px_25px_rgba(0,0,0,0.25)]"
-      >
-        Register / Continue with Google
-      </button>
+      <style jsx global>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
 
     </div>
-  </div>
-);
+  );
 }
