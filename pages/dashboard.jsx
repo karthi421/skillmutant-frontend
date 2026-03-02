@@ -191,13 +191,16 @@ export default function Home() {
         Kandelli Karthik
       </a>
     </p>
-
+     {/* Branding */}
+  <div className="mt-12 text-xs text-slate-500">
+    © {new Date().getFullYear()} SkillMutant · Engineered by{" "}
+    <span className="text-slate-300 font-medium">
+      Kandelli Karthik
+    </span>
+  </div>
   </div>
 
 </section>
-<div className="mt-16 text-xs tracking-wide text-slate-500">
-  © {new Date().getFullYear()} SkillMutant · Engineered by Kandelli Karthik
-</div>
 
     </div>
   );
