@@ -106,131 +106,127 @@ export default function Home() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
- return (
- <div className="relative min-h-screen flex items-center justify-center text-white">
+return (
+  <div className="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
 
-  {/* MODERN STARTUP BACKGROUND */}
- <div className="relative min-h-screen flex items-center justify-center text-white">
+    {/* Background */}
+    <div
+      className="absolute inset-0 -z-10 
+      bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#1e293b]"
+    />
 
-  {/* MODERN STARTUP BACKGROUND */}
-  <div
-    className="fixed inset-0 -z-10 
-      bg-[radial-gradient(circle_at_15%_25%,#1E293B,transparent_40%),
-           radial-gradient(circle_at_85%_75%,#312E81,transparent_40%)]
-      bg-gradient-to-br from-[#0F172A] via-[#111827] to-[#1E1B4B]"
-  />
+    {/* Centered Card Wrapper */}
+    <div className="w-full max-w-md px-6">
+      <div className="rounded-2xl bg-[#111827]/70 backdrop-blur-xl 
+                      border border-white/10 shadow-2xl p-10">
 
-
-
-      {/* LOGO */}
-      <div className="text-center mb-8">
-        <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
-          Skill<span className="font-semibold">Mutant</span>
-        </h1>
-        <p className="text-neutral-400 text-sm mt-2">
-          AI Skill Intelligence Platform
-        </p>
-      </div>
-
-      {/* TOGGLE */}
-      <div className="flex mb-8 bg-[#141417] rounded-full p-1 border border-neutral-700">
-        <button
-          onClick={() => setMode("login")}
-          className={`flex-1 py-2 rounded-full text-sm transition ${
-            mode === "login" ? "bg-white text-black" : "text-neutral-400"
-          }`}
-        >
-          Login
-        </button>
-        <button
-          onClick={() => setMode("register")}
-          className={`flex-1 py-2 rounded-full text-sm transition ${
-            mode === "register" ? "bg-white text-black" : "text-neutral-400"
-          }`}
-        >
-          Register
-        </button>
-      </div>
-
-      <div className="space-y-4">
-
-        <input
-          name="email"
-          placeholder="Email"
-          className="w-full px-4 py-3 rounded-lg bg-[#141417]
-                     border border-neutral-700 outline-none focus:border-white"
-          value={form.email}
-          onChange={handleChange}
-        />
-
-        {mode === "register" && (
-          <input
-            name="username"
-            placeholder="Username"
-            className="w-full px-4 py-3 rounded-lg bg-[#141417]
-                       border border-neutral-700 outline-none focus:border-white"
-            value={form.username}
-            onChange={handleChange}
-          />
-        )}
-
-        {/* PASSWORD */}
-        <div className="relative">
-          <input
-            name="password"
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            className="w-full px-4 py-3 rounded-lg bg-[#141417]
-                       border border-neutral-700 outline-none focus:border-white"
-            value={form.password}
-            onChange={handleChange}
-          />
-          <span
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-3 text-sm text-neutral-400 cursor-pointer"
-          >
-            {showPassword ? "Hide" : "Show"}
-          </span>
+        {/* LOGO */}
+        <div className="text-center mb-8">
+          <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
+            Skill<span className="font-semibold">Mutant</span>
+          </h1>
+          <p className="text-neutral-400 text-sm mt-2">
+            AI Skill Intelligence Platform
+          </p>
         </div>
 
-        {mode === "register" && (
-          <div className="relative">
+        {/* TOGGLE */}
+        <div className="flex mb-8 bg-[#141417] rounded-full p-1 border border-neutral-700">
+          <button
+            onClick={() => setMode("login")}
+            className={`flex-1 py-2 rounded-full text-sm transition ${
+              mode === "login" ? "bg-white text-black" : "text-neutral-400"
+            }`}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => setMode("register")}
+            className={`flex-1 py-2 rounded-full text-sm transition ${
+              mode === "register" ? "bg-white text-black" : "text-neutral-400"
+            }`}
+          >
+            Register
+          </button>
+        </div>
+
+        <div className="space-y-4">
+
+          <input
+            name="email"
+            placeholder="Email"
+            className="w-full px-4 py-3 rounded-lg bg-[#141417]
+                       border border-neutral-700 outline-none focus:border-white"
+            value={form.email}
+            onChange={handleChange}
+          />
+
+          {mode === "register" && (
             <input
-              name="confirmPassword"
-              type={showConfirm ? "text" : "password"}
-              placeholder="Confirm Password"
+              name="username"
+              placeholder="Username"
               className="w-full px-4 py-3 rounded-lg bg-[#141417]
                          border border-neutral-700 outline-none focus:border-white"
-              value={form.confirmPassword}
+              value={form.username}
+              onChange={handleChange}
+            />
+          )}
+
+          {/* PASSWORD */}
+          <div className="relative">
+            <input
+              name="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="w-full px-4 py-3 rounded-lg bg-[#141417]
+                         border border-neutral-700 outline-none focus:border-white"
+              value={form.password}
               onChange={handleChange}
             />
             <span
-              onClick={() => setShowConfirm(!showConfirm)}
+              onClick={() => setShowPassword(!showPassword)}
               className="absolute right-4 top-3 text-sm text-neutral-400 cursor-pointer"
             >
-              {showConfirm ? "Hide" : "Show"}
+              {showPassword ? "Hide" : "Show"}
             </span>
           </div>
-        )}
 
-        {/* MAIN BUTTON */}
-        <PremiumButton
-          onClick={mode === "login" ? handlePasswordLogin : handleRegister}
-        >
-          {mode === "login" ? "Login" : "Create Account"}
-        </PremiumButton>
+          {mode === "register" && (
+            <div className="relative">
+              <input
+                name="confirmPassword"
+                type={showConfirm ? "text" : "password"}
+                placeholder="Confirm Password"
+                className="w-full px-4 py-3 rounded-lg bg-[#141417]
+                           border border-neutral-700 outline-none focus:border-white"
+                value={form.confirmPassword}
+                onChange={handleChange}
+              />
+              <span
+                onClick={() => setShowConfirm(!showConfirm)}
+                className="absolute right-4 top-3 text-sm text-neutral-400 cursor-pointer"
+              >
+                {showConfirm ? "Hide" : "Show"}
+              </span>
+            </div>
+          )}
 
-        {/* GOOGLE ONLY FOR LOGIN */}
-        {mode === "login" && (
-          <>
-            <div className="my-6 text-center text-xs text-neutral-500">OR</div>
+          <PremiumButton
+            onClick={mode === "login" ? handlePasswordLogin : handleRegister}
+          >
+            {mode === "login" ? "Login" : "Create Account"}
+          </PremiumButton>
 
-            <PremiumButton onClick={() => signIn("google")}>
-              Continue with Google
-            </PremiumButton>
-          </>
-        )}
+          {mode === "login" && (
+            <>
+              <div className="my-6 text-center text-xs text-neutral-500">OR</div>
+              <PremiumButton onClick={() => signIn("google")}>
+                Continue with Google
+              </PremiumButton>
+            </>
+          )}
 
+        </div>
       </div>
     </div>
   </div>
