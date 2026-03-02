@@ -528,24 +528,63 @@ useEffect(() => {
 
 </section>
 
-          {/* ================= PHASE 3 ================= */}
-          <section
-            ref={phaseRefs[2]}
-            className="bg-white/5 border border-white/10 rounded-2xl p-10 backdrop-blur-sm"
-          >
-            <h2 className="text-2xl font-semibold text-cyan-400 mb-8">
-              Phase 3 — Skill Acceleration
-            </h2>
+       {/* ================= PHASE 3 ================= */}
+<section
+  ref={phaseRefs[2]}
+  className="bg-gradient-to-b from-white/5 to-white/[0.02]
+             border border-white/10 rounded-2xl
+             p-10 backdrop-blur-sm transition-all duration-500"
+>
 
-            <LearningPath
-              currentSkills={analysis.current_skills}
-              targetRole={analysis.target_role}
-            />
+  {/* ===== HEADER ===== */}
+  <div className="mb-12">
+    <h2 className="text-2xl font-semibold text-cyan-400">
+      Phase 3 — Skill Acceleration Engine
+    </h2>
+    <p className="text-slate-400 text-sm mt-2 max-w-2xl">
+      Strategic learning roadmap, AI-guided capability expansion,
+      and project-level execution planning aligned with your
+      target role: <span className="text-white font-medium">{analysis.target_role}</span>.
+    </p>
+  </div>
 
-            <AISkillAcceleration analysis={analysis} />
+  {/* ===== LEARNING ROADMAP ===== */}
+  <div className="mb-16">
+    <h3 className="text-lg font-semibold mb-6">
+      Personalized Learning Path
+    </h3>
 
-            <ProjectIntelligence projects={analysis.projects} />
-          </section>
+    <div className="border border-white/10 rounded-xl p-6 bg-white/[0.02]">
+      <LearningPath
+        currentSkills={analysis.current_skills}
+        targetRole={analysis.target_role}
+      />
+    </div>
+  </div>
+
+  {/* ===== AI SKILL ACCELERATION ===== */}
+  <div className="mb-16">
+    <h3 className="text-lg font-semibold mb-6">
+      AI Skill Acceleration Model
+    </h3>
+
+    <div className="border border-cyan-400/20 rounded-xl p-6 bg-cyan-400/[0.03]">
+      <AISkillAcceleration analysis={analysis} />
+    </div>
+  </div>
+
+  {/* ===== PROJECT INTELLIGENCE ===== */}
+  <div>
+    <h3 className="text-lg font-semibold mb-6">
+      Project Execution Intelligence
+    </h3>
+
+    <div className="border border-white/10 rounded-xl p-6 bg-white/[0.02]">
+      <ProjectIntelligence projects={analysis.projects} />
+    </div>
+  </div>
+
+</section>
 
           {/* ================= PHASE 4 ================= */}
           <section
