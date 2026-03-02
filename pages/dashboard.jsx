@@ -159,16 +159,18 @@ export default function Home() {
       </section>
 
       {/* ===== CONTACT ===== */}
-     <div className="max-w-6xl mx-auto px-6">
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-    </div>
-      <section id="contact" className="mt-40 pb-32 text-center">
+    <section id="contact" className="mt-40 pb-32 text-center">
 
-        <h3 className="text-3xl font-semibold mb-6">Contact</h3>
-        <p className="text-neutral-400">Email: support@skillmutant.ai</p>
-        <p className="text-neutral-400">LinkedIn: Kandelli Karthik</p>
+  {/* Divider */}
+  <div className="max-w-6xl mx-auto px-6 mb-20">
+    <div className="h-px w-full bg-white" />
+  </div>
 
-      </section>
+  <h3 className="text-3xl font-semibold mb-6">Contact</h3>
+  <p className="text-neutral-400">Email: support@skillmutant.ai</p>
+  <p className="text-neutral-400">LinkedIn: Kandelli Karthik</p>
+
+</section>
 
     </div>
   );
