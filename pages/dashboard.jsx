@@ -147,28 +147,32 @@ export default function Home() {
         Intelligence Workflow
       </h3>
 
-      <p className="text-slate-300 leading-relaxed text-base mb-8">
-        SkillMutant operates through a multi-layered AI pipeline that
-        transforms static career data into actionable intelligence.
-        Once a resume or workforce profile is uploaded, the system
-        extracts structured competencies, evaluates market demand,
-        identifies capability gaps, and aligns them with strategic
-        growth pathways.
-      </p>
+     <p className="text-slate-300 leading-relaxed text-base mb-8">
+  SkillMutant operates through a multi-layered AI intelligence architecture 
+  designed to transform static career data into predictive, decision-ready 
+  insights. When a resume or workforce profile is uploaded, the platform 
+  performs deep semantic parsing, contextual skill extraction, and 
+  real-time market demand evaluation. It identifies structural capability 
+  gaps, maps competencies against evolving industry benchmarks, and 
+  generates precision-aligned growth pathways tailored to individual and 
+  organizational objectives.
+</p>
 
-      <p className="text-slate-300 leading-relaxed text-base">
-        Through continuous analysis and data refinement, the platform
-        adapts recommendations dynamically — ensuring that individuals
-        and organizations remain aligned with evolving industry
-        standards and emerging technological shifts.
-      </p>
+<p className="text-slate-300 leading-relaxed text-base">
+  Beyond simple analysis, SkillMutant continuously refines its intelligence 
+  through adaptive modeling and dynamic data feedback loops. As industry 
+  standards shift and emerging technologies reshape workforce demand, 
+  the system recalibrates recommendations in real time — ensuring users 
+  remain strategically positioned for long-term career acceleration and 
+  sustainable professional growth.
+</p>
     </section>
 
     {/* ===== CONTACT ===== */}
     <section id="contact" className="mt-40 pb-32 text-center">
 
       <div className="max-w-6xl mx-auto px-6 mb-20">
-        <div className="h-px w-full bg-white/30" />
+        <div className="h-px w-full bg-white" />
       </div>
 
       <h3 className="text-3xl font-semibold mb-8 text-white">
