@@ -52,7 +52,7 @@ export default function VideoRoom({ roomId }) {
   const [activePanel, setActivePanel] = useState("notes");
   const [notes, setNotes] = useState("");
   const [notesDirty, setNotesDirty] = useState(false);
-
+  const [controlsVisible, setControlsVisible] = useState(true);
   const [aiMessages, setAiMessages] = useState([]);
   const [aiInput, setAiInput] = useState("");
   const [mediaStatus, setMediaStatus] = useState({});
@@ -167,6 +167,26 @@ const toggleHand = () => {
 
   detect();
 }, [mediaReady]);
+
+useEffect(() => {
+  let timeout;
+
+  const showControls = () => {
+    setControlsVisible(true);
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      setControlsVisible(false);
+    }, 4000);
+  };
+
+  window.addEventListener("mousemove", showControls);
+  showControls();
+
+  return () => {
+    window.removeEventListener("mousemove", showControls);
+    clearTimeout(timeout);
+  };
+}, []);
   /* ================= WEBSOCKET ================= */
   useEffect(() => {
     if (!mediaReady) return;
