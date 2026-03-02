@@ -163,7 +163,7 @@ export default function Home() {
 
   {/* Divider */}
   <div className="max-w-6xl mx-auto px-6 mb-20">
-    <div className="h-px w-full bg-white/30" />
+    <div className="h-px w-full bg-white" />
   </div>
 
   <h3 className="text-3xl font-semibold mb-8">Contact</h3>
