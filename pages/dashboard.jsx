@@ -12,139 +12,166 @@ export default function Home() {
     { id: "contact", label: "Contact" },
   ];
 
-return (
-  <div className="min-h-screen bg-[#0b1220] text-white flex flex-col">
+  return (
+    <div className="relative min-h-screen w-full flex flex-col bg-[#111111] text-white">
 
-    {/* ===== NAVBAR ===== */}
-    <div className="w-full px-12 py-8 flex items-center justify-between">
+      {/* ===== FIXED BACKGROUND ===== */}
+      <div
+  className="fixed inset-0 -z-10
+    bg-[radial-gradient(circle_at_20%_30%,rgba(79,70,229,0.15),transparent_40%),
+         radial-gradient(circle_at_80%_70%,rgba(59,130,246,0.12),transparent_40%)]
+    bg-gradient-to-br from-[#0F172A] via-[#111827] to-[#1E1B4B]"
+/>
 
-      <h1 className="text-[22px] font-light tracking-[0.5px]">
-        <span className="italic text-slate-400">Skill</span>
-        <span className="font-semibold text-white">Mutant</span>
-      </h1>
+      
+  {/* ===== NAVBAR ===== */}
+<div className="w-full px-12 py-8 flex items-center justify-between">
 
-      <div className="hidden md:flex gap-10 text-sm">
-        {navItems.map((item) => (
-          <a
-            key={item.id}
-            href={`#${item.id}`}
-            onClick={() => setActive(item.id)}
-            className={`transition ${
-              active === item.id
-                ? "text-white"
-                : "text-slate-500 hover:text-white"
-            }`}
-          >
-            {item.label}
-          </a>
-        ))}
-      </div>
-    </div>
+  {/* Left: Logo */}
+  <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
+    Skill<span className="font-semibold">Mutant</span>
+  </h1>
 
-    {/* ===== HERO ===== */}
-    <section className="flex-1 flex flex-col items-center justify-center text-center px-6">
-
-      <h2 className="text-5xl md:text-7xl font-semibold leading-tight tracking-tight max-w-4xl">
-        Intelligent Career
-        <br />
-        Infrastructure.
-      </h2>
-
-      <p className="mt-8 text-slate-400 max-w-2xl text-lg leading-relaxed">
-        SkillMutant transforms resumes into structured intelligence.
-        Analyze skill depth, predict market alignment, and build
-        future-ready career pathways powered by AI.
-      </p>
-
-      <button
-        onClick={() => router.push("/student")}
-        className="mt-12 px-10 py-4 rounded-full
-                   bg-white text-black
-                   hover:bg-slate-200
-                   transition font-medium"
+  {/* Right: Navigation */}
+  <div className="hidden md:flex gap-10 text-sm relative">
+    {navItems.map((item) => (
+      <a
+        key={item.id}
+        href={`#${item.id}`}
+        onClick={() => setActive(item.id)}
+        className={`relative transition-all duration-300 ${
+          active === item.id
+            ? "text-white"
+            : "text-neutral-400 hover:text-white"
+        }`}
       >
-        Enter Platform
-      </button>
+        {item.label}
 
-    </section>
+        {active === item.id && (
+          <motion.div
+            layoutId="navIndicator"
+            className="absolute -bottom-2 left-0 right-0 h-[2px] bg-white"
+          />
+        )}
+      </a>
+    ))}
+  </div>
 
-    {/* ===== FEATURE SECTION ===== */}
-    <section className="py-32 border-t border-white/5">
+</div>
+      {/* ===== HERO ===== */}
+      <section id="home" className="text-center mt-32 px-6">
 
-      <div className="max-w-6xl mx-auto px-6">
+        <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold
+                       bg-clip-text text-transparent
+                       bg-gradient-to-b from-neutral-50 to-neutral-400">
+          AI Skill Intelligence
+          <br />
+          Reimagined.
+        </h2>
 
-        <div className="mb-20 text-center">
-          <h3 className="text-3xl font-semibold">
-            Structured Intelligence Engine
-          </h3>
-          <p className="mt-4 text-slate-500 max-w-2xl mx-auto">
-            Designed as a modular AI system — not a resume checker.
-            Each component operates as part of a unified intelligence framework.
-          </p>
-        </div>
+        <p className="text-neutral-400 mt-8 text-lg max-w-2xl mx-auto leading-relaxed">
+          SkillMutant transforms resumes into predictive career insights,
+          structured learning pathways, advanced ATS intelligence,
+          and long-term workforce positioning strategies.
+        </p>
 
-        <div className="grid md:grid-cols-3 gap-16">
+        <button
+          onClick={() => router.push("/student")}
+          className="relative mt-14 h-14 px-10
+                     bg-white text-black
+                     rounded-full
+                     text-lg font-medium
+                     flex items-center justify-center gap-3 mx-auto
+                     shadow-[0_6px_20px_rgba(0,0,0,0.2)]
+                     transition-all duration-300 ease-out
+                     hover:-translate-y-1
+                     hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)]
+                     group"
+        >
+          Get Started
+          <span className="transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
+        </button>
 
-          <div>
-            <h4 className="text-lg font-medium mb-4">
-              Resume Signal Extraction
-            </h4>
-            <p className="text-slate-400 leading-relaxed">
-              Extracts structured competency signals, evaluates
-              skill maturity, and aligns them against real-time
-              hiring intelligence data.
-            </p>
+      </section>
+
+      {/* ===== FEATURES ===== */}
+      <section id="features" className="mt-40 max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-12">
+
+        {[
+          {
+            title: "AI Resume Analysis",
+            img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
+          },
+          {
+            title: "Personalized Learning Paths",
+            img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+          },
+          {
+            title: "Predictive Career Analytics",
+            img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
+          },
+        ].map((item) => (
+          <div
+            key={item.title}
+            className="rounded-2xl bg-[#1c1c1c]
+                       border border-neutral-800
+                       overflow-hidden
+                       transition-all duration-300 hover:border-neutral-600"
+          >
+            <img
+              src={item.img}
+              alt={item.title}
+              className="h-48 w-full object-cover"
+            />
+
+            <div className="p-6">
+              <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
+              <p className="text-neutral-400 text-sm">
+                Advanced intelligence module designed to enhance
+                decision-making and future career alignment.
+              </p>
+            </div>
           </div>
+        ))}
 
-          <div>
-            <h4 className="text-lg font-medium mb-4">
-              Predictive Role Modeling
-            </h4>
-            <p className="text-slate-400 leading-relaxed">
-              Forecasts career alignment by combining ATS readiness,
-              skill depth mapping, and market demand trends.
-            </p>
-          </div>
+      </section>
 
-          <div>
-            <h4 className="text-lg font-medium mb-4">
-              Adaptive Learning System
-            </h4>
-            <p className="text-slate-400 leading-relaxed">
-              Generates personalized acceleration paths to
-              strengthen capability gaps and maximize
-              long-term professional leverage.
-            </p>
-          </div>
+      {/* ===== INTELLIGENCE WORKFLOW ===== */}
+      <section id="workflow" className="mt-40 max-w-4xl mx-auto px-6 text-center">
 
-        </div>
-      </div>
-
-    </section>
-
-    {/* ===== INTELLIGENCE MODEL ===== */}
-    <section className="py-32 border-t border-white/5">
-
-      <div className="max-w-4xl mx-auto text-center px-6">
         <h3 className="text-3xl font-semibold mb-8">
-          AI Intelligence Architecture
+          Intelligence Workflow
         </h3>
 
-        <p className="text-slate-400 leading-relaxed">
-          SkillMutant operates through a multi-layered evaluation engine.
-          Resume parsing, contextual analysis, skill weighting, ATS
-          simulation, and predictive modeling work together as
-          a unified system — delivering insights beyond surface-level scoring.
+        <p className="text-neutral-400 leading-relaxed mb-8">
+          SkillMutant operates through a multi-layered AI pipeline that
+          transforms static career data into actionable intelligence.
+          Once a resume or workforce profile is uploaded, the system
+          extracts structured competencies, evaluates market demand,
+          identifies capability gaps, and aligns them with strategic
+          growth pathways.
         </p>
-      </div>
 
-    </section>
+        <p className="text-neutral-400 leading-relaxed">
+          Through continuous analysis and data refinement, the platform
+          adapts recommendations dynamically — ensuring that individuals
+          and organizations remain aligned with evolving industry
+          standards and emerging technological shifts.
+        </p>
 
-    {/* ===== FOOTER ===== */}
-    <footer className="py-16 border-t border-white/5 text-center text-sm text-slate-500">
-      SkillMutant © 2026 · AI Career Infrastructure
-    </footer>
+      </section>
 
-  </div>
-);
+      {/* ===== CONTACT ===== */}
+      <section id="contact" className="mt-40 pb-32 text-center">
+
+        <h3 className="text-3xl font-semibold mb-6">Contact</h3>
+        <p className="text-neutral-400">Email: support@skillmutant.ai</p>
+        <p className="text-neutral-400">LinkedIn: Kandelli Karthik</p>
+
+      </section>
+
+    </div>
+  );
 }
