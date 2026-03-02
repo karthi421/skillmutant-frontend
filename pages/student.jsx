@@ -614,11 +614,11 @@ useEffect(() => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
       <div className="border border-white/10 rounded-xl p-6 bg-white/[0.02]">
-        <InterviewReadinessCard />
+        <InterviewReadinessCard analysis={analysis} />
       </div>
 
       <div className="border border-white/10 rounded-xl p-6 bg-white/[0.02]">
-        <InterviewRoadmap />
+        <InterviewRoadmap analysis={analysis} />
       </div>
 
     </div>
