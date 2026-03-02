@@ -71,27 +71,66 @@ logProgress(
       setLoading(false);
     }
   };
-  return (
-    <div className="glass-card max-w-xl mx-auto text-center p-6">
-      <h2 className="text-2xl font-bold mb-3">
+ return (
+  <div className="max-w-xl mx-auto">
+
+    <div className="relative bg-gradient-to-b from-[#0f172a] to-[#0b1120]
+                    border border-white/10 rounded-2xl
+                    backdrop-blur-xl p-8 text-center
+                    shadow-[0_0_40px_rgba(0,0,0,0.4)]">
+
+      {/* Title */}
+      <h2 className="text-2xl font-semibold mb-3 text-white">
         AI Resume Intelligence
       </h2>
-      <p className="text-slate-400 text-sm mb-6">
-        Upload your resume to unlock AI-powered insights.
+
+      <p className="text-slate-300 text-sm mb-8">
+        Upload your resume to unlock deep semantic analysis,
+        skill-gap detection, and AI-powered career insights.
       </p>
-      <input
-        type="file"
-        accept=".pdf"
-        onChange={(e) => setFile(e.target.files[0])}
-        className="mb-4 block mx-auto text-sm"
-      />
+
+      {/* Custom Upload Area */}
+      <label className="cursor-pointer block">
+
+        <div className="border border-white/15 rounded-xl
+                        bg-white/5 hover:bg-white/10
+                        transition-all duration-300
+                        py-8 px-6 text-center">
+
+          <p className="text-slate-300 text-sm">
+            {file ? file.name : "Click to upload PDF resume"}
+          </p>
+
+          <p className="text-slate-500 text-xs mt-2">
+            Supported format: .pdf
+          </p>
+
+        </div>
+
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={(e) => setFile(e.target.files[0])}
+          className="hidden"
+        />
+      </label>
+
+      {/* CTA Button */}
       <button
         onClick={handleUpload}
-        disabled={loading}
-        className="w-full px-6 py-2 bg-cyan-500 hover:bg-cyan-600 rounded-md font-medium disabled:opacity-60"
+        disabled={loading || !file}
+        className="mt-8 w-full py-3 rounded-xl
+                   bg-gradient-to-r from-cyan-500 to-cyan-600
+                   hover:from-cyan-400 hover:to-cyan-500
+                   text-white font-medium
+                   transition-all duration-300
+                   shadow-[0_0_30px_rgba(34,211,238,0.25)]
+                   disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? "Analyzing Resume..." : "Upload & Analyze"}
       </button>
+
     </div>
-  );
+  </div>
+);
 }
