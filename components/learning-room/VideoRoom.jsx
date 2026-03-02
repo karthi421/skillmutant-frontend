@@ -200,7 +200,9 @@ const baseUrl =
     .replace(/^https/, "wss")
     .replace(/^http/, "ws");
 
-  const fullUrl = `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`;
+  const token = localStorage.getItem("token");
+
+const fullUrl = `${wsUrl}/ws/rooms/${roomId}?token=${token}`;
 
   console.log("Connecting to:", fullUrl);
 
@@ -226,13 +228,13 @@ const baseUrl =
 
       if (msg.type === "init") {
   const capped = msg.members.slice(0, 8);
-  setMembers(capped);
+setMembers(capped);
 
-  capped.forEach(id => {
-    if (id !== USER_ID) {
-      createPeer(id, false);
-    }
-  });
+capped.forEach(member => {
+  if (member.id !== USER_ID) {
+    createPeer(member.id, false);
+  }
+});
 
   // ✅ Log learning room join to backend
  apiFetch("/api/jobs/learning-room", {
@@ -249,10 +251,10 @@ const baseUrl =
 
       if (msg.type === "user-joined") {
         setMembers(prev =>
-          prev.length < 8 && !prev.includes(msg.user_id)
-            ? [...prev, msg.user_id]
-            : prev
-        );
+      prev.length < 8 && !prev.some(m => m.id === msg.user.id)
+        ? [...prev, msg.user]
+      : prev
+      );
 
         //const initiator = USER_ID < msg.user_id;
         createPeer(msg.user_id, true);
@@ -628,8 +630,12 @@ const saveRoomNotes = () => {
 const renderTile = (id) => {
   const isLocal = id === USER_ID;
 
-  // 🔹 Find member object
-  const member = members.find(m => m.id === id);
+  // SAFE member lookup
+  const member = Array.isArray(members) && members.length > 0
+    ? (typeof members[0] === "string"
+        ? { id, name: id }
+        : members.find(m => m.id === id))
+    : { id, name: id };
 
   const stream = isLocal
     ? (screenOn ? screenStreamRef.current : localStreamRef.current)
@@ -640,13 +646,9 @@ const renderTile = (id) => {
 
   return (
     <div
-      onDoubleClick={() => {
-        if (spotlightId === id) {
-          setSpotlightId(null); // Exit spotlight
-        } else {
-          setSpotlightId(id);   // Enter spotlight
-        }
-      }}
+      onDoubleClick={() =>
+        setSpotlightId(prev => (prev === id ? null : id))
+      }
       className={`relative w-full h-full bg-black rounded-2xl overflow-hidden
         transition-all duration-300 cursor-pointer
         ${activeSpeaker === id
@@ -654,7 +656,6 @@ const renderTile = (id) => {
           : ""}
       `}
     >
-      {/* ===== VIDEO ===== */}
       {stream && camEnabled ? (
         <video
           autoPlay
@@ -664,24 +665,21 @@ const renderTile = (id) => {
           className="w-full h-full object-cover"
         />
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center text-white/50 text-sm">
+        <div className="absolute inset-0 flex items-center justify-center text-white/50">
           📷 Camera Off
         </div>
       )}
 
-      {/* ===== NAME LABEL ===== */}
       <div className="absolute top-2 left-2 bg-black/60 px-3 py-1 rounded-full text-xs backdrop-blur-sm">
         {isLocal ? "You" : member?.name || id}
       </div>
 
-      {/* ===== MIC OFF ===== */}
       {!micEnabled && (
         <div className="absolute bottom-3 right-3 bg-red-600 p-2 rounded-full text-sm">
           🔇
         </div>
       )}
 
-      {/* ===== RAISED HAND ===== */}
       {handsRaised[id] && (
         <div className="absolute top-2 right-2 text-xl animate-bounce">
           ✋
