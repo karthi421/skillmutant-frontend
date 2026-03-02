@@ -9,7 +9,7 @@ function PremiumButton({ children, onClick }) {
     <button
       onClick={onClick}
       className="group relative w-full overflow-hidden rounded-full
-                 border border-white/20 bg-black text-white
+                 border border-white/20 bg-white/5 text-white backdrop-blur-md
                  transition-all duration-300 active:translate-y-[1px]"
     >
       {/* rotating subtle edge shimmer */}
@@ -21,7 +21,7 @@ function PremiumButton({ children, onClick }) {
       </div>
 
       {/* inner surface */}
-      <div className="relative z-10 rounded-full bg-[#111111] py-3
+      <div className="relative z-10 rounded-full bg-white/5 py-3
                       shadow-[inset_0_-6px_10px_rgba(255,255,255,0.08)]
                       group-hover:shadow-[inset_0_-6px_14px_rgba(255,255,255,0.15)]
                       transition-all duration-300">
@@ -120,7 +120,9 @@ export default function Home() {
 
  
 
-    <div className="w-[440px] p-10 rounded-2xl bg-[#1A1A1D] border border-neutral-800 shadow-xl">
+   <div className="w-[440px] p-10 rounded-2xl 
+                bg-white/5 backdrop-blur-xl
+                border border-white/10 shadow-2xl">
 
       {/* LOGO */}
       <div className="text-center mb-8">
@@ -142,12 +144,6 @@ export default function Home() {
         >
           Login
         </button>
-         <a
-    href="/forgot-password"
-    className="text-xs text-cyan-400 hover:underline"
-  >
-    Forgot password?
-  </a>
         <button
           onClick={() => setMode("register")}
           className={`flex-1 py-2 rounded-full text-sm transition ${
