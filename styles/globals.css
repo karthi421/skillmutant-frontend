@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-[#020617] text-white;
+  @apply  text-white;
 }
 /* PREMIUM GLASS SYSTEM */
 .glass-card {
@@ -166,6 +166,5 @@ html {
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #111111;
   scroll-behavior: smooth;
 }
