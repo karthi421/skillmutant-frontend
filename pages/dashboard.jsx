@@ -91,48 +91,61 @@ export default function Home() {
 
       </section>
 
-      {/* ===== FEATURES ===== */}
-      <section id="features" className="mt-40 max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-12">
+     {/* ===== FEATURES ===== */}
+<section
+  id="features"
+  className="mt-40 max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-12"
+>
+  {[
+    {
+      title: "AI Resume Analysis",
+      desc: "Deep semantic parsing and market demand evaluation powered by adaptive intelligence models.",
+      icon: "🧠",
+    },
+    {
+      title: "Personalized Learning Paths",
+      desc: "Dynamic skill-gap mapping that generates precision-guided learning trajectories.",
+      icon: "🧩",
+    },
+    {
+      title: "Predictive Career Analytics",
+      desc: "Workforce trend modeling aligned with industry velocity and hiring intelligence signals.",
+      icon: "📊",
+    },
+  ].map((item, i) => (
+    <div
+      key={item.title}
+      className="
+        relative p-8 rounded-2xl
+        bg-gradient-to-b from-[#0f172a] to-[#0b1120]
+        border border-white/10
+        backdrop-blur-xl
+        transition-all duration-500
+        hover:-translate-y-2
+        hover:border-cyan-400/30
+        hover:shadow-[0_0_40px_rgba(34,211,238,0.15)]
+      "
+    >
+      {/* Subtle Glow Effect */}
+      <div className="absolute inset-0 rounded-2xl bg-cyan-500/5 opacity-0 hover:opacity-100 transition duration-500 pointer-events-none" />
 
-        {[
-          {
-            title: "AI Resume Analysis",
-            img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
-          },
-          {
-            title: "Personalized Learning Paths",
-            img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
-          },
-          {
-            title: "Predictive Career Analytics",
-            img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
-          },
-        ].map((item) => (
-          <div
-            key={item.title}
-            className="rounded-2xl bg-[#1c1c1c]
-                       border border-neutral-800
-                       overflow-hidden
-                       transition-all duration-300 hover:border-neutral-600"
-          >
-            <img
-              src={item.img}
-              alt={item.title}
-              className="h-48 w-full object-cover"
-            />
+      {/* Icon */}
+      <div className="w-14 h-14 mb-6 rounded-xl bg-cyan-500/10 flex items-center justify-center text-2xl">
+        {item.icon}
+      </div>
 
-            <div className="p-6">
-              <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-              <p className="text-neutral-400 text-sm">
-                Advanced intelligence module designed to enhance
-                decision-making and future career alignment.
-              </p>
-            </div>
-          </div>
-        ))}
+      {/* Title */}
+      <h3 className="text-xl font-semibold mb-4 text-white">
+        {item.title}
+      </h3>
 
-      </section>
-
+      {/* Description */}
+      <p className="text-slate-400 text-sm leading-relaxed">
+        {item.desc}
+      </p>
+    </div>
+  ))}
+</section>
       {/* ===== INTELLIGENCE WORKFLOW ===== */}
       <section id="workflow" className="mt-40 max-w-4xl mx-auto px-6 text-center">
 
