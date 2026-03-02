@@ -369,50 +369,92 @@ useEffect(() => {
 
       {analysis && (
         <>
-          {/* ================= PHASE 1 ================= */}
-          <section
-            ref={phaseRefs[0]}
-            className="bg-white/5 border border-white/10 rounded-2xl p-10 backdrop-blur-sm"
-          >
-            <h2 className="text-2xl font-semibold text-cyan-400 mb-8">
-              Phase 1 — Resume Intelligence
-            </h2>
+        {/* ================= PHASE 1 ================= */}
+<section
+  ref={phaseRefs[0]}
+  className="bg-gradient-to-b from-white/5 to-white/[0.02]
+             border border-white/10 rounded-2xl
+             p-10 backdrop-blur-sm transition-all duration-500"
+>
 
-            <ResumeAnalysis
-              skills={analysis.skills || analysis.extracted_skills || []}
-              skillQuality={skillQuality}
-              loading={false}
-            />
+  {/* ===== TITLE ===== */}
+  <div className="mb-10">
+    <h2 className="text-2xl font-semibold text-cyan-400">
+      Phase 1 — Resume Intelligence
+    </h2>
+    <p className="text-slate-400 text-sm mt-2">
+      Structural skill extraction, competency evaluation, and role alignment analysis.
+    </p>
+  </div>
 
-            <ResumeInsights
-              roleMatch={roleMatch}
-              loading={false}
-              onStartLearning={() => {
-                skillAccelerationRef.current?.scrollIntoView({
-                  behavior: "smooth",
-                });
-              }}
-            />
+  {/* ===== CORE ANALYSIS ===== */}
+  <div className="space-y-12">
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-              <SkillGraph score={analysis.ats_score} />
-              <SkillGraphAnalysis
-                roleMatch={roleMatch}
-                skillQuality={skillQuality}
-                atsScore={analysis.ats_score}
-              />
-            </div>
+    <ResumeAnalysis
+      skills={analysis.skills || analysis.extracted_skills || []}
+      skillQuality={skillQuality}
+      loading={false}
+    />
 
-            {showSkillDetails && (
-              <div className="mt-8">
-                <SkillVisualization
-                  categories={analysis.categories}
-                  confidence={analysis.confidence}
-                />
-              </div>
-            )}
-          </section>
+    <ResumeInsights
+      roleMatch={roleMatch}
+      loading={false}
+      onStartLearning={() => {
+        skillAccelerationRef.current?.scrollIntoView({
+          behavior: "smooth",
+        });
+      }}
+    />
 
+    {/* ===== GRAPH SUMMARY ===== */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+      <SkillGraph score={analysis.ats_score} />
+
+      <SkillGraphAnalysis
+        roleMatch={roleMatch}
+        skillQuality={skillQuality}
+        atsScore={analysis.ats_score}
+      />
+
+    </div>
+
+    {/* ===== TOGGLE BUTTON ===== */}
+    <div className="flex justify-end">
+      <button
+        onClick={() => setShowSkillDetails(!showSkillDetails)}
+        className="text-sm px-4 py-2 rounded-md
+                   bg-slate-800 border border-slate-600
+                   hover:bg-slate-700 transition-all duration-300"
+      >
+        {showSkillDetails
+          ? "Hide Skill Details"
+          : "Explore Skill Details"}
+      </button>
+    </div>
+
+    {/* ===== SKILL DETAILS ===== */}
+    <AnimatePresence>
+      {showSkillDetails && (
+        <motion.div
+          key="skill-details"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ duration: 0.35 }}
+          className="border border-white/10 rounded-xl p-6 bg-white/[0.02]"
+        >
+          <SkillVisualization
+            categories={analysis.categories}
+            confidence={analysis.confidence}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+  </div>
+
+</section>
           {/* ================= PHASE 2 ================= */}
           <section
             ref={phaseRefs[1]}
