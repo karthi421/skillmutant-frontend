@@ -740,67 +740,7 @@ const renderTile = (id) => {
 
     {/* ================= MAIN ================= */}
     <main className="flex flex-1 overflow-hidden relative">
-      {showParticipants && (
-  <div className="absolute right-0 top-14 bottom-0 w-80
-                  bg-black/80 backdrop-blur-xl
-                  border-l border-white/10
-                  p-4 z-40 overflow-y-auto">
-
-    <h3 className="text-lg font-semibold mb-4 text-cyan-400">
-      Participants ({members.length})
-    </h3>
-
-    <div className="space-y-3">
-      {members.map(member => {
-        const isSpeaking = activeSpeaker === member.id;
-        const hand = handsRaised[member.id];
-        const mic = mediaStatus[member.id]?.mic !== false;
-        const cam = mediaStatus[member.id]?.cam !== false;
-
-        return (
-          <div
-            key={member.id}
-            className={`flex items-center justify-between p-3 rounded-xl
-            ${isSpeaking ? "bg-cyan-500/10 border border-cyan-400/40" : "bg-white/5"}
-            `}
-          >
-
-            {/* Left */}
-            <div className="flex items-center gap-3">
-
-              {/* Avatar */}
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br
-                              from-cyan-400 to-blue-500
-                              flex items-center justify-center text-black font-bold">
-                {member.name?.charAt(0).toUpperCase()}
-              </div>
-
-              <div>
-                <p className="text-sm font-medium">
-                  {member.name}
-                </p>
-                {isSpeaking && (
-                  <p className="text-xs text-cyan-400">
-                    Speaking...
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Status Icons */}
-            <div className="flex items-center gap-2 text-sm">
-              {!mic && "🔇"}
-              {!cam && "📷"}
-              {hand && "✋"}
-            </div>
-
-          </div>
-        );
-      })}
-    </div>
-
-  </div>
-)}
+     
 
       {/* ================= VIDEO AREA ================= */}
       <section className="flex-1 p-4 overflow-hidden">
