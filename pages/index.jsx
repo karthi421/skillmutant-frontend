@@ -106,50 +106,32 @@ export default function Home() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 return (
-  <div className="relative min-h-screen flex items-center justify-center overflow-hidden text-white">
+  <div className="min-h-screen flex items-center justify-center bg-[#0b1220] text-white">
 
-    {/* === FUTURISTIC AI BACKGROUND === */}
-    <div className="absolute inset-0 -z-10 bg-[#050816]" />
-
-    {/* moving light beam */}
-    <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[800px]
-                    bg-[radial-gradient(circle,rgba(56,189,248,0.15),transparent_60%)]
-                    blur-3xl animate-pulse"
-    />
-
-    {/* === GLASS AI CARD === */}
+    {/* Center Wrapper */}
     <div className="w-full max-w-md px-6">
-      <div className="
-        relative
-        bg-white/5
-        backdrop-blur-2xl
-        border border-white/10
-        rounded-3xl
-        p-10
-        shadow-[0_0_40px_rgba(0,0,0,0.6)]
-        transition-all duration-500
-        hover:shadow-[0_0_80px_rgba(56,189,248,0.15)]
-      ">
+      <div className="bg-[#0f172a] border border-white/10 rounded-2xl p-10
+                      shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
 
-        {/* LOGO */}
+        {/* Logo */}
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-light tracking-widest">
-            <span className="italic text-slate-300">Skill</span>
+          <h1 className="text-3xl font-light tracking-wide">
+            <span className="italic text-slate-400">Skill</span>
             <span className="font-semibold text-white">Mutant</span>
           </h1>
-          <p className="text-slate-400 text-sm mt-3 tracking-wide">
+          <p className="text-slate-500 text-sm mt-3">
             AI Skill Intelligence Platform
           </p>
         </div>
 
-        {/* TOGGLE */}
-        <div className="flex mb-8 bg-black/40 rounded-full p-1 border border-white/10">
+        {/* Toggle */}
+        <div className="flex mb-8 bg-[#0b1220] rounded-full p-1 border border-white/10">
           <button
             onClick={() => setMode("login")}
-            className={`flex-1 py-2 rounded-full text-sm transition-all duration-300 ${
+            className={`flex-1 py-2 rounded-full text-sm transition ${
               mode === "login"
-                ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[#1e293b] text-white"
+                : "text-slate-500 hover:text-white"
             }`}
           >
             Login
@@ -157,10 +139,10 @@ return (
 
           <button
             onClick={() => setMode("register")}
-            className={`flex-1 py-2 rounded-full text-sm transition-all duration-300 ${
+            className={`flex-1 py-2 rounded-full text-sm transition ${
               mode === "register"
-                ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[#1e293b] text-white"
+                : "text-slate-500 hover:text-white"
             }`}
           >
             Register
@@ -172,10 +154,9 @@ return (
           <input
             name="email"
             placeholder="Email"
-            className="w-full px-4 py-3 rounded-xl bg-black/40
+            className="w-full px-4 py-3 rounded-xl bg-[#0b1220]
                        border border-white/10
-                       focus:border-cyan-400
-                       focus:ring-1 focus:ring-cyan-400
+                       focus:border-white/30
                        outline-none transition"
             value={form.email}
             onChange={handleChange}
@@ -185,32 +166,31 @@ return (
             <input
               name="username"
               placeholder="Username"
-              className="w-full px-4 py-3 rounded-xl bg-black/40
+              className="w-full px-4 py-3 rounded-xl bg-[#0b1220]
                          border border-white/10
-                         focus:border-cyan-400
-                         focus:ring-1 focus:ring-cyan-400
+                         focus:border-white/30
                          outline-none transition"
               value={form.username}
               onChange={handleChange}
             />
           )}
 
+          {/* Password */}
           <div className="relative">
             <input
               name="password"
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full px-4 py-3 rounded-xl bg-black/40
+              className="w-full px-4 py-3 rounded-xl bg-[#0b1220]
                          border border-white/10
-                         focus:border-cyan-400
-                         focus:ring-1 focus:ring-cyan-400
+                         focus:border-white/30
                          outline-none transition"
               value={form.password}
               onChange={handleChange}
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-3 text-sm text-slate-400 cursor-pointer hover:text-white"
+              className="absolute right-4 top-3 text-sm text-slate-500 cursor-pointer hover:text-white"
             >
               {showPassword ? "Hide" : "Show"}
             </span>
@@ -222,46 +202,47 @@ return (
                 name="confirmPassword"
                 type={showConfirm ? "text" : "password"}
                 placeholder="Confirm Password"
-                className="w-full px-4 py-3 rounded-xl bg-black/40
+                className="w-full px-4 py-3 rounded-xl bg-[#0b1220]
                            border border-white/10
-                           focus:border-cyan-400
-                           focus:ring-1 focus:ring-cyan-400
+                           focus:border-white/30
                            outline-none transition"
                 value={form.confirmPassword}
                 onChange={handleChange}
               />
               <span
                 onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute right-4 top-3 text-sm text-slate-400 cursor-pointer hover:text-white"
+                className="absolute right-4 top-3 text-sm text-slate-500 cursor-pointer hover:text-white"
               >
                 {showConfirm ? "Hide" : "Show"}
               </span>
             </div>
           )}
 
-          {/* MAIN BUTTON */}
+          {/* Primary Button */}
           <button
             onClick={mode === "login" ? handlePasswordLogin : handleRegister}
             className="w-full py-3 rounded-xl
-                       bg-gradient-to-r from-cyan-500 to-blue-600
-                       hover:from-cyan-400 hover:to-blue-500
-                       transition-all duration-300
-                       font-medium shadow-lg
-                       hover:shadow-cyan-500/30"
+                       bg-[#1e293b]
+                       hover:bg-[#334155]
+                       transition
+                       font-medium"
           >
             {mode === "login" ? "Login" : "Create Account"}
           </button>
 
           {mode === "login" && (
             <>
-              <div className="my-6 text-center text-xs text-slate-500">OR</div>
+              <div className="my-6 text-center text-xs text-slate-500">
+                OR
+              </div>
 
               <button
                 onClick={() => signIn("google")}
                 className="w-full py-3 rounded-xl
-                           bg-white/10
-                           hover:bg-white/20
-                           transition border border-white/10"
+                           bg-transparent
+                           border border-white/10
+                           hover:bg-white/5
+                           transition"
               >
                 Continue with Google
               </button>
