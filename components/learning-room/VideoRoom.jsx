@@ -62,6 +62,7 @@ export default function VideoRoom({ roomId }) {
  const [activeSpeaker, setActiveSpeaker] = useState(null);
  const [handsRaised, setHandsRaised] = useState({});
   const [reactions, setReactions] = useState([]);
+  const [showReactions, setShowReactions] = useState(false);
  const sendReaction = (emoji) => {
   const reaction = {
     id: Date.now() + Math.random(),
@@ -625,8 +626,7 @@ const saveRoomNotes = () => {
   setNotesDirty(false);
 };
 
-
-const renderTile = (id, isSpotlight) => {
+const renderTile = (id) => {
   const isLocal = id === USER_ID;
   const stream = isLocal
     ? (screenOn ? screenStreamRef.current : localStreamRef.current)
@@ -639,10 +639,10 @@ const renderTile = (id, isSpotlight) => {
     <div
       onDoubleClick={() => setSpotlightId(id)}
       className={`relative w-full h-full bg-black rounded-2xl overflow-hidden
-      transition-all duration-300
-      ${activeSpeaker === id
-        ? "ring-2 ring-cyan-400 shadow-[0_0_40px_rgba(34,211,238,0.6)]"
-        : ""}
+        transition-all duration-300 cursor-pointer
+        ${activeSpeaker === id
+          ? "ring-2 ring-cyan-400 shadow-[0_0_40px_rgba(34,211,238,0.6)]"
+          : ""}
       `}
     >
       {stream && camEnabled ? (
@@ -659,34 +659,39 @@ const renderTile = (id, isSpotlight) => {
         </div>
       )}
 
-      {/* Name */}
       <div className="absolute top-2 left-2 bg-black/60 px-3 py-1 rounded-full text-xs">
         {isLocal ? "You" : id}
       </div>
 
-      {/* Hover Controls */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 
-                      opacity-0 hover:opacity-100 transition duration-300">
-        <div className="flex gap-2 bg-black/60 backdrop-blur px-3 py-1 rounded-xl">
-          <button className="text-sm">🎯</button>
-          <button className="text-sm">📌</button>
+      {!micEnabled && (
+        <div className="absolute bottom-3 right-3 bg-red-600 p-2 rounded-full text-sm">
+          🔇
         </div>
-      </div>
+      )}
 
-      {/* Audio Wave */}
-      {activeSpeaker === id && (
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-cyan-400 animate-pulse" />
+      {handsRaised[id] && (
+        <div className="absolute top-2 right-2 text-xl animate-bounce">
+          ✋
+        </div>
       )}
     </div>
   );
 };
   /* ================= UI ================= */
  return (
-  <div className="h-screen bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#020617] text-white flex flex-col overflow-hidden relative">
+  <div
+    className="h-screen bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#020617] text-white flex flex-col overflow-hidden relative"
+    onMouseMove={() => {
+      setControlsVisible(true);
+      clearTimeout(window.controlTimeout);
+      window.controlTimeout = setTimeout(() => {
+        setControlsVisible(false);
+      }, 2500);
+    }}
+  >
 
     {/* ================= HEADER ================= */}
     <header className="h-14 px-6 flex justify-between items-center border-b border-white/10 bg-black/40 backdrop-blur-md">
-      
       <div className="flex items-center gap-4">
         <span className="font-semibold text-cyan-400">
           SkillMutant Learning Arena
@@ -698,11 +703,6 @@ const renderTile = (id, isSpotlight) => {
 
       <div className="flex items-center gap-6 text-sm text-slate-400">
         <span>{mm}:{ss} | {members.length}/8</span>
-
-        <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${aiSpeaking ? "bg-cyan-400 animate-pulse" : "bg-green-400"}`} />
-          AI Moderator {aiSpeaking && "Speaking..."}
-        </div>
       </div>
     </header>
 
@@ -735,20 +735,29 @@ const renderTile = (id, isSpotlight) => {
 
             {/* Spotlight */}
             <div className="flex-1">
-              {renderTile(spotlightId, true)}
+              {renderTile(spotlightId)}
             </div>
 
-            {/* Others */}
+            {/* Thumbnails */}
             <div className="h-32 flex gap-4 overflow-x-auto">
-              {members.filter(id => id !== spotlightId).map(id => (
-                <div
-                  key={id}
-                  className="w-40 flex-shrink-0"
-                  onClick={() => setSpotlightId(id)}
-                >
-                  {renderTile(id, false)}
-                </div>
-              ))}
+              {members
+                .filter(id => id !== spotlightId)
+                .map(id => (
+                  <div
+                    key={id}
+                    className="w-40 flex-shrink-0"
+                    onClick={() => setSpotlightId(id)}
+                  >
+                    {renderTile(id)}
+                  </div>
+                ))}
+
+              <button
+                onClick={() => setSpotlightId(null)}
+                className="px-4 rounded-xl bg-black/60 text-sm"
+              >
+                Exit Spotlight
+              </button>
             </div>
 
           </div>
@@ -756,7 +765,7 @@ const renderTile = (id, isSpotlight) => {
           <div className={`grid ${gridCols} gap-4 h-full`}>
             {members.map(id => (
               <div key={id}>
-                {renderTile(id, false)}
+                {renderTile(id)}
               </div>
             ))}
           </div>
@@ -837,11 +846,10 @@ const renderTile = (id, isSpotlight) => {
     </main>
 
 
-    {/* ================= FLOATING CONTROL CENTER ================= */}
+    {/* ================= CONTROL CENTER ================= */}
     <div className={`absolute bottom-6 left-1/2 -translate-x-1/2 z-50 
       transition-all duration-500
-      ${controlsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
-    `}>
+      ${controlsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
 
       <div className="flex items-center gap-4 
                       bg-black/70 backdrop-blur-2xl 
@@ -849,49 +857,85 @@ const renderTile = (id, isSpotlight) => {
                       px-6 py-4 rounded-3xl
                       shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
 
-        <button onClick={toggleMic}
-          className={`w-12 h-12 rounded-full flex items-center justify-center transition
-          ${micOn ? "bg-slate-700" : "bg-red-500"}`}>
+        {/* Mic */}
+        <button
+          onClick={toggleMic}
+          className={`w-12 h-12 flex items-center justify-center rounded-full 
+          transition hover:scale-110
+          ${micOn ? "bg-slate-700" : "bg-red-500"}`}
+        >
           🎤
         </button>
 
-        <button onClick={toggleCam}
+        {/* Cam */}
+        <button
+          onClick={toggleCam}
           className={`w-12 h-12 rounded-full flex items-center justify-center transition
-          ${camOn ? "bg-slate-700" : "bg-red-500"}`}>
+          ${camOn ? "bg-slate-700" : "bg-red-500"}`}
+        >
           📷
         </button>
 
-        <button onClick={screenOn ? stopScreenShare : startScreenShare}
+        {/* Screen */}
+        <button
+          onClick={screenOn ? stopScreenShare : startScreenShare}
           className={`w-12 h-12 rounded-full flex items-center justify-center transition
-          ${screenOn ? "bg-emerald-500" : "bg-slate-700"}`}>
+          ${screenOn ? "bg-emerald-500" : "bg-slate-700"}`}
+        >
           🖥
         </button>
 
-        <button onClick={toggleHand}
-          className="w-12 h-12 rounded-full bg-yellow-500 text-black flex items-center justify-center">
+        {/* Raise Hand */}
+        <button
+          onClick={toggleHand}
+          className={`w-12 h-12 rounded-full flex items-center justify-center transition
+          ${handsRaised[USER_ID] ? "bg-yellow-400 text-black" : "bg-slate-700"}`}
+        >
           ✋
         </button>
 
         <div className="h-8 w-px bg-white/10" />
 
-        <div className="flex gap-2">
-          {["👍","👏","🎉","🔥","❤️","😄"].map(e => (
-            <button
-              key={e}
-              onClick={() => sendReaction(e)}
-              className="text-lg hover:scale-125 transition"
-            >
-              {e}
-            </button>
-          ))}
+        {/* Reaction Button */}
+        <div className="relative">
+          <button
+            onClick={() => setShowReactions(prev => !prev)}
+            className="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center hover:scale-110 transition"
+          >
+            😊
+          </button>
+
+          {showReactions && (
+            <div className="absolute bottom-16 left-1/2 -translate-x-1/2
+                            bg-black/80 backdrop-blur-xl
+                            border border-white/10
+                            px-4 py-3 rounded-2xl
+                            flex gap-3 shadow-xl">
+
+              {["👍","👏","🎉","🔥","❤️","😂","💯"].map(e => (
+                <button
+                  key={e}
+                  onClick={() => {
+                    sendReaction(e);
+                    setShowReactions(false);
+                  }}
+                  className="text-2xl hover:scale-125 transition"
+                >
+                  {e}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="h-8 w-px bg-white/10" />
 
+        {/* Leave */}
         <button
           onClick={handleLeave}
-          className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white">
-          End call for everyone
+          className="bg-red-600 p-3 rounded-full hover:scale-110 transition"
+        >
+          ⏻
         </button>
 
       </div>
