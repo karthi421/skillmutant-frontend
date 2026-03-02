@@ -57,50 +57,7 @@ export default function VideoRoom({ roomId }) {
   const [aiInput, setAiInput] = useState("");
   const [mediaStatus, setMediaStatus] = useState({});
  const [networkQuality, setNetworkQuality] = useState({});
- const [activeSpeaker, setActiveSpeaker] = useState(null);
- const [handsRaised, setHandsRaised] = useState({});
-  const [reactions, setReactions] = useState([]);
- const sendReaction = (emoji) => {
-  const reaction = {
-    id: Date.now() + Math.random(),
-    emoji,
-    from: USER_ID,
-  };
 
-  // Show locally instantly
-  setReactions(prev => [...prev, reaction]);
-
-  // Broadcast to room
-  socketRef.current?.send(
-    JSON.stringify({
-      type: "reaction",
-      emoji,
-      from: USER_ID,
-    })
-  );
-
-  // Auto remove
-  setTimeout(() => {
-    setReactions(prev =>
-      prev.filter(r => r.id !== reaction.id)
-    );
-  }, 2000);
-};
-
-const toggleHand = () => {
-  const raised = !handsRaised[USER_ID];
-
-  setHandsRaised(prev => ({
-    ...prev,
-    [USER_ID]: raised,
-  }));
-
-  socketRef.current?.send(JSON.stringify({
-    type: "hand",
-    from: USER_ID,
-    raised,
-  }));
-};
   /* ================= TIMER ================= */
   useEffect(() => {
     const t = setInterval(() => setSeconds(s => s + 1), 1000);
@@ -137,34 +94,7 @@ const toggleHand = () => {
       localStreamRef.current?.getTracks().forEach(t => t.stop());
     };
   }, []);
-  useEffect(() => {
-  if (!localStreamRef.current) return;
 
-  const audioContext = new AudioContext();
-  const analyser = audioContext.createAnalyser();
-  const micSource = audioContext.createMediaStreamSource(localStreamRef.current);
-  micSource.connect(analyser);
-
-  const data = new Uint8Array(analyser.frequencyBinCount);
-
-  const detect = () => {
-    analyser.getByteFrequencyData(data);
-    const volume = data.reduce((a, b) => a + b) / data.length;
-
-    if (volume > 40) {
-      setActiveSpeaker(USER_ID);
-
-      socketRef.current?.send(JSON.stringify({
-        type: "speaking",
-        from: USER_ID,
-      }));
-    }
-
-    requestAnimationFrame(detect);
-  };
-
-  detect();
-}, [mediaReady]);
   /* ================= WEBSOCKET ================= */
   useEffect(() => {
     if (!mediaReady) return;
@@ -239,39 +169,11 @@ const baseUrl =
          console.log("Received offer from:", msg.from); 
         handleOffer(msg);
       }
-      if (msg.type === "speaking") {
-        setActiveSpeaker(msg.from);
-
-      setTimeout(() => {
-        setActiveSpeaker(null);
-          }, 800);
-      }
-      if (msg.type === "hand") {
-  setHandsRaised(prev => ({
-    ...prev,
-    [msg.from]: msg.raised,
-  }));
-}
       if (msg.type === "answer") {
         console.log("Received answer from:", msg.from);
         await peersRef.current[msg.from]?.setRemoteDescription(msg.answer);
       }
-      if (msg.type === "reaction") {
-          const reaction = {
-        id: Date.now() + Math.random(),
-        emoji: msg.emoji,
-      from: msg.from,
-      };
 
-      setReactions(prev => [...prev, reaction]);
-
-    // Auto remove after 2 seconds
-      setTimeout(() => {
-      setReactions(prev =>
-      prev.filter(r => r.id !== reaction.id)
-      );
-      }, 2000);
-    }
       if (msg.type === "ice") {
         await peersRef.current[msg.from]?.addIceCandidate(msg.candidate);
       }
@@ -604,244 +506,155 @@ const saveRoomNotes = () => {
 };
 
   /* ================= UI ================= */
- return (
-  <div className="h-screen bg-gradient-to-br from-[#020617] to-[#0f172a] text-white flex flex-col overflow-hidden relative">
+  return (
+    <div className="h-screen bg-[#020617] text-white flex flex-col overflow-hidden">
 
-    {/* ================= HEADER ================= */}
-    <header className="h-14 px-6 flex justify-between items-center border-b border-white/10 bg-black/40 backdrop-blur-md">
-      
-      <div className="flex items-center gap-4">
-        <span className="font-semibold text-cyan-400">
-          SkillMutant Learning Arena
-        </span>
-        <span className="text-xs bg-cyan-500/20 px-2 py-1 rounded">
-          INTERVIEW MODE
-        </span>
+      <header className="h-14 px-6 flex justify-between items-center border-b border-white/10">
+        <span>Learning Room — <span className="text-slate-400">{roomId}</span></span>
+        <span className="text-sm text-slate-400">{mm}:{ss} | {members.length}/8</span>
+      </header>
+
+      <main className="flex flex-1 overflow-hidden">
+
+       <section className={`flex-1 grid ${gridCols} gap-4 p-4 overflow-hidden`}>
+  {members.map(id => {
+    const isLocal = id === USER_ID;
+    const stream = isLocal
+      ? (screenOn ? screenStreamRef.current : localStreamRef.current)
+      : remoteStreams[id];
+
+    const camEnabled = mediaStatus[id]?.cam !== false;
+    const micEnabled = mediaStatus[id]?.mic !== false;
+    const quality = networkQuality[id]; // 👈 from state
+
+    return (
+      <div
+        key={id}
+        className="relative rounded-xl bg-black overflow-hidden flex items-center justify-center"
+      >
+        {/* 🎥 VIDEO */}
+        {stream && camEnabled ? (
+          <video
+            autoPlay
+            playsInline
+            muted={isLocal}
+            ref={el => attachStream(el, stream)}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-black text-white">
+            <span className="text-lg">📷 Camera Off</span>
+          </div>
+        )}
+
+        {/* 🔇 MIC ICON */}
+        {!micEnabled && (
+          <div className="absolute bottom-3 right-3 bg-red-600 p-2 rounded-full text-white text-sm">
+            🔇
+          </div>
+        )}
+
+        {/* 🏷 USER LABEL */}
+        <div className="absolute top-2 left-2 bg-black/60 px-2 py-1 rounded text-xs text-white">
+          {isLocal ? "You" : id}
+        </div>
+
+        {/* 📶 NETWORK INDICATOR */}
+      {!isLocal && (
+  <div className="absolute top-2 right-2">
+    {networkQuality[id] ? (
+      <div
+        className={`px-2 py-1 rounded-md text-[10px] font-semibold ${
+          networkQuality[id] === "good 📶"
+            ? "bg-green-600/90 text-white"
+            : networkQuality[id] === "medium 📶"
+            ? "bg-yellow-500/90 text-black"
+            : "bg-red-600/90 text-white"
+        }`}
+      >
+        {networkQuality[id].toUpperCase()}
       </div>
-
-      <div className="flex items-center gap-6 text-sm text-slate-400">
-        <span>{mm}:{ss} | {members.length}/8</span>
-
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-          AI Moderator Active
-        </div>
+    ) : (
+      <div className="px-2 py-1 rounded-md text-[10px] bg-slate-600 text-white">
+        CHECKING..📶
       </div>
-    </header>
+    )}
+  </div>
+)}
 
 
-    {/* ================= FLOATING REACTIONS ================= */}
-    <div className="absolute inset-0 pointer-events-none overflow-hidden z-50">
-      {reactions.map(r => (
-        <div
-          key={r.id}
-          className="absolute text-4xl animate-float"
-          style={{
-            left: `${Math.random() * 80 + 10}%`,
-            bottom: "20%",
-          }}
-        >
-          {r.emoji}
-        </div>
-      ))}
-    </div>
+      </div>
+    );
+  })}
+</section>
 
 
-    {/* ================= MAIN ================= */}
-    <main className="flex flex-1 overflow-hidden relative">
 
-      {/* ================= VIDEO GRID ================= */}
-      <section className={`flex-1 grid ${gridCols} gap-4 p-4`}>
+        <aside className="w-80 border-l border-white/10 bg-black/40 flex flex-col overflow-hidden">
+          <div className="flex gap-2 mb-3">
+            <button onClick={() => setActivePanel("notes")}>📝 Notes</button>
+            <button onClick={() => setActivePanel("ai")}>🤖 AI</button>
+          </div>
 
-        {members.map(id => {
-          const isLocal = id === USER_ID;
-          const stream = isLocal
-            ? (screenOn ? screenStreamRef.current : localStreamRef.current)
-            : remoteStreams[id];
-
-          const camEnabled = mediaStatus[id]?.cam !== false;
-          const micEnabled = mediaStatus[id]?.mic !== false;
-          const quality = networkQuality[id];
-
-          return (
-            <div
-              key={id}
-              className={`relative rounded-2xl overflow-hidden bg-black flex items-center justify-center
-                transition-all duration-300
-                ${activeSpeaker === id ? "ring-2 ring-cyan-400 scale-[1.02]" : ""}
-              `}
-            >
-
-              {/* VIDEO */}
-              {stream && camEnabled ? (
-                <video
-                  autoPlay
-                  playsInline
-                  muted={isLocal}
-                  ref={el => attachStream(el, stream)}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-black text-white">
-                  <span className="text-lg opacity-60">📷 Camera Off</span>
-                </div>
-              )}
-
-              {/* USER LABEL */}
-              <div className="absolute top-2 left-2 bg-black/60 px-2 py-1 rounded text-xs">
-                {isLocal ? "You" : id}
-              </div>
-
-              {/* MIC OFF */}
-              {!micEnabled && (
-                <div className="absolute bottom-3 right-3 bg-red-600 p-2 rounded-full text-sm">
-                  🔇
-                </div>
-              )}
-
-              {/* HAND RAISED */}
-              {handsRaised[id] && (
-                <div className="absolute top-2 right-2 text-xl animate-bounce">
-                  ✋
-                </div>
-              )}
-
-              {/* NETWORK */}
-              {!isLocal && (
-                <div className="absolute bottom-3 left-3 text-[10px] px-2 py-1 rounded-md
-                  bg-black/60 backdrop-blur">
-                  {quality ? quality.toUpperCase() : "CHECKING.."}
-                </div>
-              )}
-
-            </div>
-          );
-        })}
-      </section>
-
-
-      {/* ================= SIDEBAR ================= */}
-      <aside className="w-80 border-l border-white/10 bg-black/50 backdrop-blur-lg flex flex-col">
-
-        <div className="flex border-b border-white/10">
-          <button
-            onClick={() => setActivePanel("notes")}
-            className={`flex-1 py-3 text-sm ${activePanel === "notes" ? "bg-white/10" : ""}`}
-          >
-            📝 Notes
-          </button>
-
-          <button
-            onClick={() => setActivePanel("ai")}
-            className={`flex-1 py-3 text-sm ${activePanel === "ai" ? "bg-white/10" : ""}`}
-          >
-            🤖 AI
-          </button>
-        </div>
-
-        {activePanel === "notes" && (
-          <div className="flex flex-col flex-1 p-4">
-            <textarea
-              value={notes}
-              onChange={e => { setNotes(e.target.value); setNotesDirty(true); }}
-              className="flex-1 bg-black border border-slate-700 rounded p-3 text-sm"
-              placeholder="Write collaborative notes..."
-            />
-            {notesDirty && (
-              <button
+          {activePanel === "notes" && (
+            <>
+              <textarea
+                value={notes}
+                onChange={e => { setNotes(e.target.value); setNotesDirty(true); }}
+                className="flex-1 bg-black border border-slate-700 rounded p-2"
+              />
+              {notesDirty && (
+               <button
                 onClick={saveRoomNotes}
-                className="mt-3 bg-emerald-500 text-black py-2 rounded"
+                className="mt-2 bg-emerald-500 text-black py-2 rounded"
               >
                 💾 Save Notes
               </button>
-            )}
-          </div>
-        )}
 
-        {activePanel === "ai" && (
-          <div className="flex flex-col flex-1">
-            <div className="flex-1 overflow-y-auto p-4 text-sm space-y-3">
-              {aiMessages.map((m, i) => (
-                <div key={i} className={m.role === "assistant" ? "text-cyan-400" : ""}>
-                  <b>{m.role === "user" ? "Q:" : "AI:"}</b> {m.content}
-                </div>
-              ))}
-            </div>
+              )}
+            </>
+          )}
 
-            <div className="p-4 flex gap-2 border-t border-white/10">
-              <input
-                value={aiInput}
-                onChange={e => setAiInput(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && askAI()}
-                className="flex-1 bg-black border border-slate-700 rounded px-3 py-2 text-sm"
-                placeholder="Ask AI..."
-              />
-              <button
-                onClick={askAI}
-                disabled={!aiInput.trim()}
-                className="bg-cyan-500 text-black px-4 rounded disabled:opacity-50"
-              >
-                Ask
-              </button>
-            </div>
-          </div>
-        )}
-      </aside>
+          {activePanel === "ai" && (
+            <>
+              <div className="flex-1 overflow-y-auto p-4 text-sm space-y-2">
+                {aiMessages.map((m, i) => (
+                  <div key={i} className={m.role === "assistant" ? "text-cyan-400" : ""}>
+                    <b>{m.role === "user" ? "Q:" : "AI:"}</b> {m.content}
+                  </div>
+                ))}
+              </div>
 
-    </main>
+              <div className="mt-2 flex gap-2">
+                <input
+                  value={aiInput}
+                  onChange={e => setAiInput(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && askAI()}
+                  className="flex-1 bg-black border border-slate-700 rounded px-2"
+                  placeholder="Ask a doubt…"
+                />
+                <button
+                  onClick={askAI}
+                  disabled={!aiInput.trim()}
+                  className="bg-cyan-500 text-black px-3 rounded disabled:opacity-50"
+                >
+                  Ask
+                </button>
+              </div>
+            </>
+          )}
+        </aside>
+      </main>
 
-
-    {/* ================= FOOTER ================= */}
-    <footer className="h-16 flex justify-center gap-6 items-center border-t border-white/10 bg-black/60 backdrop-blur-lg">
-
-      <button
-        onClick={toggleMic}
-        className={`${micOn ? "bg-slate-700" : "bg-red-500"} p-3 rounded-full hover:scale-110 transition`}
-      >
-        🎤
-      </button>
-
-      <button
-        onClick={toggleCam}
-        className={`${camOn ? "bg-slate-700" : "bg-red-500"} p-3 rounded-full hover:scale-110 transition`}
-      >
-        📷
-      </button>
-
-      <button
-        onClick={screenOn ? stopScreenShare : startScreenShare}
-        className={`${screenOn ? "bg-emerald-500" : "bg-slate-700"} p-3 rounded-full hover:scale-110 transition`}
-      >
-        🖥
-      </button>
-
-      <button
-        onClick={toggleHand}
-        className="bg-yellow-500 text-black p-3 rounded-full hover:scale-110 transition"
-      >
-        ✋
-      </button>
-
-      <div className="flex gap-2">
-        {["👍","🔥","👏","😂","💯"].map(e => (
-          <button
-            key={e}
-            onClick={() => sendReaction(e)}
-            className="bg-slate-700 px-2 py-1 rounded hover:scale-110 transition"
-          >
-            {e}
-          </button>
-        ))}
-      </div>
-
-      <button
-        onClick={handleLeave}
-        className="bg-red-600 p-3 rounded-full hover:scale-110 transition"
-      >
-        ⏻
-      </button>
-
-    </footer>
-  </div>
-);
+      <footer className="h-16 flex justify-center gap-6 items-center border-t border-white/10">
+        <button onClick={toggleMic} className={micOn ? "bg-slate-700 p-3 rounded-full" : "bg-red-500 p-3 rounded-full"}>🎤</button>
+        <button onClick={toggleCam} className={camOn ? "bg-slate-700 p-3 rounded-full" : "bg-red-500 p-3 rounded-full"}>📷</button>
+        <button onClick={screenOn ? stopScreenShare : startScreenShare}
+          className={screenOn ? "bg-emerald-500 p-3 rounded-full" : "bg-slate-700 p-3 rounded-full"}>
+          🖥
+        </button>
+        <button onClick={handleLeave} className="bg-red-600 p-3 rounded-full">⏻</button>
+      </footer>
+    </div>
+  );
 }
