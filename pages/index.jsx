@@ -142,7 +142,12 @@ export default function Home() {
         >
           Login
         </button>
-
+         <a
+    href="/forgot-password"
+    className="text-xs text-cyan-400 hover:underline"
+  >
+    Forgot password?
+  </a>
         <button
           onClick={() => setMode("register")}
           className={`flex-1 py-2 rounded-full text-sm transition ${
