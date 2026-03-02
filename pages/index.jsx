@@ -106,20 +106,21 @@ export default function Home() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 return (
-  <div className="min-h-screen flex items-center justify-center bg-[#0b1220] text-white">
+  <div className="min-h-screen flex items-center justify-center 
+                  bg-gradient-to-br from-[#0b1220] to-[#0f172a] text-white">
 
-    {/* Center Wrapper */}
-    <div className="w-full max-w-md px-6">
-      <div className="bg-[#0f172a] border border-white/10 rounded-2xl p-10
+    <div className="w-full max-w-lg px-6">
+      <div className="bg-[#0f172a] border border-white/10 
+                      rounded-2xl p-12
                       shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
 
         {/* Logo */}
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-light tracking-wide">
+          <h1 className="text-[28px] font-light tracking-[0.5px]">
             <span className="italic text-slate-400">Skill</span>
             <span className="font-semibold text-white">Mutant</span>
           </h1>
-          <p className="text-slate-500 text-sm mt-3">
+          <p className="text-slate-500 text-xs mt-2">
             AI Skill Intelligence Platform
           </p>
         </div>
@@ -151,6 +152,7 @@ return (
 
         <div className="space-y-5">
 
+          {/* Email */}
           <input
             name="email"
             placeholder="Email"
@@ -162,6 +164,7 @@ return (
             onChange={handleChange}
           />
 
+          {/* Username (Register Only) */}
           {mode === "register" && (
             <input
               name="username"
@@ -190,12 +193,14 @@ return (
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-3 text-sm text-slate-500 cursor-pointer hover:text-white"
+              className="absolute right-4 top-3 text-sm text-slate-500 
+                         cursor-pointer hover:text-white"
             >
               {showPassword ? "Hide" : "Show"}
             </span>
           </div>
 
+          {/* Confirm Password (Register Only) */}
           {mode === "register" && (
             <div className="relative">
               <input
@@ -211,10 +216,23 @@ return (
               />
               <span
                 onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute right-4 top-3 text-sm text-slate-500 cursor-pointer hover:text-white"
+                className="absolute right-4 top-3 text-sm text-slate-500 
+                           cursor-pointer hover:text-white"
               >
                 {showConfirm ? "Hide" : "Show"}
               </span>
+            </div>
+          )}
+
+          {/* Forgot Password (Login Only) */}
+          {mode === "login" && (
+            <div className="flex justify-end">
+              <a
+                href="/forgot-password"
+                className="text-xs text-slate-400 hover:text-white transition"
+              >
+                Forgot password?
+              </a>
             </div>
           )}
 
@@ -222,14 +240,15 @@ return (
           <button
             onClick={mode === "login" ? handlePasswordLogin : handleRegister}
             className="w-full py-3 rounded-xl
-                       bg-[#1e293b]
-                       hover:bg-[#334155]
+                       bg-white text-black
+                       hover:bg-slate-200
                        transition
                        font-medium"
           >
             {mode === "login" ? "Login" : "Create Account"}
           </button>
 
+          {/* Google (Login Only) */}
           {mode === "login" && (
             <>
               <div className="my-6 text-center text-xs text-slate-500">
@@ -239,7 +258,6 @@ return (
               <button
                 onClick={() => signIn("google")}
                 className="w-full py-3 rounded-xl
-                           bg-transparent
                            border border-white/10
                            hover:bg-white/5
                            transition"
@@ -253,5 +271,4 @@ return (
       </div>
     </div>
   </div>
-);
-}
+);}
