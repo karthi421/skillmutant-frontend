@@ -586,21 +586,78 @@ useEffect(() => {
 
 </section>
 
-          {/* ================= PHASE 4 ================= */}
-          <section
-            ref={phaseRefs[3]}
-            className="bg-white/5 border border-white/10 rounded-2xl p-10 backdrop-blur-sm"
-          >
-            <h2 className="text-2xl font-semibold text-cyan-400 mb-8">
-              Phase 4 — Career Readiness
-            </h2>
+         {/* ================= PHASE 4 ================= */}
+<section
+  ref={phaseRefs[3]}
+  className="bg-gradient-to-b from-white/5 to-white/[0.02]
+             border border-white/10 rounded-2xl
+             p-10 backdrop-blur-sm transition-all duration-500"
+>
 
-            <InterviewReadinessCard />
-            <InterviewRoadmap />
-            <AIJobRecommendations analysis={analysis} />
-            <AIMockInterview analysis={analysis} />
-            <CollaborativeLearningRooms />
-          </section>
+  {/* ===== HEADER ===== */}
+  <div className="mb-12">
+    <h2 className="text-2xl font-semibold text-cyan-400">
+      Phase 4 — Career Readiness & Market Domination
+    </h2>
+    <p className="text-slate-400 text-sm mt-2 max-w-2xl">
+      Interview preparation, recruiter alignment, job targeting,
+      and real-world execution strategy — powered by AI.
+    </p>
+  </div>
+
+  {/* ===== INTERVIEW READINESS BLOCK ===== */}
+  <div className="mb-16">
+    <h3 className="text-lg font-semibold mb-6">
+      Interview Readiness Intelligence
+    </h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+      <div className="border border-white/10 rounded-xl p-6 bg-white/[0.02]">
+        <InterviewReadinessCard />
+      </div>
+
+      <div className="border border-white/10 rounded-xl p-6 bg-white/[0.02]">
+        <InterviewRoadmap />
+      </div>
+
+    </div>
+  </div>
+
+  {/* ===== JOB TARGETING ENGINE ===== */}
+  <div className="mb-16">
+    <h3 className="text-lg font-semibold mb-6">
+      AI Job Targeting & Role Matching
+    </h3>
+
+    <div className="border border-cyan-400/20 rounded-xl p-6 bg-cyan-400/[0.03]">
+      <AIJobRecommendations analysis={analysis} />
+    </div>
+  </div>
+
+  {/* ===== MOCK INTERVIEW SYSTEM ===== */}
+  <div className="mb-16">
+    <h3 className="text-lg font-semibold mb-6">
+      AI Mock Interview Simulator
+    </h3>
+
+    <div className="border border-white/10 rounded-xl p-6 bg-white/[0.02]">
+      <AIMockInterview analysis={analysis} />
+    </div>
+  </div>
+
+  {/* ===== COLLABORATIVE ROOMS ===== */}
+  <div>
+    <h3 className="text-lg font-semibold mb-6">
+      Collaborative Learning Rooms
+    </h3>
+
+    <div className="border border-white/10 rounded-xl p-6 bg-white/[0.02]">
+      <CollaborativeLearningRooms />
+    </div>
+  </div>
+
+</section>
         </>
       )}
     </div>
