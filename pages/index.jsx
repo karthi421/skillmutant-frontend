@@ -22,7 +22,7 @@ function PremiumButton({ children, onClick }) {
 
       {/* inner surface */}
       <div className="relative z-10 rounded-full bg-white/5 py-3
-                      shadow-[inset_0_-6px_10px_rgba(255,255,255,0.08)]
+                      shadow-[inset_0_-6px_10px_rgba(255,255,255,0.15)]
                       group-hover:shadow-[inset_0_-6px_14px_rgba(255,255,255,0.15)]
                       transition-all duration-300">
         <span className="text-sm lg:text-base font-medium tracking-tight">

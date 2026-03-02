@@ -189,3 +189,61 @@ export default function Dashboard() {
           </svg>
         </button>
  */
+
+
+
+
+
+
+
+
+        /* 
+
+<div className="relative min-h-screen w-full flex flex-col bg-gradient-to-b from-[#020617] via-[#020617] to-black text-white">
+
+     <div className="absolute inset-0 -z-10 pointer-events-none
+        bg-[radial-gradient(circle_at_0%_0%,rgba(255,255,255,0.08),transparent_45%)]"
+      />
+
+<section id="contact" className="mt-40 pb-32 text-center">
+
+  
+  <div className="max-w-6xl mx-auto px-6 mb-20">
+    <div className="h-px w-full bg-white" />
+  </div>
+
+  <h3 className="text-3xl font-semibold mb-8">Contact</h3>
+
+  <div className="space-y-4 text-neutral-400">
+
+    <p>
+      Email:{" "}
+      <a
+        href="mailto:skillmutant.app@gmail.com"
+        className="text-white hover:text-cyan-400 transition"
+      >
+        support@skillmutant.ai
+      </a>
+    </p>
+
+    <p>
+      LinkedIn:{" "}
+      <a
+        href="https://www.linkedin.com/in/karthik-kandelli-9573712b9/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-white hover:text-cyan-400 transition"
+      >
+        Kandelli Karthik
+      </a>
+    </p>
+     
+  <div className="mt-12 text-xs text-slate-500">
+    © {new Date().getFullYear()} SkillMutant · Engineered by{" "}
+    <span className="text-slate-300 font-medium">
+      Kandelli Karthik
+    </span>
+  </div>
+  </div>
+
+</section> */
