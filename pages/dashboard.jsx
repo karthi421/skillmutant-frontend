@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <div className="relative min-h-screen w-full flex flex-col bg-[#0B1F3A] text-white">
 
-      
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.05),transparent_60%)]" />
       
   {/* ===== NAVBAR ===== */}
 <div className="w-full px-12 py-8 flex items-center justify-between">
