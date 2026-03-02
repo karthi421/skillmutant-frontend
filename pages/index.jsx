@@ -113,12 +113,14 @@ export default function Home() {
  <div className="relative min-h-screen flex items-center justify-center text-white">
 
   {/* MODERN STARTUP BACKGROUND */}
-<div className="fixed inset-0 -z-10 
-  bg-gradient-to-br 
-  from-[#0f172a] 
-  via-[#111827] 
-  to-[#1e293b]" 
-/>
+  <div
+    className="fixed inset-0 -z-10 
+      bg-[radial-gradient(circle_at_15%_25%,#1E293B,transparent_40%),
+           radial-gradient(circle_at_85%_75%,#312E81,transparent_40%)]
+      bg-gradient-to-br from-[#0F172A] via-[#111827] to-[#1E1B4B]"
+  />
+
+
 
       {/* LOGO */}
       <div className="text-center mb-8">
