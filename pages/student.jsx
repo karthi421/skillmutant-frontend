@@ -455,18 +455,78 @@ useEffect(() => {
   </div>
 
 </section>
-          {/* ================= PHASE 2 ================= */}
-          <section
-            ref={phaseRefs[1]}
-            className="bg-white/5 border border-white/10 rounded-2xl p-10 backdrop-blur-sm"
-          >
-            <h2 className="text-2xl font-semibold text-cyan-400 mb-8">
-              Phase 2 — ATS Optimization
-            </h2>
+        {/* ================= PHASE 2 ================= */}
+<section
+  ref={phaseRefs[1]}
+  className="bg-gradient-to-b from-white/5 to-white/[0.02]
+             border border-white/10 rounded-2xl
+             p-10 backdrop-blur-sm transition-all duration-500"
+>
 
-            <ResumeComparison />
-            <SkillConfidenceGrowth />
-          </section>
+  {/* ===== HEADER ===== */}
+  <div className="mb-10">
+    <h2 className="text-2xl font-semibold text-cyan-400">
+      Phase 2 — ATS Optimization
+    </h2>
+    <p className="text-slate-400 text-sm mt-2">
+      Keyword compliance analysis, structural formatting review, and machine parsing evaluation.
+    </p>
+  </div>
+
+  {/* ===== ATS SCORE BLOCK ===== */}
+  <div className="flex items-center gap-8 mb-12">
+
+    <div className="text-5xl font-bold text-cyan-400">
+      {analysis.ats_score}%
+    </div>
+
+    <div className="text-sm text-slate-400 max-w-md leading-relaxed">
+      {analysis.ats_verdict}
+      <div className="mt-2 text-xs text-slate-500">
+        ATS systems prioritize structure, keyword density,
+        and semantic alignment — not visual design.
+      </div>
+    </div>
+
+  </div>
+
+  {/* ===== BEFORE / AFTER COMPARISON ===== */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+    <div className="border border-red-500/30 bg-red-500/5 rounded-xl p-6">
+      <h3 className="text-sm font-semibold text-red-400 mb-4">
+        ❌ Current Resume Analysis
+      </h3>
+
+      <ResumeComparison mode="before" />
+
+    </div>
+
+    <div className="border border-green-500/30 bg-green-500/5 rounded-xl p-6">
+      <h3 className="text-sm font-semibold text-green-400 mb-4">
+        ✅ Optimized Structure Projection
+      </h3>
+
+      <ResumeComparison mode="after" />
+
+    </div>
+
+  </div>
+
+  {/* ===== GROWTH TREND ===== */}
+  <div className="mt-16">
+
+    <h3 className="text-lg font-semibold mb-6">
+      Skill Confidence Trajectory
+    </h3>
+
+    <div className="border border-white/10 rounded-xl p-6 bg-white/[0.02]">
+      <SkillConfidenceGrowth />
+    </div>
+
+  </div>
+
+</section>
 
           {/* ================= PHASE 3 ================= */}
           <section
