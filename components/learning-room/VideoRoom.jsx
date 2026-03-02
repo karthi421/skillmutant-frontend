@@ -56,13 +56,13 @@ export default function VideoRoom({ roomId }) {
   const [aiMessages, setAiMessages] = useState([]);
   const [aiInput, setAiInput] = useState("");
   const [mediaStatus, setMediaStatus] = useState({});
-  const [aiSpeaking, setAiSpeaking] = useState(false);
   const [spotlightId, setSpotlightId] = useState(null);
  const [networkQuality, setNetworkQuality] = useState({});
  const [activeSpeaker, setActiveSpeaker] = useState(null);
  const [handsRaised, setHandsRaised] = useState({});
   const [reactions, setReactions] = useState([]);
   const [showReactions, setShowReactions] = useState(false);
+  const [showParticipants, setShowParticipants] = useState(false);
  const sendReaction = (emoji) => {
   const reaction = {
     id: Date.now() + Math.random(),
@@ -625,9 +625,12 @@ const saveRoomNotes = () => {
 
   setNotesDirty(false);
 };
-
 const renderTile = (id) => {
   const isLocal = id === USER_ID;
+
+  // 🔹 Find member object
+  const member = members.find(m => m.id === id);
+
   const stream = isLocal
     ? (screenOn ? screenStreamRef.current : localStreamRef.current)
     : remoteStreams[id];
@@ -637,7 +640,13 @@ const renderTile = (id) => {
 
   return (
     <div
-      onDoubleClick={() => setSpotlightId(id)}
+      onDoubleClick={() => {
+        if (spotlightId === id) {
+          setSpotlightId(null); // Exit spotlight
+        } else {
+          setSpotlightId(id);   // Enter spotlight
+        }
+      }}
       className={`relative w-full h-full bg-black rounded-2xl overflow-hidden
         transition-all duration-300 cursor-pointer
         ${activeSpeaker === id
@@ -645,6 +654,7 @@ const renderTile = (id) => {
           : ""}
       `}
     >
+      {/* ===== VIDEO ===== */}
       {stream && camEnabled ? (
         <video
           autoPlay
@@ -654,21 +664,24 @@ const renderTile = (id) => {
           className="w-full h-full object-cover"
         />
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center text-white/50">
-          Camera Off
+        <div className="absolute inset-0 flex items-center justify-center text-white/50 text-sm">
+          📷 Camera Off
         </div>
       )}
 
-      <div className="absolute top-2 left-2 bg-black/60 px-3 py-1 rounded-full text-xs">
-        {isLocal ? "You" : id}
+      {/* ===== NAME LABEL ===== */}
+      <div className="absolute top-2 left-2 bg-black/60 px-3 py-1 rounded-full text-xs backdrop-blur-sm">
+        {isLocal ? "You" : member?.name || id}
       </div>
 
+      {/* ===== MIC OFF ===== */}
       {!micEnabled && (
         <div className="absolute bottom-3 right-3 bg-red-600 p-2 rounded-full text-sm">
           🔇
         </div>
       )}
 
+      {/* ===== RAISED HAND ===== */}
       {handsRaised[id] && (
         <div className="absolute top-2 right-2 text-xl animate-bounce">
           ✋
@@ -704,6 +717,12 @@ const renderTile = (id) => {
       <div className="flex items-center gap-6 text-sm text-slate-400">
         <span>{mm}:{ss} | {members.length}/8</span>
       </div>
+     <button
+  onClick={() => setShowParticipants(prev => !prev)}
+  className="text-sm bg-white/10 px-3 py-1 rounded hover:bg-white/20 transition"
+>
+  👥 Participants
+</button> 
     </header>
 
 
@@ -726,6 +745,67 @@ const renderTile = (id) => {
 
     {/* ================= MAIN ================= */}
     <main className="flex flex-1 overflow-hidden relative">
+      {showParticipants && (
+  <div className="absolute right-0 top-14 bottom-0 w-80
+                  bg-black/80 backdrop-blur-xl
+                  border-l border-white/10
+                  p-4 z-40 overflow-y-auto">
+
+    <h3 className="text-lg font-semibold mb-4 text-cyan-400">
+      Participants ({members.length})
+    </h3>
+
+    <div className="space-y-3">
+      {members.map(member => {
+        const isSpeaking = activeSpeaker === member.id;
+        const hand = handsRaised[member.id];
+        const mic = mediaStatus[member.id]?.mic !== false;
+        const cam = mediaStatus[member.id]?.cam !== false;
+
+        return (
+          <div
+            key={member.id}
+            className={`flex items-center justify-between p-3 rounded-xl
+            ${isSpeaking ? "bg-cyan-500/10 border border-cyan-400/40" : "bg-white/5"}
+            `}
+          >
+
+            {/* Left */}
+            <div className="flex items-center gap-3">
+
+              {/* Avatar */}
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br
+                              from-cyan-400 to-blue-500
+                              flex items-center justify-center text-black font-bold">
+                {member.name?.charAt(0).toUpperCase()}
+              </div>
+
+              <div>
+                <p className="text-sm font-medium">
+                  {member.name}
+                </p>
+                {isSpeaking && (
+                  <p className="text-xs text-cyan-400">
+                    Speaking...
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Status Icons */}
+            <div className="flex items-center gap-2 text-sm">
+              {!mic && "🔇"}
+              {!cam && "📷"}
+              {hand && "✋"}
+            </div>
+
+          </div>
+        );
+      })}
+    </div>
+
+  </div>
+)}
 
       {/* ================= VIDEO AREA ================= */}
       <section className="flex-1 p-4 overflow-hidden">
