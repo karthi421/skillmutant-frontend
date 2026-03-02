@@ -107,14 +107,16 @@ export default function Home() {
   };
 
  return (
-  <div className="relative min-h-screen flex items-center justify-center bg-[#0E0E10] text-white">
+  <div className="relative min-h-screen flex items-center justify-center text-white">
 
-    {/* NEW PREMIUM GRAPHITE BACKGROUND */}
-    <div className="fixed inset-0 -z-10 
-      bg-[radial-gradient(circle_at_top_left,#1C1C1F,transparent_40%),
-           radial-gradient(circle_at_bottom_right,#18181B,transparent_40%)]
-      bg-[#0E0E10]" 
-    />
+  {/* NEW MIDNIGHT DEPTH BACKGROUND */}
+  <div className="fixed inset-0 -z-10 
+    bg-[radial-gradient(circle_at_20%_20%,#1E293B,transparent_40%),
+         radial-gradient(circle_at_80%_80%,#0F172A,transparent_40%)]
+    bg-gradient-to-br from-[#0B1220] via-[#0F172A] to-[#111827]" 
+  />
+
+ 
 
     <div className="w-[440px] p-10 rounded-2xl bg-[#1A1A1D] border border-neutral-800 shadow-xl">
 
