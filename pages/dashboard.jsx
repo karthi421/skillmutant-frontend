@@ -159,18 +159,45 @@ export default function Home() {
       </section>
 
       {/* ===== CONTACT ===== */}
-    <section id="contact" className="mt-40 pb-32 text-center">
+<section id="contact" className="mt-40 pb-32 text-center">
 
   {/* Divider */}
   <div className="max-w-6xl mx-auto px-6 mb-20">
-    <div className="h-px w-full bg-white" />
+    <div className="h-px w-full bg-white/30" />
   </div>
 
-  <h3 className="text-3xl font-semibold mb-6">Contact</h3>
-  <p className="text-neutral-400">Email: support@skillmutant.ai</p>
-  <p className="text-neutral-400">LinkedIn: Kandelli Karthik</p>
+  <h3 className="text-3xl font-semibold mb-8">Contact</h3>
+
+  <div className="space-y-4 text-neutral-400">
+
+    <p>
+      Email:{" "}
+      <a
+        href="mailto:skillmutant.app@gmail.com"
+        className="text-white hover:text-cyan-400 transition"
+      >
+        support@skillmutant.ai
+      </a>
+    </p>
+
+    <p>
+      LinkedIn:{" "}
+      <a
+        href="https://www.linkedin.com/in/karthik-kandelli-9573712b9/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-white hover:text-cyan-400 transition"
+      >
+        Kandelli Karthik
+      </a>
+    </p>
+
+  </div>
 
 </section>
+<div className="mt-16 text-xs tracking-wide text-slate-500">
+  © {new Date().getFullYear()} SkillMutant · Engineered by Kandelli Karthik
+</div>
 
     </div>
   );
