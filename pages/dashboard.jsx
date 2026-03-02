@@ -159,6 +159,9 @@ export default function Home() {
       </section>
 
       {/* ===== CONTACT ===== */}
+       <div className="max-w-6xl mx-auto px-6">
+          <div className="h-px bg-white/15 w-full" />
+      </div>
       <section id="contact" className="mt-40 pb-32 text-center">
 
         <h3 className="text-3xl font-semibold mb-6">Contact</h3>
