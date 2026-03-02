@@ -105,58 +105,78 @@ export default function Home() {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-
 return (
-  <div className="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
+  <div className="relative min-h-screen flex items-center justify-center overflow-hidden text-white">
 
-    {/* Background */}
-    <div
-      className="absolute inset-0 -z-10 
-      bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#1e293b]"
+    {/* === FUTURISTIC AI BACKGROUND === */}
+    <div className="absolute inset-0 -z-10 bg-[#050816]" />
+
+    {/* moving light beam */}
+    <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[800px]
+                    bg-[radial-gradient(circle,rgba(56,189,248,0.15),transparent_60%)]
+                    blur-3xl animate-pulse"
     />
 
-    {/* Centered Card Wrapper */}
+    {/* === GLASS AI CARD === */}
     <div className="w-full max-w-md px-6">
-      <div className="rounded-2xl bg-[#111827]/70 backdrop-blur-xl 
-                      border border-white/10 shadow-2xl p-10">
+      <div className="
+        relative
+        bg-white/5
+        backdrop-blur-2xl
+        border border-white/10
+        rounded-3xl
+        p-10
+        shadow-[0_0_40px_rgba(0,0,0,0.6)]
+        transition-all duration-500
+        hover:shadow-[0_0_80px_rgba(56,189,248,0.15)]
+      ">
 
         {/* LOGO */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
-            Skill<span className="font-semibold">Mutant</span>
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-light tracking-widest">
+            <span className="italic text-slate-300">Skill</span>
+            <span className="font-semibold text-white">Mutant</span>
           </h1>
-          <p className="text-neutral-400 text-sm mt-2">
+          <p className="text-slate-400 text-sm mt-3 tracking-wide">
             AI Skill Intelligence Platform
           </p>
         </div>
 
         {/* TOGGLE */}
-        <div className="flex mb-8 bg-[#141417] rounded-full p-1 border border-neutral-700">
+        <div className="flex mb-8 bg-black/40 rounded-full p-1 border border-white/10">
           <button
             onClick={() => setMode("login")}
-            className={`flex-1 py-2 rounded-full text-sm transition ${
-              mode === "login" ? "bg-white text-black" : "text-neutral-400"
+            className={`flex-1 py-2 rounded-full text-sm transition-all duration-300 ${
+              mode === "login"
+                ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             Login
           </button>
+
           <button
             onClick={() => setMode("register")}
-            className={`flex-1 py-2 rounded-full text-sm transition ${
-              mode === "register" ? "bg-white text-black" : "text-neutral-400"
+            className={`flex-1 py-2 rounded-full text-sm transition-all duration-300 ${
+              mode === "register"
+                ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             Register
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-5">
 
           <input
             name="email"
             placeholder="Email"
-            className="w-full px-4 py-3 rounded-lg bg-[#141417]
-                       border border-neutral-700 outline-none focus:border-white"
+            className="w-full px-4 py-3 rounded-xl bg-black/40
+                       border border-white/10
+                       focus:border-cyan-400
+                       focus:ring-1 focus:ring-cyan-400
+                       outline-none transition"
             value={form.email}
             onChange={handleChange}
           />
@@ -165,27 +185,32 @@ return (
             <input
               name="username"
               placeholder="Username"
-              className="w-full px-4 py-3 rounded-lg bg-[#141417]
-                         border border-neutral-700 outline-none focus:border-white"
+              className="w-full px-4 py-3 rounded-xl bg-black/40
+                         border border-white/10
+                         focus:border-cyan-400
+                         focus:ring-1 focus:ring-cyan-400
+                         outline-none transition"
               value={form.username}
               onChange={handleChange}
             />
           )}
 
-          {/* PASSWORD */}
           <div className="relative">
             <input
               name="password"
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full px-4 py-3 rounded-lg bg-[#141417]
-                         border border-neutral-700 outline-none focus:border-white"
+              className="w-full px-4 py-3 rounded-xl bg-black/40
+                         border border-white/10
+                         focus:border-cyan-400
+                         focus:ring-1 focus:ring-cyan-400
+                         outline-none transition"
               value={form.password}
               onChange={handleChange}
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-3 text-sm text-neutral-400 cursor-pointer"
+              className="absolute right-4 top-3 text-sm text-slate-400 cursor-pointer hover:text-white"
             >
               {showPassword ? "Hide" : "Show"}
             </span>
@@ -197,32 +222,49 @@ return (
                 name="confirmPassword"
                 type={showConfirm ? "text" : "password"}
                 placeholder="Confirm Password"
-                className="w-full px-4 py-3 rounded-lg bg-[#141417]
-                           border border-neutral-700 outline-none focus:border-white"
+                className="w-full px-4 py-3 rounded-xl bg-black/40
+                           border border-white/10
+                           focus:border-cyan-400
+                           focus:ring-1 focus:ring-cyan-400
+                           outline-none transition"
                 value={form.confirmPassword}
                 onChange={handleChange}
               />
               <span
                 onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute right-4 top-3 text-sm text-neutral-400 cursor-pointer"
+                className="absolute right-4 top-3 text-sm text-slate-400 cursor-pointer hover:text-white"
               >
                 {showConfirm ? "Hide" : "Show"}
               </span>
             </div>
           )}
 
-          <PremiumButton
+          {/* MAIN BUTTON */}
+          <button
             onClick={mode === "login" ? handlePasswordLogin : handleRegister}
+            className="w-full py-3 rounded-xl
+                       bg-gradient-to-r from-cyan-500 to-blue-600
+                       hover:from-cyan-400 hover:to-blue-500
+                       transition-all duration-300
+                       font-medium shadow-lg
+                       hover:shadow-cyan-500/30"
           >
             {mode === "login" ? "Login" : "Create Account"}
-          </PremiumButton>
+          </button>
 
           {mode === "login" && (
             <>
-              <div className="my-6 text-center text-xs text-neutral-500">OR</div>
-              <PremiumButton onClick={() => signIn("google")}>
+              <div className="my-6 text-center text-xs text-slate-500">OR</div>
+
+              <button
+                onClick={() => signIn("google")}
+                className="w-full py-3 rounded-xl
+                           bg-white/10
+                           hover:bg-white/20
+                           transition border border-white/10"
+              >
                 Continue with Google
-              </PremiumButton>
+              </button>
             </>
           )}
 
