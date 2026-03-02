@@ -266,7 +266,7 @@ useEffect(() => {
 
     )}
 
-      {/* ===== ACCOUNT PANEL ===== */}
+      
       {/* ===== ACCOUNT PANEL ===== */}
 <StudentAccountPanel
   open={accountOpen}

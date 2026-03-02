@@ -285,7 +285,68 @@ useEffect(() => {
 
     {/* ===== HEADER ===== */}
     <StudentHeader />
-
+     {/* ===== SIDEBAR (ONLY ONCE — FIXED) ===== */}
+          {sidebarOpen && (
+            <StudentSidebar
+      onClose={() => setSidebarOpen(false)}
+      onOpenAccount={() => {
+        setAccountOpen(true);
+        setSidebarOpen(false);
+      }}
+      onOpenJobs={() => {
+        setJobsOpen(true);
+        setSidebarOpen(false);
+      }}
+      interviewCount={interviewCount}
+       onOpenNotes={(mode) => {
+          setNotesMode(mode);     
+          setNotesOpen(true);
+          setSidebarOpen(false);
+        }}
+        onOpenQuizzes={() => {
+          setQuizzesOpen(true);
+        }}
+      /> 
+     )}
+    
+       {/* ===== SIDEBAR TOGGLE (AFTER RESUME ANALYSIS) ===== */}
+         
+            <button
+      onClick={() => setSidebarOpen(true)}
+      className="
+        fixed top-20 left-4 z-40
+        bg-slate-800/80 backdrop-blur
+        px-3 py-2 rounded-md
+        hover:bg-slate-700 transition
+      "
+    >
+      MENU ☰
+    </button>
+          
+          {/* ===== ACCOUNT PANEL ===== */}
+    <StudentAccountPanel
+      open={accountOpen}
+      onClose={() => setAccountOpen(false)}
+    />
+    
+    {/* ===== JOBS PANEL ===== */}
+    {jobsOpen && (
+      <JobsPanel
+        onClose={() => setJobsOpen(false)}
+      />
+    )}
+    {notesOpen && (
+      <NotesPanel
+        mode={notesMode}
+        onClose={() => setNotesOpen(false)}
+      />
+    )}
+    
+    {quizzesOpen && (
+      <QuizPanel onClose={() => setQuizzesOpen(false)} />
+    )}
+       
+    
     {/* ===== AI PIPELINE HUD ===== */}
     {analysis && (
       <div className="sticky top-16 z-50 bg-[#020617]/95 backdrop-blur-xl border-b border-white/10">
