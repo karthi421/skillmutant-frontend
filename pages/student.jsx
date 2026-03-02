@@ -107,15 +107,14 @@ export default function StudentPage() {
 
 const [activePhase, setActivePhase] = useState(0);
 
+
+
 const phaseRefs = [
   useRef(null),
   useRef(null),
   useRef(null),
   useRef(null),
 ];
- const progressPercent = analysis
-  ? Math.round((activePhase / 3) * 100)
-  : 0;
 
 const scrollToPhase = (index) => {
   phaseRefs[index]?.current?.scrollIntoView({
@@ -123,6 +122,8 @@ const scrollToPhase = (index) => {
     block: "start",
   });
 };
+
+const progressPercent = Math.round((activePhase / 3) * 100);
 
 // ===== AI LEARNING PATH FROM RESUME =====
 const fetchLearningPath = async (skill = null) => {
@@ -279,404 +280,188 @@ useEffect(() => {
   return () => window.removeEventListener("scroll", handleScroll);
 }, []);
  
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-[#020617] to-[#0f172a] text-white">
+ return (
+  <div className="min-h-screen bg-gradient-to-b from-[#020617] via-[#020617] to-black text-white">
 
-      {/* ===== HEADER ===== */}
-      <StudentHeader />
+    {/* ===== HEADER ===== */}
+    <StudentHeader />
 
-      {/* ===== SIDEBAR (ONLY ONCE — FIXED) ===== */}
-      {sidebarOpen && (
-        <StudentSidebar
-  onClose={() => setSidebarOpen(false)}
-  onOpenAccount={() => {
-    setAccountOpen(true);
-    setSidebarOpen(false);
-  }}
-  onOpenJobs={() => {
-    setJobsOpen(true);
-    setSidebarOpen(false);
-  }}
-  interviewCount={interviewCount}
-   onOpenNotes={(mode) => {
-      setNotesMode(mode);     
-      setNotesOpen(true);
-      setSidebarOpen(false);
-    }}
-    onOpenQuizzes={() => {
-      setQuizzesOpen(true);
-    }}
-/>
+    {/* ===== AI PIPELINE HUD ===== */}
+    {analysis && (
+      <div className="sticky top-16 z-50 bg-[#020617]/95 backdrop-blur-xl border-b border-white/10">
 
+        <div className="max-w-7xl mx-auto px-6 py-6 relative">
+
+          <div className="flex justify-between items-center mb-4">
+            <div className="text-xs text-slate-400 uppercase tracking-wider">
+              AI Career Transformation Pipeline
+            </div>
+            <div className="text-xs text-cyan-400 font-semibold">
+              {progressPercent}% Complete
+            </div>
+          </div>
+
+          <div className="relative h-[3px] bg-white/10 rounded-full overflow-hidden">
+            <div
+              className="absolute top-0 left-0 h-full bg-cyan-400 transition-all duration-700 shadow-[0_0_20px_rgba(34,211,238,0.7)]"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+
+          <div className="flex justify-between mt-6">
+
+            {[
+              "Resume Intelligence",
+              "ATS Optimization",
+              "Skill Acceleration",
+              "Career Readiness",
+            ].map((phase, i) => {
+
+              const completed = activePhase > i;
+              const active = activePhase === i;
+
+              return (
+                <button
+                  key={phase}
+                  onClick={() => scrollToPhase(i)}
+                  className="flex flex-col items-center gap-2 group"
+                >
+                  <div
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold
+                    transition-all duration-500
+                    ${
+                      completed
+                        ? "bg-cyan-400 text-black shadow-[0_0_25px_rgba(34,211,238,0.9)]"
+                        : active
+                        ? "bg-cyan-400 text-black animate-pulse"
+                        : "bg-slate-700 text-transparent"
+                    }`}
+                  >
+                    {completed ? "✓" : ""}
+                  </div>
+
+                  <span
+                    className={`text-xs md:text-sm transition-all duration-300
+                    ${
+                      active
+                        ? "text-cyan-400"
+                        : "text-slate-500 group-hover:text-white"
+                    }`}
+                  >
+                    {phase}
+                  </span>
+                </button>
+              );
+            })}
+
+          </div>
+        </div>
+      </div>
     )}
 
-    
-      {/* ===== ACCOUNT PANEL ===== */}
-<StudentAccountPanel
-  open={accountOpen}
-  onClose={() => setAccountOpen(false)}
-/>
+    {/* ===== MAIN CONTENT ===== */}
+    <div className="max-w-7xl mx-auto px-6 py-12 space-y-24">
 
-{/* ===== JOBS PANEL ===== */}
-{jobsOpen && (
-  <JobsPanel
-    onClose={() => setJobsOpen(false)}
-  />
-)}
-{notesOpen && (
-  <NotesPanel
-    mode={notesMode}
-    onClose={() => setNotesOpen(false)}
-  />
-)}
+      {/* ===== RESUME UPLOAD ===== */}
+      {!analysis && (
+        <ResumeCoreCard onAnalyze={setAnalysis} />
+      )}
 
-{quizzesOpen && (
-  <QuizPanel onClose={() => setQuizzesOpen(false)} />
-)}
-      {/* ===== SIDEBAR TOGGLE (AFTER RESUME ANALYSIS) ===== */}
-     
-        <button
-  onClick={() => setSidebarOpen(true)}
-  className="
-    fixed top-20 left-4 z-40
-    bg-slate-800/80 backdrop-blur
-    px-3 py-2 rounded-md
-    hover:bg-slate-700 transition
-  "
->
-  MENU ☰
-</button>
-
-   
-
-      {/* ===== MAIN CONTENT ===== */}
-      <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
-
-        {/* ===== RESUME UPLOAD ===== */}
-        {!analysis && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
+      {analysis && (
+        <>
+          {/* ================= PHASE 1 ================= */}
+          <section
+            ref={phaseRefs[0]}
+            className="bg-white/5 border border-white/10 rounded-2xl p-10 backdrop-blur-sm"
           >
-            <ResumeCoreCard onAnalyze={setAnalysis} />
-          </motion.div>
-        )}
-        
-        
-        {analysis && (
-          <>
-          {/* ===== AI RESUME ANALYSIS ===== */}
-<motion.section {...scrollAnim}>
-  <ResumeAnalysis
-    skills={analysis.skills || analysis.extracted_skills || []}
-    skillQuality={skillQuality}
-    loading={false}
-  />
-</motion.section>
+            <h2 className="text-2xl font-semibold text-cyan-400 mb-8">
+              Phase 1 — Resume Intelligence
+            </h2>
 
-{/* ===== AI RESUME INSIGHTS ===== */}
-<motion.section {...scrollAnim}>
- <ResumeInsights
-  roleMatch={roleMatch}
-  loading={false}
-  onStartLearning={() => {
-    skillAccelerationRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  }}
-/>
+            <ResumeAnalysis
+              skills={analysis.skills || analysis.extracted_skills || []}
+              skillQuality={skillQuality}
+              loading={false}
+            />
 
+            <ResumeInsights
+              roleMatch={roleMatch}
+              loading={false}
+              onStartLearning={() => {
+                skillAccelerationRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                });
+              }}
+            />
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+              <SkillGraph score={analysis.ats_score} />
+              <SkillGraphAnalysis
+                roleMatch={roleMatch}
+                skillQuality={skillQuality}
+                atsScore={analysis.ats_score}
+              />
+            </div>
 
-</motion.section>
-{/* ===== TOGGLE BUTTON ===== */}
-<div className="flex justify-end mb-4">
-  <button
-    onClick={() => setShowSkillDetails(!showSkillDetails)}
-    className="
-      text-sm px-3 py-1 rounded-md
-      bg-slate-800 border border-slate-600
-      hover:bg-slate-700 transition
-    "
-  >
-    {showSkillDetails ? "Hide Skill Details" : "Explore Skill Details"}
-  </button>
-</div>
-
-<motion.section {...scrollAnim} className="space-y-6">
-  {/* ===== SUMMARY ROW ===== */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <SkillGraph score={analysis.ats_score} />
-
-    <SkillGraphAnalysis
-      roleMatch={roleMatch}
-      skillQuality={skillQuality}
-      atsScore={analysis.ats_score}
-    />
-  </div>
-
-  {/* ===== TOGGLE ===== */}
-  
-
-  {/* ===== DETAILS (OPTIONAL) ===== */}
-  <AnimatePresence>
-  {showSkillDetails && (
-    <motion.div
-      key="skill-details"
-      initial={{ height: 0, opacity: 0 }}
-      animate={{ height: "auto", opacity: 1 }}
-      exit={{ height: 0, opacity: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      className="overflow-hidden"
-    >
-      <SkillVisualization
-        categories={analysis.categories}
-        confidence={analysis.confidence}
-      />
-    </motion.div>
-  )}
-</AnimatePresence>
-
-</motion.section>
-
-
-    <motion.section {...scrollAnim}>
-        <LearningPath
-          currentSkills={analysis.current_skills}
-          targetRole={analysis.target_role}
-        />
-    </motion.section>
-
-   
-  
-           
-<motion.section
-  {...scrollAnim}
-  className="glass-card p-6 border border-cyan-400/15"
->
-  {/* ===== HEADER ===== */}
-  <h2 className="text-xl font-semibold mb-1">
-    ATS Compatibility
-  </h2>
-
-  <p className="text-xs text-slate-400 mb-3">
-    ATS systems analyze resume structure, keywords, and formatting — not visual design.
-  </p>
-
-  <div className="flex items-center gap-4 mb-6">
-    <p className="text-4xl font-bold text-cyan-400">
-      {analysis.ats_score}%
-    </p>
-
-    <p className="text-sm text-slate-400">
-      {analysis.ats_verdict}
-    </p>
-  </div>
-
-  {/* ===== BEFORE / AFTER GRID ===== */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-    {/* ❌ BEFORE — ATS ISSUES */}
-    <div className="border border-red-500/30 bg-red-500/5 rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-red-400 mb-3">
-        ❌ Uploaded Resume (ATS Issues)
-      </h3>
-
-      <ResumePDFPreview
-        title="Uploaded Resume"
-        accent="red"
-        mode="before"
-        checklist={analysis.ats_checklist}
-        description="Red tags highlight ATS-detected issues such as missing keywords, weak structure, or formatting problems."
-      />
-
-      <ul className="space-y-2 text-sm mt-4">
-        {analysis.ats_checklist.map((item, i) => (
-          <li key={i} className="flex flex-col">
-            <span
-              className={
-                item.status ? "text-slate-400" : "text-red-400"
-              }
-            >
-              {item.status ? "✔" : "✘"} {item.item}
-            </span>
-
-            {!item.status && item.fix && (
-              <span className="text-xs text-red-300 ml-4">
-                Problem: {item.fix}
-              </span>
+            {showSkillDetails && (
+              <div className="mt-8">
+                <SkillVisualization
+                  categories={analysis.categories}
+                  confidence={analysis.confidence}
+                />
+              </div>
             )}
-          </li>
-        ))}
-      </ul>
+          </section>
+
+          {/* ================= PHASE 2 ================= */}
+          <section
+            ref={phaseRefs[1]}
+            className="bg-white/5 border border-white/10 rounded-2xl p-10 backdrop-blur-sm"
+          >
+            <h2 className="text-2xl font-semibold text-cyan-400 mb-8">
+              Phase 2 — ATS Optimization
+            </h2>
+
+            <ResumeComparison />
+            <SkillConfidenceGrowth />
+          </section>
+
+          {/* ================= PHASE 3 ================= */}
+          <section
+            ref={phaseRefs[2]}
+            className="bg-white/5 border border-white/10 rounded-2xl p-10 backdrop-blur-sm"
+          >
+            <h2 className="text-2xl font-semibold text-cyan-400 mb-8">
+              Phase 3 — Skill Acceleration
+            </h2>
+
+            <LearningPath
+              currentSkills={analysis.current_skills}
+              targetRole={analysis.target_role}
+            />
+
+            <AISkillAcceleration analysis={analysis} />
+
+            <ProjectIntelligence projects={analysis.projects} />
+          </section>
+
+          {/* ================= PHASE 4 ================= */}
+          <section
+            ref={phaseRefs[3]}
+            className="bg-white/5 border border-white/10 rounded-2xl p-10 backdrop-blur-sm"
+          >
+            <h2 className="text-2xl font-semibold text-cyan-400 mb-8">
+              Phase 4 — Career Readiness
+            </h2>
+
+            <InterviewReadinessCard />
+            <InterviewRoadmap />
+            <AIJobRecommendations analysis={analysis} />
+            <AIMockInterview analysis={analysis} />
+            <CollaborativeLearningRooms />
+          </section>
+        </>
+      )}
     </div>
-
-    {/* ✅ AFTER — ATS OPTIMIZED */}
-    <div className="border border-green-500/30 bg-green-500/5 rounded-lg p-4">
-      <h3 className="text-sm font-semibold text-green-400 mb-3">
-        ✅ ATS-Optimized View (Recommended)
-      </h3>
-
-      <ResumePDFPreview
-        title="ATS-Optimized Guidance"
-        accent="green"
-        mode="after"
-        checklist={analysis.ats_checklist}
-        description="Green tags represent how your resume aligns with ATS expectations after applying the recommended fixes."
-      />
-
-      <ul className="space-y-2 text-sm mt-4">
-        {analysis.ats_checklist.map((item, i) => (
-          <li key={i} className="text-green-400">
-            ✔ {item.item}
-          </li>
-        ))}
-      </ul>
-
-      <p className="text-xs text-slate-400 mt-3">
-        Apply these fixes to improve keyword matching, section clarity, and ATS readability.
-      </p>
-    </div>
-
   </div>
-</motion.section>
-
- 
-<motion.section {...scrollAnim}>
-  <ResumeComparison />
-</motion.section>
-
-<motion.section {...scrollAnim}>
-  <SkillConfidenceGrowth />
-</motion.section>
-
-
-
-            <motion.section {...scrollAnim} className="glass-card p-6">
-              <h2 className="text-xl font-semibold mb-4">Project Intelligence</h2>
-              <ProjectIntelligence projects={analysis.projects} />
-            </motion.section>
-
-            <motion.section {...scrollAnim} className="glass-card p-6">
-  <h2 className="text-xl font-semibold mb-2">
-    Resume Optimization Insights
-  </h2>
-
-  <p className="text-xs text-slate-400 mb-4">
-    These insights are derived from ATS analysis, skill coverage,
-    and recruiter expectations — not generic advice.
-  </p>
-
-  <div className="space-y-3">
-    {insights.map((item, i) => (
-      <div
-        key={i}
-        className={`
-          flex gap-3 p-3 rounded-lg border
-          ${
-            item.level === "critical"
-              ? "border-red-500/30 bg-red-500/5"
-              : item.level === "improve"
-              ? "border-yellow-400/30 bg-yellow-400/5"
-              : "border-white/10 bg-white/5"
-          }
-        `}
-      >
-        <div className="text-lg">
-          {item.level === "critical"
-            ? "❌"
-            : item.level === "improve"
-            ? "⚠️"
-            : "ℹ️"}
-        </div>
-
-        <div>
-          <p className="text-sm leading-relaxed">
-            {item.text}
-          </p>
-
-          <p className="text-xs text-slate-400 mt-1">
-            {item.level === "critical"
-              ? "This issue significantly reduces ATS and recruiter confidence."
-              : item.level === "improve"
-              ? "Fixing this can noticeably improve your resume strength."
-              : "Optional optimization for stronger impact."}
-          </p>
-        </div>
-      </div>
-    ))}
-  </div>
-</motion.section>
-
-
-            <motion.section {...scrollAnim} className="glass-card p-6">
-              <h2 className="text-xl font-semibold mb-4">
-                AI-Generated Project Ideas
-              </h2>
-              {Object.entries(analysis.project_ideas).map(([level, ideas]) => (
-                <div key={level} className="mb-3">
-                  <p className="font-medium capitalize text-cyan-400 mb-1">
-                    {level}
-                  </p>
-                  <ul className="list-disc list-inside text-sm text-slate-300 space-y-1">
-                    {ideas.map((idea, i) => (
-                      <li key={i}>{idea}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            {learningLoading && (
-            <motion.div
-              {...scrollAnim}
-                  className="glass-card p-6 border border-cyan-400/20"
-            >
-              <p className="text-cyan-300 animate-pulse">
-                🤖 AI is generating your personalized learning path...
-                </p>
-            </motion.div>
-        )}
- 
-            </motion.section>
-
-         <motion.section {...scrollAnim}>
-              <AISkillAcceleration analysis={analysis} />
-        </motion.section>
-
-
-
-
-            <motion.section {...scrollAnim}>
-              <InterviewReadinessCard />
-            </motion.section>
-
-            <motion.section {...scrollAnim}>
-              <InterviewRoadmap />
-            </motion.section>
-
-            <motion.section {...scrollAnim}>
-              <AIJobRecommendations analysis={analysis} />
-            </motion.section>
-
-            <motion.section {...scrollAnim}>
-              <AIMockInterview analysis={analysis} />
-            </motion.section>
-
-            <motion.section {...scrollAnim}>
-              <CollaborativeLearningRooms />
-            </motion.section>
-
-            
-
-          </>
-  
-
-
-        )}
-      </div>
- 
-    </div>
-  );
-
-}
+);}
