@@ -17,7 +17,7 @@ function PremiumButton({ children, onClick }) {
                       group-hover:opacity-100 transition-opacity duration-500">
         <div className="absolute inset-0 rounded-full
                         animate-[spin_4s_linear_infinite]
-                        bg-[conic-gradient(from_0deg,transparent,rgba(136, 162, 240, 0.4),transparent)]" />
+                        bg-[conic-gradient(from_0deg,transparent,rgba(255, 255, 255, 0.4),transparent)]" />
       </div>
 
       {/* inner surface */}
@@ -106,134 +106,130 @@ export default function Home() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  return (
-    <div className="relative min-h-screen flex items-center justify-center bg-[#111111] text-white">
+ return (
+  <div className="relative min-h-screen flex items-center justify-center bg-[#0E0E10] text-white">
 
-      {/* DASHBOARD BACKGROUND */}
-      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#181818] via-[#111111] to-[#1c1c1c]" />
+    {/* NEW PREMIUM GRAPHITE BACKGROUND */}
+    <div className="fixed inset-0 -z-10 
+      bg-[radial-gradient(circle_at_top_left,#1C1C1F,transparent_40%),
+           radial-gradient(circle_at_bottom_right,#18181B,transparent_40%)]
+      bg-[#0E0E10]" 
+    />
 
-      <div className="w-[440px] p-10 rounded-2xl bg-[#1c1c1c] border border-neutral-800 shadow-xl">
+    <div className="w-[440px] p-10 rounded-2xl bg-[#1A1A1D] border border-neutral-800 shadow-xl">
 
-        {/* LOGO */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
-            Skill<span className="font-semibold">Mutant</span>
-          </h1>
-          <p className="text-neutral-400 text-sm mt-2">
-            AI Skill Intelligence Platform
-          </p>
-        </div>
+      {/* LOGO */}
+      <div className="text-center mb-8">
+        <h1 className="text-2xl italic tracking-widest -skew-x-6 font-light">
+          Skill<span className="font-semibold">Mutant</span>
+        </h1>
+        <p className="text-neutral-400 text-sm mt-2">
+          AI Skill Intelligence Platform
+        </p>
+      </div>
 
-        {/* TOGGLE */}
-        <div className="flex mb-8 bg-[#111111] rounded-full p-1 border border-neutral-700">
-          <button
-            onClick={() => setMode("login")}
-            className={`flex-1 py-2 rounded-full text-sm transition ${
-              mode === "login" ? "bg-white text-black" : "text-neutral-400"
-            }`}
-          >
-            Login
-          </button>
+      {/* TOGGLE */}
+      <div className="flex mb-8 bg-[#141417] rounded-full p-1 border border-neutral-700">
+        <button
+          onClick={() => setMode("login")}
+          className={`flex-1 py-2 rounded-full text-sm transition ${
+            mode === "login" ? "bg-white text-black" : "text-neutral-400"
+          }`}
+        >
+          Login
+        </button>
 
-          <button
-            onClick={() => setMode("register")}
-            className={`flex-1 py-2 rounded-full text-sm transition ${
-              mode === "register" ? "bg-white text-black" : "text-neutral-400"
-            }`}
-          >
-            Register
-          </button>
-        </div>
+        <button
+          onClick={() => setMode("register")}
+          className={`flex-1 py-2 rounded-full text-sm transition ${
+            mode === "register" ? "bg-white text-black" : "text-neutral-400"
+          }`}
+        >
+          Register
+        </button>
+      </div>
 
-        <div className="space-y-4">
+      <div className="space-y-4">
 
+        <input
+          name="email"
+          placeholder="Email"
+          className="w-full px-4 py-3 rounded-lg bg-[#141417]
+                     border border-neutral-700 outline-none focus:border-white"
+          value={form.email}
+          onChange={handleChange}
+        />
+
+        {mode === "register" && (
           <input
-            name="email"
-            placeholder="Email"
-            className="w-full px-4 py-3 rounded-lg bg-[#111111]
+            name="username"
+            placeholder="Username"
+            className="w-full px-4 py-3 rounded-lg bg-[#141417]
                        border border-neutral-700 outline-none focus:border-white"
-            value={form.email}
+            value={form.username}
             onChange={handleChange}
           />
+        )}
 
-          {mode === "register" && (
-            <input
-              name="username"
-              placeholder="Username"
-              className="w-full px-4 py-3 rounded-lg bg-[#111111]
-                         border border-neutral-700 outline-none focus:border-white"
-              value={form.username}
-              onChange={handleChange}
-            />
-          )}
+        {/* PASSWORD */}
+        <div className="relative">
+          <input
+            name="password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            className="w-full px-4 py-3 rounded-lg bg-[#141417]
+                       border border-neutral-700 outline-none focus:border-white"
+            value={form.password}
+            onChange={handleChange}
+          />
+          <span
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-3 text-sm text-neutral-400 cursor-pointer"
+          >
+            {showPassword ? "Hide" : "Show"}
+          </span>
+        </div>
 
-          {/* PASSWORD */}
+        {mode === "register" && (
           <div className="relative">
             <input
-              name="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              className="w-full px-4 py-3 rounded-lg bg-[#111111]
+              name="confirmPassword"
+              type={showConfirm ? "text" : "password"}
+              placeholder="Confirm Password"
+              className="w-full px-4 py-3 rounded-lg bg-[#141417]
                          border border-neutral-700 outline-none focus:border-white"
-              value={form.password}
+              value={form.confirmPassword}
               onChange={handleChange}
             />
             <span
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => setShowConfirm(!showConfirm)}
               className="absolute right-4 top-3 text-sm text-neutral-400 cursor-pointer"
             >
-              {showPassword ? "Hide" : "Show"}
+              {showConfirm ? "Hide" : "Show"}
             </span>
           </div>
+        )}
 
-          {mode === "register" && (
-            <div className="relative">
-              <input
-                name="confirmPassword"
-                type={showConfirm ? "text" : "password"}
-                placeholder="Confirm Password"
-                className="w-full px-4 py-3 rounded-lg bg-[#111111]
-                           border border-neutral-700 outline-none focus:border-white"
-                value={form.confirmPassword}
-                onChange={handleChange}
-              />
-              <span
-                onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute right-4 top-3 text-sm text-neutral-400 cursor-pointer"
-              >
-                {showConfirm ? "Hide" : "Show"}
-              </span>
-            </div>
-          )}
+        {/* MAIN BUTTON */}
+        <PremiumButton
+          onClick={mode === "login" ? handlePasswordLogin : handleRegister}
+        >
+          {mode === "login" ? "Login" : "Create Account"}
+        </PremiumButton>
 
-          {/* MAIN BUTTON */}
-          <PremiumButton
-            onClick={mode === "login" ? handlePasswordLogin : handleRegister}
-          >
-            {mode === "login" ? "Login" : "Create Account"}
-          </PremiumButton>
+        {/* GOOGLE ONLY FOR LOGIN */}
+        {mode === "login" && (
+          <>
+            <div className="my-6 text-center text-xs text-neutral-500">OR</div>
 
-          {/* GOOGLE ONLY FOR LOGIN */}
-          {mode === "login" && (
-            <>
-              <div className="my-6 text-center text-xs text-neutral-500">OR</div>
+            <PremiumButton onClick={() => signIn("google")}>
+              Continue with Google
+            </PremiumButton>
+          </>
+        )}
 
-              <PremiumButton onClick={() => signIn("google")}>
-                Continue with Google
-              </PremiumButton>
-            </>
-          )}
-
-        </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
-
     </div>
-  );
+  </div>
+);
 }
