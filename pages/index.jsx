@@ -17,7 +17,7 @@ function PremiumButton({ children, onClick }) {
                       group-hover:opacity-100 transition-opacity duration-500">
         <div className="absolute inset-0 rounded-full
                         animate-[spin_4s_linear_infinite]
-                        bg-[conic-gradient(from_0deg,transparent,rgba(41, 42, 45, 0.4),transparent)]" />
+                        bg-[conic-gradient(from_0deg,transparent,rgba(136, 162, 240, 0.4),transparent)]" />
       </div>
 
       {/* inner surface */}
