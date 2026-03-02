@@ -169,3 +169,34 @@ html, body {
   
   scroll-behavior: smooth;
 }
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-200px) scale(1.4); opacity: 0; }
+}
+
+.animate-float {
+  animation: floatUp 2s ease-out forwards;
+}
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradientMove 15s ease infinite;
+}
+
+@keyframes wave {
+  0% { transform: scaleX(0.3); }
+  50% { transform: scaleX(1); }
+  100% { transform: scaleX(0.3); }
+}
+
+.wave-bar {
+  height: 4px;
+  background: linear-gradient(90deg, cyan, blue);
+  animation: wave 0.8s infinite ease-in-out;
+  transform-origin: left;
+}

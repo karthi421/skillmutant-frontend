@@ -56,6 +56,8 @@ export default function VideoRoom({ roomId }) {
   const [aiMessages, setAiMessages] = useState([]);
   const [aiInput, setAiInput] = useState("");
   const [mediaStatus, setMediaStatus] = useState({});
+  const [aiSpeaking, setAiSpeaking] = useState(false);
+  const [spotlightId, setSpotlightId] = useState(null);
  const [networkQuality, setNetworkQuality] = useState({});
  const [activeSpeaker, setActiveSpeaker] = useState(null);
  const [handsRaised, setHandsRaised] = useState({});
@@ -603,9 +605,64 @@ const saveRoomNotes = () => {
   setNotesDirty(false);
 };
 
+
+const renderTile = (id, isSpotlight) => {
+  const isLocal = id === USER_ID;
+  const stream = isLocal
+    ? (screenOn ? screenStreamRef.current : localStreamRef.current)
+    : remoteStreams[id];
+
+  const camEnabled = mediaStatus[id]?.cam !== false;
+  const micEnabled = mediaStatus[id]?.mic !== false;
+
+  return (
+    <div
+      onDoubleClick={() => setSpotlightId(id)}
+      className={`relative w-full h-full bg-black rounded-2xl overflow-hidden
+      transition-all duration-300
+      ${activeSpeaker === id
+        ? "ring-2 ring-cyan-400 shadow-[0_0_40px_rgba(34,211,238,0.6)]"
+        : ""}
+      `}
+    >
+      {stream && camEnabled ? (
+        <video
+          autoPlay
+          playsInline
+          muted={isLocal}
+          ref={el => attachStream(el, stream)}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center text-white/50">
+          Camera Off
+        </div>
+      )}
+
+      {/* Name */}
+      <div className="absolute top-2 left-2 bg-black/60 px-3 py-1 rounded-full text-xs">
+        {isLocal ? "You" : id}
+      </div>
+
+      {/* Hover Controls */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 
+                      opacity-0 hover:opacity-100 transition duration-300">
+        <div className="flex gap-2 bg-black/60 backdrop-blur px-3 py-1 rounded-xl">
+          <button className="text-sm">🎯</button>
+          <button className="text-sm">📌</button>
+        </div>
+      </div>
+
+      {/* Audio Wave */}
+      {activeSpeaker === id && (
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-cyan-400 animate-pulse" />
+      )}
+    </div>
+  );
+};
   /* ================= UI ================= */
  return (
-  <div className="h-screen bg-gradient-to-br from-[#020617] to-[#0f172a] text-white flex flex-col overflow-hidden relative">
+  <div className="h-screen bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#020617] text-white flex flex-col overflow-hidden relative">
 
     {/* ================= HEADER ================= */}
     <header className="h-14 px-6 flex justify-between items-center border-b border-white/10 bg-black/40 backdrop-blur-md">
@@ -623,8 +680,8 @@ const saveRoomNotes = () => {
         <span>{mm}:{ss} | {members.length}/8</span>
 
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-          AI Moderator Active
+          <span className={`w-2 h-2 rounded-full ${aiSpeaking ? "bg-cyan-400 animate-pulse" : "bg-green-400"}`} />
+          AI Moderator {aiSpeaking && "Speaking..."}
         </div>
       </div>
     </header>
@@ -650,73 +707,41 @@ const saveRoomNotes = () => {
     {/* ================= MAIN ================= */}
     <main className="flex flex-1 overflow-hidden relative">
 
-      {/* ================= VIDEO GRID ================= */}
-      <section className={`flex-1 grid ${gridCols} gap-4 p-4`}>
+      {/* ================= VIDEO AREA ================= */}
+      <section className="flex-1 p-4 overflow-hidden">
 
-        {members.map(id => {
-          const isLocal = id === USER_ID;
-          const stream = isLocal
-            ? (screenOn ? screenStreamRef.current : localStreamRef.current)
-            : remoteStreams[id];
+        {spotlightId ? (
+          <div className="h-full flex flex-col gap-4">
 
-          const camEnabled = mediaStatus[id]?.cam !== false;
-          const micEnabled = mediaStatus[id]?.mic !== false;
-          const quality = networkQuality[id];
-
-          return (
-            <div
-              key={id}
-              className={`relative rounded-2xl overflow-hidden bg-black flex items-center justify-center
-                transition-all duration-300
-                ${activeSpeaker === id ? "ring-2 ring-cyan-400 scale-[1.02]" : ""}
-              `}
-            >
-
-              {/* VIDEO */}
-              {stream && camEnabled ? (
-                <video
-                  autoPlay
-                  playsInline
-                  muted={isLocal}
-                  ref={el => attachStream(el, stream)}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-black text-white">
-                  <span className="text-lg opacity-60">📷 Camera Off</span>
-                </div>
-              )}
-
-              {/* USER LABEL */}
-              <div className="absolute top-2 left-2 bg-black/60 px-2 py-1 rounded text-xs">
-                {isLocal ? "You" : id}
-              </div>
-
-              {/* MIC OFF */}
-              {!micEnabled && (
-                <div className="absolute bottom-3 right-3 bg-red-600 p-2 rounded-full text-sm">
-                  🔇
-                </div>
-              )}
-
-              {/* HAND RAISED */}
-              {handsRaised[id] && (
-                <div className="absolute top-2 right-2 text-xl animate-bounce">
-                  ✋
-                </div>
-              )}
-
-              {/* NETWORK */}
-              {!isLocal && (
-                <div className="absolute bottom-3 left-3 text-[10px] px-2 py-1 rounded-md
-                  bg-black/60 backdrop-blur">
-                  {quality ? quality.toUpperCase() : "CHECKING.."}
-                </div>
-              )}
-
+            {/* Spotlight */}
+            <div className="flex-1">
+              {renderTile(spotlightId, true)}
             </div>
-          );
-        })}
+
+            {/* Others */}
+            <div className="h-32 flex gap-4 overflow-x-auto">
+              {members.filter(id => id !== spotlightId).map(id => (
+                <div
+                  key={id}
+                  className="w-40 flex-shrink-0"
+                  onClick={() => setSpotlightId(id)}
+                >
+                  {renderTile(id, false)}
+                </div>
+              ))}
+            </div>
+
+          </div>
+        ) : (
+          <div className={`grid ${gridCols} gap-4 h-full`}>
+            {members.map(id => (
+              <div key={id}>
+                {renderTile(id, false)}
+              </div>
+            ))}
+          </div>
+        )}
+
       </section>
 
 
@@ -786,62 +811,72 @@ const saveRoomNotes = () => {
             </div>
           </div>
         )}
+
       </aside>
 
     </main>
 
 
-    {/* ================= FOOTER ================= */}
-    <footer className="h-16 flex justify-center gap-6 items-center border-t border-white/10 bg-black/60 backdrop-blur-lg">
+    {/* ================= FLOATING CONTROL CENTER ================= */}
+    <div className={`absolute bottom-6 left-1/2 -translate-x-1/2 z-50 
+      transition-all duration-500
+      ${controlsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
+    `}>
 
-      <button
-        onClick={toggleMic}
-        className={`${micOn ? "bg-slate-700" : "bg-red-500"} p-3 rounded-full hover:scale-110 transition`}
-      >
-        🎤
-      </button>
+      <div className="flex items-center gap-4 
+                      bg-black/70 backdrop-blur-2xl 
+                      border border-white/10
+                      px-6 py-4 rounded-3xl
+                      shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
 
-      <button
-        onClick={toggleCam}
-        className={`${camOn ? "bg-slate-700" : "bg-red-500"} p-3 rounded-full hover:scale-110 transition`}
-      >
-        📷
-      </button>
+        <button onClick={toggleMic}
+          className={`w-12 h-12 rounded-full flex items-center justify-center transition
+          ${micOn ? "bg-slate-700" : "bg-red-500"}`}>
+          🎤
+        </button>
 
-      <button
-        onClick={screenOn ? stopScreenShare : startScreenShare}
-        className={`${screenOn ? "bg-emerald-500" : "bg-slate-700"} p-3 rounded-full hover:scale-110 transition`}
-      >
-        🖥
-      </button>
+        <button onClick={toggleCam}
+          className={`w-12 h-12 rounded-full flex items-center justify-center transition
+          ${camOn ? "bg-slate-700" : "bg-red-500"}`}>
+          📷
+        </button>
 
-      <button
-        onClick={toggleHand}
-        className="bg-yellow-500 text-black p-3 rounded-full hover:scale-110 transition"
-      >
-        ✋
-      </button>
+        <button onClick={screenOn ? stopScreenShare : startScreenShare}
+          className={`w-12 h-12 rounded-full flex items-center justify-center transition
+          ${screenOn ? "bg-emerald-500" : "bg-slate-700"}`}>
+          🖥
+        </button>
 
-      <div className="flex gap-2">
-        {["👍","🔥","👏","😂","💯"].map(e => (
-          <button
-            key={e}
-            onClick={() => sendReaction(e)}
-            className="bg-slate-700 px-2 py-1 rounded hover:scale-110 transition"
-          >
-            {e}
-          </button>
-        ))}
+        <button onClick={toggleHand}
+          className="w-12 h-12 rounded-full bg-yellow-500 text-black flex items-center justify-center">
+          ✋
+        </button>
+
+        <div className="h-8 w-px bg-white/10" />
+
+        <div className="flex gap-2">
+          {["👍","👏","🎉","🔥","❤️","😄"].map(e => (
+            <button
+              key={e}
+              onClick={() => sendReaction(e)}
+              className="text-lg hover:scale-125 transition"
+            >
+              {e}
+            </button>
+          ))}
+        </div>
+
+        <div className="h-8 w-px bg-white/10" />
+
+        <button
+          onClick={handleLeave}
+          className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white">
+          End call for everyone
+        </button>
+
       </div>
+    </div>
 
-      <button
-        onClick={handleLeave}
-        className="bg-red-600 p-3 rounded-full hover:scale-110 transition"
-      >
-        ⏻
-      </button>
-
-    </footer>
   </div>
 );
 }
