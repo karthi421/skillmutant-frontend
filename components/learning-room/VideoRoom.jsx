@@ -62,7 +62,7 @@ export default function VideoRoom({ roomId }) {
  const [handsRaised, setHandsRaised] = useState({});
   const [reactions, setReactions] = useState([]);
   const [showReactions, setShowReactions] = useState(false);
-  const [showParticipants, setShowParticipants] = useState(false);
+
  const sendReaction = (emoji) => {
   const reaction = {
     id: Date.now() + Math.random(),
@@ -200,9 +200,7 @@ const baseUrl =
     .replace(/^https/, "wss")
     .replace(/^http/, "ws");
 
-  const token = localStorage.getItem("token");
-
-const fullUrl = `${wsUrl}/ws/rooms/${roomId}?token=${token}`;
+  const fullUrl = `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`;
 
   console.log("Connecting to:", fullUrl);
 
@@ -228,13 +226,13 @@ const fullUrl = `${wsUrl}/ws/rooms/${roomId}?token=${token}`;
 
       if (msg.type === "init") {
   const capped = msg.members.slice(0, 8);
-setMembers(capped);
+  setMembers(capped);
 
-capped.forEach(member => {
-  if (member.id !== USER_ID) {
-    createPeer(member.id, false);
-  }
-});
+  capped.forEach(id => {
+    if (id !== USER_ID) {
+      createPeer(id, false);
+    }
+  });
 
   // ✅ Log learning room join to backend
  apiFetch("/api/jobs/learning-room", {
@@ -251,10 +249,10 @@ capped.forEach(member => {
 
       if (msg.type === "user-joined") {
         setMembers(prev =>
-      prev.length < 8 && !prev.some(m => m.id === msg.user.id)
-        ? [...prev, msg.user]
-      : prev
-      );
+          prev.length < 8 && !prev.includes(msg.user_id)
+            ? [...prev, msg.user_id]
+            : prev
+        );
 
         //const initiator = USER_ID < msg.user_id;
         createPeer(msg.user_id, true);
@@ -630,12 +628,8 @@ const saveRoomNotes = () => {
 const renderTile = (id) => {
   const isLocal = id === USER_ID;
 
-  // SAFE member lookup
-  const member = Array.isArray(members) && members.length > 0
-    ? (typeof members[0] === "string"
-        ? { id, name: id }
-        : members.find(m => m.id === id))
-    : { id, name: id };
+  // 🔹 Find member object
+  const member = members.find(m => m.id === id);
 
   const stream = isLocal
     ? (screenOn ? screenStreamRef.current : localStreamRef.current)
@@ -646,9 +640,13 @@ const renderTile = (id) => {
 
   return (
     <div
-      onDoubleClick={() =>
-        setSpotlightId(prev => (prev === id ? null : id))
-      }
+      onDoubleClick={() => {
+        if (spotlightId === id) {
+          setSpotlightId(null); // Exit spotlight
+        } else {
+          setSpotlightId(id);   // Enter spotlight
+        }
+      }}
       className={`relative w-full h-full bg-black rounded-2xl overflow-hidden
         transition-all duration-300 cursor-pointer
         ${activeSpeaker === id
@@ -656,6 +654,7 @@ const renderTile = (id) => {
           : ""}
       `}
     >
+      {/* ===== VIDEO ===== */}
       {stream && camEnabled ? (
         <video
           autoPlay
@@ -665,21 +664,24 @@ const renderTile = (id) => {
           className="w-full h-full object-cover"
         />
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center text-white/50">
+        <div className="absolute inset-0 flex items-center justify-center text-white/50 text-sm">
           📷 Camera Off
         </div>
       )}
 
+      {/* ===== NAME LABEL ===== */}
       <div className="absolute top-2 left-2 bg-black/60 px-3 py-1 rounded-full text-xs backdrop-blur-sm">
         {isLocal ? "You" : member?.name || id}
       </div>
 
+      {/* ===== MIC OFF ===== */}
       {!micEnabled && (
         <div className="absolute bottom-3 right-3 bg-red-600 p-2 rounded-full text-sm">
           🔇
         </div>
       )}
 
+      {/* ===== RAISED HAND ===== */}
       {handsRaised[id] && (
         <div className="absolute top-2 right-2 text-xl animate-bounce">
           ✋
@@ -715,12 +717,7 @@ const renderTile = (id) => {
       <div className="flex items-center gap-6 text-sm text-slate-400">
         <span>{mm}:{ss} | {members.length}/8</span>
       </div>
-     <button
-  onClick={() => setShowParticipants(prev => !prev)}
-  className="text-sm bg-white/10 px-3 py-1 rounded hover:bg-white/20 transition"
->
-  👥 Participants
-</button> 
+ 
     </header>
 
 
