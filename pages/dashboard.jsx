@@ -108,15 +108,16 @@ export default function Home() {
     img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71"
   }
 ].map((item) => (
-          
-            <div key={item.title} 
-            className="group rounded-2xl bg-gradient-to-b from-[#0f172a] to-[#0b1120]
+         <div  key={item.title}
+         className="group rounded-2xl bg-gradient-to-b from-[#0f172a] to-[#0b1120]
                 border border-white/10
                 overflow-hidden
                 transition-all duration-500
                 hover:-translate-y-2
                 hover:border-cyan-400/30
                 hover:shadow-[0_0_40px_rgba(34,211,238,0.15)]">
+           
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0b1120] via-transparent to-transparent" />
             <img
               src={item.img}
               alt={item.title}
