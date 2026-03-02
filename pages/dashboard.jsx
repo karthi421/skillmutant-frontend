@@ -13,15 +13,15 @@ export default function Home() {
   ];
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col bg-[#111111] text-white">
+    <div className="relative min-h-screen w-full flex flex-col  text-white">
 
       {/* ===== FIXED BACKGROUND ===== */}
       <div
-  className="fixed inset-0 -z-10
-    bg-[radial-gradient(circle_at_20%_30%,rgba(79,70,229,0.15),transparent_40%),
-         radial-gradient(circle_at_80%_70%,rgba(59,130,246,0.12),transparent_40%)]
-    bg-gradient-to-br from-[#0F172A] via-[#111827] to-[#1E1B4B]"
-/>
+          className="fixed inset-0 -z-10
+          bg-[radial-gradient(circle_at_20%_30%,rgba(79,70,229,0.15),transparent_40%),
+          radial-gradient(circle_at_80%_70%,rgba(59,130,246,0.12),transparent_40%)]
+          bg-gradient-to-br from-[#0F172A] via-[#111827] to-[#1E1B4B]"
+      />
 
       
   {/* ===== NAVBAR ===== */}
