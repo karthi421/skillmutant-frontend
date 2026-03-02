@@ -13,7 +13,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col bg-[#071A2D] text-white">
+    <div className="relative min-h-screen w-full flex flex-col bg-gradient-to-b from-[#020617] via-[#020617] to-black text-white">
 
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.05),transparent_60%)]" />
       
