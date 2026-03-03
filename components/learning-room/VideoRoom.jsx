@@ -62,7 +62,8 @@ export default function VideoRoom({ roomId }) {
  const [handsRaised, setHandsRaised] = useState({});
   const [reactions, setReactions] = useState([]);
   const [showReactions, setShowReactions] = useState(false);
-
+  const [displayName, setDisplayName] = useState("");
+const [nameConfirmed, setNameConfirmed] = useState(false);
  const sendReaction = (emoji) => {
   const reaction = {
     id: Date.now() + Math.random(),
@@ -200,8 +201,9 @@ const baseUrl =
     .replace(/^https/, "wss")
     .replace(/^http/, "ws");
 
-  const fullUrl = `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`;
-
+  //const fullUrl = `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`;
+  const fullUrl =
+  `${wsUrl}/ws/rooms/${roomId}/${USER_ID}?name=${encodeURIComponent(displayName)}`;
   console.log("Connecting to:", fullUrl);
 
   const socket = new WebSocket(fullUrl);
@@ -224,15 +226,16 @@ const baseUrl =
     console.log("WS MESSAGE:", event.data);
       const msg = JSON.parse(event.data);
 
-      if (msg.type === "init") {
+  if (msg.type === "init") {
   const capped = msg.members.slice(0, 8);
   setMembers(capped);
 
-  capped.forEach(id => {
-    if (id !== USER_ID) {
-      createPeer(id, false);
+  capped.forEach(member => {
+    if (member.id !== USER_ID) {
+      createPeer(member.id, false);
     }
   });
+
 
   // ✅ Log learning room join to backend
  apiFetch("/api/jobs/learning-room", {
@@ -247,16 +250,15 @@ const baseUrl =
   }).catch(err => console.error("Room log failed:", err));
 }
 
-      if (msg.type === "user-joined") {
-        setMembers(prev =>
-          prev.length < 8 && !prev.includes(msg.user_id)
-            ? [...prev, msg.user_id]
-            : prev
-        );
+    if (msg.type === "user-joined") {
+  setMembers(prev =>
+    prev.length < 8 && !prev.some(m => m.id === msg.user.id)
+      ? [...prev, msg.user]
+      : prev
+  );
 
-        //const initiator = USER_ID < msg.user_id;
-        createPeer(msg.user_id, true);
-      }
+  createPeer(msg.user.id, true);
+}
 
       if (msg.type === "offer"){
          console.log("Received offer from:", msg.from); 
@@ -671,7 +673,7 @@ const renderTile = (id) => {
 
       {/* ===== NAME LABEL ===== */}
       <div className="absolute top-2 left-2 bg-black/60 px-3 py-1 rounded-full text-xs backdrop-blur-sm">
-        {isLocal ? "You" : member?.name || id}
+        {member?.name || (isLocal ? displayName : id)}
       </div>
 
       {/* ===== MIC OFF ===== */}
@@ -690,6 +692,34 @@ const renderTile = (id) => {
     </div>
   );
 };
+
+
+if (!nameConfirmed) {
+  return (
+    <div className="h-screen flex items-center justify-center bg-black text-white">
+      <div className="bg-slate-900 p-8 rounded-2xl w-96">
+        <h2 className="text-xl mb-4 text-cyan-400">
+          Enter Your Name
+        </h2>
+
+        <input
+          value={displayName}
+          onChange={(e) => setDisplayName(e.target.value)}
+          className="w-full p-3 rounded bg-black border border-slate-700 mb-4"
+          placeholder="Your name..."
+        />
+
+        <button
+          disabled={!displayName.trim()}
+          onClick={() => setNameConfirmed(true)}
+          className="w-full bg-cyan-500 text-black py-2 rounded disabled:opacity-50"
+        >
+          Join Room
+        </button>
+      </div>
+    </div>
+  );
+}
   /* ================= UI ================= */
  return (
   <div
