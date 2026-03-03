@@ -64,6 +64,8 @@ export default function VideoRoom({ roomId }) {
   const [showReactions, setShowReactions] = useState(false);
   const [displayName, setDisplayName] = useState("");
 const [nameConfirmed, setNameConfirmed] = useState(false);
+const [showParticipants, setShowParticipants] = useState(false);
+
  const sendReaction = (emoji) => {
   const reaction = {
     id: Date.now() + Math.random(),
@@ -750,6 +752,13 @@ if (!nameConfirmed) {
       <div className="flex items-center gap-6 text-sm text-slate-400">
         <span>{mm}:{ss} | {members.length}/8</span>
       </div>
+
+      <button
+  onClick={() => setShowParticipants(prev => !prev)}
+  className="text-sm bg-white/10 px-3 py-1 rounded hover:bg-white/20"
+>
+  👥 Participants
+</button>
  
     </header>
 
@@ -774,7 +783,36 @@ if (!nameConfirmed) {
     {/* ================= MAIN ================= */}
     <main className="flex flex-1 overflow-hidden relative">
      
+     {showParticipants && (
+  <div className="absolute right-0 top-14 bottom-0 w-72 bg-black/80 backdrop-blur-xl p-4 border-l border-white/10 z-40">
+    
+    <h3 className="text-lg mb-4 text-cyan-400">
+      Participants ({members.length})
+    </h3>
 
+    <div className="space-y-3">
+      {members.map(member => (
+        <div
+          key={member.id}
+          className="flex items-center gap-3 p-2 bg-white/5 rounded-xl"
+        >
+          <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-black font-bold">
+            {member.name?.charAt(0).toUpperCase()}
+          </div>
+
+          <div>
+            <p className="text-sm font-medium">
+              {member.name}
+            </p>
+            <p className="text-xs text-slate-400">
+              {member.id === USER_ID ? "You" : "Participant"}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
       {/* ================= VIDEO AREA ================= */}
       <section className="flex-1 p-4 overflow-hidden">
 
