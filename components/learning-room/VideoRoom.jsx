@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { logActivity } from "../../lib/logActivity";
 import { apiFetch } from "../../lib/api";
+import { jwtDecode } from "jwt-decode";
 //const ICE_SERVERS = {
 //  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
 //};
@@ -27,9 +28,16 @@ const ICE_SERVERS = {
 
 export default function VideoRoom({ roomId }) {
   /* ================= USER ================= */
-  const userIdRef = useRef("user_" + Math.random().toString(36).slice(2, 8));
-  const USER_ID = userIdRef.current;
+  //const userIdRef = useRef("user_" + Math.random().toString(36).slice(2, 8));
+  //const USER_ID = userIdRef.current;
+  
 
+const token = localStorage.getItem("token");
+const decoded = token ? jwtDecode(token) : null;
+
+const USER_ID = decoded?.id;
+const USER_NAME = decoded?.name;
+const USER_AVATAR = decoded?.profile_image;
   /* ================= REFS ================= */
   const localVideoRef = useRef(null);
   const localStreamRef = useRef(null);
@@ -62,8 +70,19 @@ export default function VideoRoom({ roomId }) {
  const [handsRaised, setHandsRaised] = useState({});
   const [reactions, setReactions] = useState([]);
   const [showReactions, setShowReactions] = useState(false);
+  const [memberProfiles, setMemberProfiles] = useState({});
+  const [showParticipants, setShowParticipants] = useState(false);
+  useEffect(() => {
+  if (!USER_ID) return;
 
- const sendReaction = (emoji) => {
+  setMemberProfiles({
+    [USER_ID]: {
+      name: USER_NAME,
+      avatar: USER_AVATAR
+    }
+  });
+}, []);
+  const sendReaction = (emoji) => {
   const reaction = {
     id: Date.now() + Math.random(),
     emoji,
@@ -200,7 +219,7 @@ const baseUrl =
     .replace(/^https/, "wss")
     .replace(/^http/, "ws");
 
-  const fullUrl = `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`;
+  const fullUrl = `${wsUrl}/ws/rooms/${roomId}?token=${token}`;
 
   console.log("Connecting to:", fullUrl);
 
@@ -223,14 +242,39 @@ const baseUrl =
   socket.onmessage = async (event) => {
     console.log("WS MESSAGE:", event.data);
       const msg = JSON.parse(event.data);
-
-      if (msg.type === "init") {
+if (msg.type === "init") {
   const capped = msg.members.slice(0, 8);
   setMembers(capped);
 
+  // Create peers
   capped.forEach(id => {
     if (id !== USER_ID) {
       createPeer(id, false);
+    }
+  });
+
+  // Fetch profiles for members
+  capped.forEach(async (id) => {
+    if (!memberProfiles[id]) {
+      try {
+        const res = await apiFetch(`/account/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+
+        const data = await res.json();
+
+        setMemberProfiles(prev => ({
+          ...prev,
+          [id]: {
+            name: data.name,
+            avatar: data.profile_image
+          }
+        }));
+      } catch (err) {
+        console.error("Failed to fetch profile:", err);
+      }
     }
   });
 
@@ -717,7 +761,12 @@ const renderTile = (id) => {
       <div className="flex items-center gap-6 text-sm text-slate-400">
         <span>{mm}:{ss} | {members.length}/8</span>
       </div>
- 
+      <button
+  onClick={() => setShowParticipants(prev => !prev)}
+  className="text-sm bg-white/10 px-3 py-1 rounded hover:bg-white/20"
+>
+  👥 Participants
+</button>
     </header>
 
 
@@ -740,7 +789,31 @@ const renderTile = (id) => {
 
     {/* ================= MAIN ================= */}
     <main className="flex flex-1 overflow-hidden relative">
-     
+     {showParticipants && (
+  <div className="absolute right-0 top-14 bottom-0 w-80 bg-black/80 backdrop-blur-xl p-4">
+    <h3 className="text-lg mb-4 text-cyan-400">
+      Participants ({members.length})
+    </h3>
+
+    {members.map(id => {
+      const profile = memberProfiles[id];
+
+      return (
+        <div key={id} className="flex items-center gap-3 mb-3 p-2 bg-white/5 rounded-xl">
+          <img
+            src={profile?.avatar || "/default-avatar.png"}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+          <div>
+            <p className="text-sm font-medium">
+              {profile?.name || id}
+            </p>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+)}
 
       {/* ================= VIDEO AREA ================= */}
       <section className="flex-1 p-4 overflow-hidden">
