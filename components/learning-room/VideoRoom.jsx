@@ -832,11 +832,11 @@ const renderTile = (id) => {
           </div>
         ) : (
           <div className={`grid ${gridCols} gap-4 h-full`}>
-            {members.map(id => (
-              <div key={id}>
-                {renderTile(id)}
-              </div>
-            ))}
+            {members.map(member => (
+  <div key={member.id}>
+    {renderTile(String(member.id))}
+  </div>
+))}
           </div>
         )}
 
