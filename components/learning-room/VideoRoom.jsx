@@ -653,6 +653,7 @@ const saveRoomNotes = () => {
   setNotesDirty(false);
 };
 const renderTile = (id) => {
+  const USER_ID = String(decoded?.id);
   const isLocal = id === USER_ID;
 
   // 🔹 Find member object
@@ -785,7 +786,8 @@ const renderTile = (id) => {
       className="flex items-center gap-3 mb-3 p-2 bg-white/5 rounded-xl"
     >
       <img
-        src={member.profile_pic || "/default-avatar.png"}
+        src={member.profile_pic ||
+`https://ui-avatars.com/api/?name=${member.name || "User"}&background=0D8ABC&color=fff`}
         className="w-10 h-10 rounded-full object-cover"
       />
       <div>
