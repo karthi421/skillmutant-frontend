@@ -168,7 +168,7 @@ const toggleHand = () => {
   };
 
   detect();
-}, [mediaReady]);
+}, [mediaReady, nameConfirmed]);
 
 useEffect(() => {
   let timeout;
@@ -190,8 +190,10 @@ useEffect(() => {
   };
 }, []);
   /* ================= WEBSOCKET ================= */
-  useEffect(() => {
-    if (!mediaReady) return;
+useEffect(() => {
+  if (!mediaReady) return;
+  if (!nameConfirmed) return;
+  if (!displayName.trim()) return;
 
 const baseUrl =
     process.env.NEXT_PUBLIC_AI_BACKEND_URL ||
@@ -332,7 +334,7 @@ const baseUrl =
     };
 
     return () => socketRef.current?.close();
-  }, [mediaReady]);
+}, [mediaReady, nameConfirmed]);
 
   /* ================= WEBRTC ================= */
   const createPeer = async (remoteId, initiator) => {
