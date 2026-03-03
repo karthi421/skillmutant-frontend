@@ -65,7 +65,7 @@ export default function VideoRoom({ roomId }) {
   const [displayName, setDisplayName] = useState("");
 const [nameConfirmed, setNameConfirmed] = useState(false);
 const [showParticipants, setShowParticipants] = useState(false);
-
+const [avatar, setAvatar] = useState(null);
  const sendReaction = (emoji) => {
   const reaction = {
     id: Date.now() + Math.random(),
@@ -207,7 +207,7 @@ const baseUrl =
 
   //const fullUrl = `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`;
   const fullUrl =
-  `${wsUrl}/ws/rooms/${roomId}/${USER_ID}?name=${encodeURIComponent(displayName)}`;
+  `${wsUrl}/ws/rooms/${roomId}/${USER_ID}?name=${encodeURIComponent(displayName)}&avatar=${encodeURIComponent(avatar || "")}`;
   console.log("Connecting to:", fullUrl);
 
   const socket = new WebSocket(fullUrl);
@@ -671,9 +671,19 @@ const renderTile = (id) => {
           className="w-full h-full object-cover"
         />
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center text-white/50 text-sm">
-          📷 Camera Off
-        </div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black text-white">
+  {member?.avatar ? (
+    <img
+      src={member.avatar}
+      className="w-24 h-24 rounded-full object-cover mb-3"
+    />
+  ) : (
+    <div className="w-24 h-24 rounded-full bg-cyan-500 flex items-center justify-center text-3xl text-black mb-3">
+      {member?.name?.charAt(0).toUpperCase()}
+    </div>
+  )}
+  <span className="text-sm opacity-70">Camera Off</span>
+</div>
       )}
 
       {/* ===== NAME LABEL ===== */}
@@ -703,8 +713,9 @@ if (!nameConfirmed) {
   return (
     <div className="h-screen flex items-center justify-center bg-black text-white">
       <div className="bg-slate-900 p-8 rounded-2xl w-96">
+
         <h2 className="text-xl mb-4 text-cyan-400">
-          Enter Your Name
+          Enter Your Details
         </h2>
 
         <input
@@ -714,6 +725,29 @@ if (!nameConfirmed) {
           placeholder="Your name..."
         />
 
+        <input
+          type="file"
+          accept="image/*"
+          className="w-full text-sm mb-4"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              setAvatar(reader.result);
+            };
+            reader.readAsDataURL(file);
+          }}
+        />
+
+        {avatar && (
+          <img
+            src={avatar}
+            className="w-20 h-20 rounded-full mx-auto mb-4 object-cover"
+          />
+        )}
+
         <button
           disabled={!displayName.trim()}
           onClick={() => setNameConfirmed(true)}
@@ -721,6 +755,7 @@ if (!nameConfirmed) {
         >
           Join Room
         </button>
+
       </div>
     </div>
   );
@@ -784,7 +819,7 @@ if (!nameConfirmed) {
     <main className="flex flex-1 overflow-hidden relative">
      
      {showParticipants && (
-  <div className="absolute right-0 top-14 bottom-0 w-72 bg-black/80 backdrop-blur-xl p-4 border-l border-white/10 z-40">
+  <div className="absolute right-0 top-14 bottom-0 w-72 bg-black/80 backdrop-blur-xl p-4 border-l border-white/10 z-40 overflow-y-auto">
     
     <h3 className="text-lg mb-4 text-cyan-400">
       Participants ({members.length})
@@ -794,20 +829,41 @@ if (!nameConfirmed) {
       {members.map(member => (
         <div
           key={member.id}
-          className="flex items-center gap-3 p-2 bg-white/5 rounded-xl"
+          className="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 transition"
         >
-          <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-black font-bold">
-            {member.name?.charAt(0).toUpperCase()}
-          </div>
 
-          <div>
+          {/* Avatar */}
+          {member.avatar ? (
+            <img
+              src={member.avatar}
+              className="w-10 h-10 rounded-full object-cover"
+              alt="avatar"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-black font-bold">
+              {member.name?.charAt(0).toUpperCase()}
+            </div>
+          )}
+
+          {/* Info */}
+          <div className="flex-1">
             <p className="text-sm font-medium">
               {member.name}
             </p>
-            <p className="text-xs text-slate-400">
-              {member.id === USER_ID ? "You" : "Participant"}
-            </p>
+
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              {member.id === USER_ID && <span>You</span>}
+
+              {mediaStatus[member.id]?.mic === false && (
+                <span className="text-red-400">🔇 Muted</span>
+              )}
+
+              {handsRaised[member.id] && (
+                <span className="text-yellow-400">✋ Raised</span>
+              )}
+            </div>
           </div>
+
         </div>
       ))}
     </div>
