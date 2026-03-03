@@ -329,12 +329,13 @@ const baseUrl =
           return copy;
         });
 
-        setMembers(prev => prev.filter(id => id !== msg.user_id));
+        setMembers(prev => prev.filter(m => m.id !== msg.user_id));
       }
     };
 
     return () => socketRef.current?.close();
 }, [mediaReady, nameConfirmed]);
+
 
   /* ================= WEBRTC ================= */
   const createPeer = async (remoteId, initiator) => {
@@ -675,7 +676,7 @@ const renderTile = (id) => {
 
       {/* ===== NAME LABEL ===== */}
       <div className="absolute top-2 left-2 bg-black/60 px-3 py-1 rounded-full text-xs backdrop-blur-sm">
-        {member?.name || (isLocal ? displayName : id)}
+        {member?.name || id}
       </div>
 
       {/* ===== MIC OFF ===== */}
@@ -787,15 +788,15 @@ if (!nameConfirmed) {
 
             {/* Thumbnails */}
             <div className="h-32 flex gap-4 overflow-x-auto">
-              {members
-                .filter(id => id !== spotlightId)
-                .map(id => (
+                {members
+                  .filter(member => member.id !== spotlightId)
+                  .map(member => (
                   <div
-                    key={id}
+                    key={member.id}
                     className="w-40 flex-shrink-0"
-                    onClick={() => setSpotlightId(id)}
+                    onClick={() => setSpotlightId(member.id)}
                   >
-                    {renderTile(id)}
+                    {renderTile(member.id)}
                   </div>
                 ))}
 
@@ -810,11 +811,11 @@ if (!nameConfirmed) {
           </div>
         ) : (
           <div className={`grid ${gridCols} gap-4 h-full`}>
-            {members.map(id => (
-              <div key={id}>
-                {renderTile(id)}
-              </div>
-            ))}
+           {members.map(member => (
+            <div key={member.id}>
+              {renderTile(member.id)}
+          </div>
+        ))}
           </div>
         )}
 
