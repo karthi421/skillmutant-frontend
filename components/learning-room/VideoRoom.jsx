@@ -244,41 +244,23 @@ const baseUrl =
       const msg = JSON.parse(event.data);
 if (msg.type === "init") {
   const capped = msg.members.slice(0, 8);
+
   setMembers(capped);
 
-  // Create peers
-  capped.forEach(id => {
+  // Create peers using member.id
+  capped.forEach(member => {
+    const id = String(member.id);
     if (id !== USER_ID) {
       createPeer(id, false);
     }
   });
+}
 
   // Fetch profiles for members
-  capped.forEach(async (id) => {
-    if (!memberProfiles[id]) {
-      try {
-        const res = await apiFetch(`/account/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-          }
-        });
-
-        const data = await res.json();
-
-        setMemberProfiles(prev => ({
-          ...prev,
-          [id]: {
-            name: data.name,
-            avatar: data.profile_image
-          }
-        }));
-      } catch (err) {
-        console.error("Failed to fetch profile:", err);
-      }
-    }
-  });
+ 
 
   // ✅ Log learning room join to backend
+
  apiFetch("/api/jobs/learning-room", {
     method: "POST",
     headers: {
@@ -289,18 +271,17 @@ if (msg.type === "init") {
       roomId: roomId,
     }),
   }).catch(err => console.error("Room log failed:", err));
-}
+
 
       if (msg.type === "user-joined") {
-        setMembers(prev =>
-          prev.length < 8 && !prev.includes(msg.user_id)
-            ? [...prev, msg.user_id]
-            : prev
-        );
+  setMembers(prev =>
+    prev.length < 8 && !prev.some(m => m.id === msg.user.id)
+      ? [...prev, msg.user]
+      : prev
+  );
 
-        //const initiator = USER_ID < msg.user_id;
-        createPeer(msg.user_id, true);
-      }
+  createPeer(String(msg.user.id), true);
+}
 
       if (msg.type === "offer"){
          console.log("Received offer from:", msg.from); 
@@ -829,8 +810,8 @@ const renderTile = (id) => {
             {/* Thumbnails */}
             <div className="h-32 flex gap-4 overflow-x-auto">
               {members
-                .filter(id => id !== spotlightId)
-                .map(id => (
+                .filter(member => member.id !== spotlightId)
+                .map(member => (
                   <div
                     key={id}
                     className="w-40 flex-shrink-0"
