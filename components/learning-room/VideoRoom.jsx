@@ -350,7 +350,9 @@ if (msg.type === "init") {
           return copy;
         });
 
-        setMembers(prev => prev.filter(id => id !== msg.user_id));
+        setMembers(prev =>
+  prev.filter(member => member.id !== msg.user_id)
+);
       }
     };
 
@@ -776,23 +778,24 @@ const renderTile = (id) => {
       Participants ({members.length})
     </h3>
 
-    {members.map(id => {
-      const profile = memberProfiles[id];
-
-      return (
-        <div key={id} className="flex items-center gap-3 mb-3 p-2 bg-white/5 rounded-xl">
-          <img
-            src={profile?.avatar || "/default-avatar.png"}
-            className="w-10 h-10 rounded-full object-cover"
-          />
-          <div>
-            <p className="text-sm font-medium">
-              {profile?.name || id}
-            </p>
-          </div>
-        </div>
-      );
-    })}
+   {members.map(member => {
+  return (
+    <div
+      key={member.id}
+      className="flex items-center gap-3 mb-3 p-2 bg-white/5 rounded-xl"
+    >
+      <img
+        src={member.profile_pic || "/default-avatar.png"}
+        className="w-10 h-10 rounded-full object-cover"
+      />
+      <div>
+        <p className="text-sm font-medium">
+          {member.name ?? `User ${member.id}`}
+        </p>
+      </div>
+    </div>
+  );
+})}
   </div>
 )}
 
@@ -810,16 +813,16 @@ const renderTile = (id) => {
             {/* Thumbnails */}
             <div className="h-32 flex gap-4 overflow-x-auto">
               {members
-                .filter(member => member.id !== spotlightId)
-                .map(member => (
-                  <div
-                    key={id}
-                    className="w-40 flex-shrink-0"
-                    onClick={() => setSpotlightId(id)}
-                  >
-                    {renderTile(id)}
-                  </div>
-                ))}
+  .filter(member => member.id !== spotlightId)
+  .map(member => (
+    <div
+      key={member.id}
+      className="w-40 flex-shrink-0"
+      onClick={() => setSpotlightId(member.id)}
+    >
+      {renderTile(String(member.id))}
+    </div>
+))}
 
               <button
                 onClick={() => setSpotlightId(null)}
