@@ -206,14 +206,19 @@ const baseUrl =
     .replace(/^http/, "ws");
 
   //const fullUrl = `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`;
-  const fullUrl =
-  `${wsUrl}/ws/rooms/${roomId}/${USER_ID}?name=${encodeURIComponent(displayName)}&avatar=${encodeURIComponent(avatar || "")}`;
+  const fullUrl = `${wsUrl}/ws/rooms/${roomId}/${USER_ID}?name=${encodeURIComponent(name)}`;
   console.log("Connecting to:", fullUrl);
 
   const socket = new WebSocket(fullUrl);
   socketRef.current = socket;
 
   socket.onopen = () => {
+    if (avatarBase64) {
+  socket.send(JSON.stringify({
+    type: "profile-update",
+    avatar: avatarBase64
+  }));
+}
     console.log("Room connected ✅");
     logActivity("learning_room", "Joined Learning Room");
   };
@@ -291,7 +296,7 @@ const baseUrl =
         emoji: msg.emoji,
       from: msg.from,
       };
-
+ 
       setReactions(prev => [...prev, reaction]);
 
     // Auto remove after 2 seconds
@@ -333,6 +338,15 @@ const baseUrl =
 
         setMembers(prev => prev.filter(m => m.id !== msg.user_id));
       }
+      if (msg.type === "profile-update") {
+  setMembers(prev =>
+    prev.map(m =>
+      m.id === msg.user_id
+        ? { ...m, avatar: msg.avatar }
+        : m
+    )
+  );
+}
     };
 
     return () => socketRef.current?.close();
