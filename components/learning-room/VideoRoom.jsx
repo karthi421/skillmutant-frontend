@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { logActivity } from "../../lib/logActivity";
 import { apiFetch } from "../../lib/api";
-import { jwtDecode } from "jwt-decode";
 //const ICE_SERVERS = {
 //  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
 //};
@@ -28,16 +27,9 @@ const ICE_SERVERS = {
 
 export default function VideoRoom({ roomId }) {
   /* ================= USER ================= */
-  //const userIdRef = useRef("user_" + Math.random().toString(36).slice(2, 8));
-  //const USER_ID = userIdRef.current;
-  
+  const userIdRef = useRef("user_" + Math.random().toString(36).slice(2, 8));
+  const USER_ID = userIdRef.current;
 
-const token = localStorage.getItem("token");
-const decoded = token ? jwtDecode(token) : null;
-
-const USER_ID = decoded?.id;
-const USER_NAME = decoded?.name;
-const USER_AVATAR = decoded?.profile_image;
   /* ================= REFS ================= */
   const localVideoRef = useRef(null);
   const localStreamRef = useRef(null);
@@ -70,19 +62,8 @@ const USER_AVATAR = decoded?.profile_image;
  const [handsRaised, setHandsRaised] = useState({});
   const [reactions, setReactions] = useState([]);
   const [showReactions, setShowReactions] = useState(false);
-  const [memberProfiles, setMemberProfiles] = useState({});
-  const [showParticipants, setShowParticipants] = useState(false);
-  useEffect(() => {
-  if (!USER_ID) return;
 
-  setMemberProfiles({
-    [USER_ID]: {
-      name: USER_NAME,
-      avatar: USER_AVATAR
-    }
-  });
-}, []);
-  const sendReaction = (emoji) => {
+ const sendReaction = (emoji) => {
   const reaction = {
     id: Date.now() + Math.random(),
     emoji,
@@ -219,7 +200,7 @@ const baseUrl =
     .replace(/^https/, "wss")
     .replace(/^http/, "ws");
 
-  const fullUrl = `${wsUrl}/ws/rooms/${roomId}?token=${token}`;
+  const fullUrl = `${wsUrl}/ws/rooms/${roomId}/${USER_ID}`;
 
   console.log("Connecting to:", fullUrl);
 
@@ -242,25 +223,18 @@ const baseUrl =
   socket.onmessage = async (event) => {
     console.log("WS MESSAGE:", event.data);
       const msg = JSON.parse(event.data);
-if (msg.type === "init") {
-  const capped = msg.members.slice(0, 8);
 
+      if (msg.type === "init") {
+  const capped = msg.members.slice(0, 8);
   setMembers(capped);
 
-  // Create peers using member.id
-  capped.forEach(member => {
-    const id = String(member.id);
+  capped.forEach(id => {
     if (id !== USER_ID) {
       createPeer(id, false);
     }
   });
-}
-
-  // Fetch profiles for members
- 
 
   // ✅ Log learning room join to backend
-
  apiFetch("/api/jobs/learning-room", {
     method: "POST",
     headers: {
@@ -271,17 +245,18 @@ if (msg.type === "init") {
       roomId: roomId,
     }),
   }).catch(err => console.error("Room log failed:", err));
-
+}
 
       if (msg.type === "user-joined") {
-  setMembers(prev =>
-    prev.length < 8 && !prev.some(m => m.id === msg.user.id)
-      ? [...prev, msg.user]
-      : prev
-  );
+        setMembers(prev =>
+          prev.length < 8 && !prev.includes(msg.user_id)
+            ? [...prev, msg.user_id]
+            : prev
+        );
 
-  createPeer(String(msg.user.id), true);
-}
+        //const initiator = USER_ID < msg.user_id;
+        createPeer(msg.user_id, true);
+      }
 
       if (msg.type === "offer"){
          console.log("Received offer from:", msg.from); 
@@ -350,9 +325,7 @@ if (msg.type === "init") {
           return copy;
         });
 
-        setMembers(prev =>
-  prev.filter(member => member.id !== msg.user_id)
-);
+        setMembers(prev => prev.filter(id => id !== msg.user_id));
       }
     };
 
@@ -653,7 +626,6 @@ const saveRoomNotes = () => {
   setNotesDirty(false);
 };
 const renderTile = (id) => {
-  const USER_ID = String(decoded?.id);
   const isLocal = id === USER_ID;
 
   // 🔹 Find member object
@@ -745,12 +717,7 @@ const renderTile = (id) => {
       <div className="flex items-center gap-6 text-sm text-slate-400">
         <span>{mm}:{ss} | {members.length}/8</span>
       </div>
-      <button
-  onClick={() => setShowParticipants(prev => !prev)}
-  className="text-sm bg-white/10 px-3 py-1 rounded hover:bg-white/20"
->
-  👥 Participants
-</button>
+ 
     </header>
 
 
@@ -773,33 +740,7 @@ const renderTile = (id) => {
 
     {/* ================= MAIN ================= */}
     <main className="flex flex-1 overflow-hidden relative">
-     {showParticipants && (
-  <div className="absolute right-0 top-14 bottom-0 w-80 bg-black/80 backdrop-blur-xl p-4">
-    <h3 className="text-lg mb-4 text-cyan-400">
-      Participants ({members.length})
-    </h3>
-
-   {members.map(member => {
-  return (
-    <div
-      key={member.id}
-      className="flex items-center gap-3 mb-3 p-2 bg-white/5 rounded-xl"
-    >
-      <img
-        src={member.profile_pic ||
-`https://ui-avatars.com/api/?name=${member.name || "User"}&background=0D8ABC&color=fff`}
-        className="w-10 h-10 rounded-full object-cover"
-      />
-      <div>
-        <p className="text-sm font-medium">
-          {member.name ?? `User ${member.id}`}
-        </p>
-      </div>
-    </div>
-  );
-})}
-  </div>
-)}
+     
 
       {/* ================= VIDEO AREA ================= */}
       <section className="flex-1 p-4 overflow-hidden">
@@ -815,16 +756,16 @@ const renderTile = (id) => {
             {/* Thumbnails */}
             <div className="h-32 flex gap-4 overflow-x-auto">
               {members
-  .filter(member => member.id !== spotlightId)
-  .map(member => (
-    <div
-      key={member.id}
-      className="w-40 flex-shrink-0"
-      onClick={() => setSpotlightId(member.id)}
-    >
-      {renderTile(String(member.id))}
-    </div>
-))}
+                .filter(id => id !== spotlightId)
+                .map(id => (
+                  <div
+                    key={id}
+                    className="w-40 flex-shrink-0"
+                    onClick={() => setSpotlightId(id)}
+                  >
+                    {renderTile(id)}
+                  </div>
+                ))}
 
               <button
                 onClick={() => setSpotlightId(null)}
@@ -837,11 +778,11 @@ const renderTile = (id) => {
           </div>
         ) : (
           <div className={`grid ${gridCols} gap-4 h-full`}>
-            {members.map(member => (
-  <div key={member.id}>
-    {renderTile(String(member.id))}
-  </div>
-))}
+            {members.map(id => (
+              <div key={id}>
+                {renderTile(id)}
+              </div>
+            ))}
           </div>
         )}
 
