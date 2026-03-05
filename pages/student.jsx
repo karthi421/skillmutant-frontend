@@ -554,24 +554,14 @@ useEffect(() => {
   {/* ===== BEFORE / AFTER COMPARISON ===== */}
   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
 
-    <div className="border border-red-500/30 bg-red-500/5 rounded-xl p-6">
-      <h3 className="text-sm font-semibold text-red-400 mb-4">
-        ❌ Current Resume Analysis
-      </h3>
+   {/* ===== BEFORE / AFTER COMPARISON ===== */}
+<div className="border border-cyan-500/30 bg-cyan-500/5 rounded-xl p-6">
+  <h3 className="text-sm font-semibold text-cyan-400 mb-4">
+    📊 Resume Improvement Analysis
+  </h3>
 
-      <ResumeComparison mode="before" />
-
-    </div>
-
-    <div className="border border-green-500/30 bg-green-500/5 rounded-xl p-6">
-      <h3 className="text-sm font-semibold text-green-400 mb-4">
-        ✅ Optimized Structure Projection
-      </h3>
-
-      <ResumeComparison mode="after" />
-
-    </div>
-
+  <ResumeComparison />
+</div>
   </div>
 
   {/* ===== GROWTH TREND ===== */}
