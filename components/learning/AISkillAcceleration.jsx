@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CourseCarousel from "./CourseCarousel";
 import { logProgress } from "../../lib/logProgress";
 import { apiFetch } from "../../lib/api";
-import AIRoadmap from "./student-dashboard/AIRoadmap";
+import AIRoadmap from "../student-dashboard/AIRoadmap";
 const PLATFORMS = [
   "All",
   "freeCodeCamp",
