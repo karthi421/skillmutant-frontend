@@ -139,14 +139,16 @@ const handleDelete = async () => {
                 {/* PROFILE PIC */}
                 
                  <div className="text-center">
-                 <img
-  src={
-    user.profile_pic
-      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${user.profile_pic}?t=${Date.now()}`
-      : "/default-profile.png"
-  }
-  className="w-32 h-32 rounded-full object-cover border border-cyan-400/40"
-/>
+                {user.profile_pic ? (
+  <img
+    src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${user.profile_pic}?t=${Date.now()}`}
+    className="w-32 h-32 rounded-full object-cover border border-cyan-400/40"
+  />
+) : (
+  <div className="w-32 h-32 rounded-full bg-cyan-500 flex items-center justify-center text-3xl font-bold text-black">
+    {user.name?.charAt(0)?.toUpperCase() || "U"}
+  </div>
+)}
 
                  <label className="relative cursor-pointer">
   <span className="
