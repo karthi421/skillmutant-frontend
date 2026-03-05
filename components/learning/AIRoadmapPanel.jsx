@@ -1,49 +1,42 @@
-import { motion } from "framer-motion";
-
 export default function AIRoadmapPanel({ roadmap }) {
-  if (!roadmap || roadmap.length === 0) return null;
+
+  if (!roadmap || roadmap.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="mb-8 bg-[#020617]/80 border border-white/10 rounded-2xl p-6">
+    <div className="mb-6 p-4 bg-black/40 border border-white/10 rounded-xl">
 
-      <h2 className="text-lg font-semibold mb-4 text-cyan-400">
+      <h3 className="text-cyan-400 text-sm font-semibold mb-3">
         AI Career Roadmap
-      </h2>
+      </h3>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
 
         {roadmap.map((phase, index) => (
-          <motion.div
+          <div
             key={index}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="bg-white/5 rounded-xl p-4"
+            className="bg-white/5 p-3 rounded-lg"
           >
-
-            <p className="text-sm font-semibold text-white mb-2">
+            <p className="text-sm font-medium text-white">
               Phase {index + 1}: {phase.phase}
             </p>
 
-            <div className="flex flex-wrap gap-2">
-
+            <div className="flex flex-wrap gap-2 mt-2">
               {phase.skills.map((skill, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1 text-xs rounded-full
-                  bg-cyan-500/20 text-cyan-300 border border-cyan-400/30"
+                  className="px-2 py-1 text-xs bg-cyan-500/20 text-cyan-300 rounded"
                 >
                   {skill}
                 </span>
               ))}
-
             </div>
 
-          </motion.div>
+          </div>
         ))}
 
       </div>
-
     </div>
   );
 }

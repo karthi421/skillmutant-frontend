@@ -37,6 +37,7 @@ export default function AISkillAcceleration({ analysis }) {
 
       const data = await res.json();
       setRoadmap(data?.roadmap || []);
+      console.log("ROADMAP:", roadmap);
       const flat =
         data?.recommendations?.flatMap((r) => r.courses) || [];
 
@@ -89,13 +90,13 @@ const markCourseCompleted = async (courseId) => {
       <h2 className="text-xl font-semibold mb-2">
         AI Skill Acceleration
       </h2>
-
+      <AIRoadmapPanel roadmap={roadmap} />
       <p className="text-sm text-slate-400 mb-4">
         Search what you want to learn. Results are strictly based on your query.
       </p>
 
 
-     <AIRoadmapPanel roadmap={roadmap} />
+     
       {/* SEARCH */}
       <div className="flex gap-3 mb-4">
         <input
