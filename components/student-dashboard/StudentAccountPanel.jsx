@@ -81,18 +81,31 @@ useEffect(() => {
   };
 
   /* ================= DELETE ================= */
-  const handleDelete = async () => {
-    if (!confirm("Delete account permanently?")) return;
+const handleDelete = async () => {
+  if (!confirm("Delete account permanently?")) return;
 
-    await apiFetch("api/auth/delete-account", {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Not authenticated");
+    return;
+  }
+
+  try {
+    await apiFetch("/api/auth/delete-account", {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     localStorage.removeItem("token");
     window.location.href = "/";
-  };
-
+  } catch (err) {
+    console.error("Delete account failed:", err);
+    alert("Failed to delete account");
+  }
+};
   return (
     <AnimatePresence>
       {open && (
