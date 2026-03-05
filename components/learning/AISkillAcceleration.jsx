@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import CourseCarousel from "./CourseCarousel";
 import { logProgress } from "../../lib/logProgress";
 import { apiFetch } from "../../lib/api";
+import AIRoadmap from "./AIRoadmap";
 const PLATFORMS = [
   "All",
   "freeCodeCamp",
@@ -14,6 +15,7 @@ const PLATFORMS = [
 export default function AISkillAcceleration({ analysis }) {
   const [query, setQuery] = useState("DSA");
   const [courses, setCourses] = useState([]);
+  const [roadmap, setRoadmap] = useState([]);
   const [platform, setPlatform] = useState("All");
   const [loading, setLoading] = useState(false);
 
@@ -34,6 +36,7 @@ export default function AISkillAcceleration({ analysis }) {
       });
 
       const data = await res.json();
+      setRoadmap(data?.roadmap || []);
       const flat =
         data?.recommendations?.flatMap((r) => r.courses) || [];
 
@@ -91,6 +94,8 @@ const markCourseCompleted = async (courseId) => {
         Search what you want to learn. Results are strictly based on your query.
       </p>
 
+
+     <AIRoadmap roadmap={roadmap} />
       {/* SEARCH */}
       <div className="flex gap-3 mb-4">
         <input
