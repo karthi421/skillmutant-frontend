@@ -516,7 +516,7 @@ useEffect(() => {
   </div>
 
 </section>
- {/* ================= PHASE 2 ================= */}
+{/* ================= PHASE 2 ================= */}
 <section
   ref={phaseRefs[1]}
   className="bg-gradient-to-b from-white/5 to-white/[0.02]
@@ -538,16 +538,20 @@ useEffect(() => {
 
 
 {/* ===== ATS SCORE PANEL ===== */}
-<div className="mb-12">
+<div className="mb-14">
 
-  <div className="grid md:grid-cols-[180px_1fr] gap-8 items-center
-                  border border-cyan-500/20
-                  bg-cyan-500/5
-                  rounded-xl p-6">
+  <div
+    className="grid md:grid-cols-[180px_1fr] gap-8 items-center
+               border border-cyan-500/20
+               bg-cyan-500/5
+               rounded-xl p-6
+               transition-all duration-500
+               hover:border-cyan-400/40"
+  >
 
     {/* SCORE */}
     <div className="text-center md:text-left">
-      <div className="text-6xl font-bold text-cyan-400">
+      <div className="text-6xl font-bold text-cyan-400 tracking-tight">
         {analysis.ats_score}%
       </div>
 
@@ -576,39 +580,43 @@ useEffect(() => {
 </div>
 
 
-{/* ===== BEFORE / AFTER COMPARISON ===== */}
-<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+{/* ===== AI RESUME OPTIMIZATION ANALYSIS ===== */}
+<div className="mb-16">
 
-  {/* BEFORE */}
-  <div className="border border-red-500/30
-                  bg-red-500/5
-                  rounded-xl
-                  p-6
-                  transition-all
-                  hover:border-red-400/40">
+  <div
+    className="border border-emerald-500/20
+               bg-gradient-to-b from-emerald-500/5 to-transparent
+               rounded-xl p-8
+               transition-all duration-500
+               hover:border-emerald-400/40"
+  >
 
-    <h3 className="text-sm font-semibold text-red-400 mb-4 flex items-center gap-2">
-      ❌ Current Resume Analysis
-    </h3>
+    {/* HEADER */}
+    <div className="flex items-center justify-between mb-6">
 
-    <ResumeComparison mode="before" />
+      <div>
+        <h3 className="text-sm font-semibold text-emerald-400">
+          AI Resume Optimization Analysis
+        </h3>
 
-  </div>
+        <p className="text-xs text-slate-400 mt-1">
+          Comparison between the previous resume structure
+          and the optimized ATS-friendly projection.
+        </p>
+      </div>
 
+      <div
+        className="text-xs px-3 py-1 rounded-full
+                   bg-emerald-500/10 border border-emerald-500/30
+                   text-emerald-300"
+      >
+        AI Generated
+      </div>
 
-  {/* AFTER */}
-  <div className="border border-emerald-500/30
-                  bg-emerald-500/5
-                  rounded-xl
-                  p-6
-                  transition-all
-                  hover:border-emerald-400/40">
+    </div>
 
-    <h3 className="text-sm font-semibold text-emerald-400 mb-4 flex items-center gap-2">
-      ✅ Optimized Resume Projection
-    </h3>
-
-    <ResumeComparison mode="after" />
+    {/* COMPARISON */}
+    <ResumeComparison />
 
   </div>
 
@@ -616,19 +624,21 @@ useEffect(() => {
 
 
 {/* ===== SKILL CONFIDENCE GROWTH ===== */}
-<div className="mt-16">
+<div>
 
   <h3 className="text-lg font-semibold mb-6">
     Skill Confidence Trajectory
   </h3>
 
-  <div className="border border-white/10
-                  rounded-xl
-                  p-6
-                  bg-white/[0.02]">
-
+  <div
+    className="border border-white/10
+               rounded-xl
+               p-6
+               bg-white/[0.02]
+               transition-all duration-500
+               hover:border-white/20"
+  >
     <SkillConfidenceGrowth />
-
   </div>
 
 </div>
