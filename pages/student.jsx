@@ -540,12 +540,13 @@ useEffect(() => {
 {/* ===== ATS SCORE PANEL ===== */}
 <div className="mb-12">
 
-  <div className="grid md:grid-cols-[200px_1fr] gap-8 items-center
+  <div className="grid md:grid-cols-[180px_1fr] gap-8 items-center
                   border border-cyan-500/20
                   bg-cyan-500/5
                   rounded-xl p-6">
 
-    <div>
+    {/* SCORE */}
+    <div className="text-center md:text-left">
       <div className="text-6xl font-bold text-cyan-400">
         {analysis.ats_score}%
       </div>
@@ -555,111 +556,20 @@ useEffect(() => {
       </div>
     </div>
 
+    {/* DESCRIPTION */}
     <div className="text-sm text-slate-300 leading-relaxed">
-      {analysis.ats_verdict}
 
-      <div className="mt-3 text-xs text-slate-400">
+      <p className="text-slate-200">
+        {analysis.ats_verdict}
+      </p>
+
+      <p className="mt-3 text-slate-400 text-xs">
         Applicant Tracking Systems evaluate resumes based on
         structural clarity, keyword alignment, semantic role matching,
         and machine-readable formatting rather than visual styling.
-      </div>
-    </div>
-
-  </div>
-
-</div>
-
-
-{/* ===== KEYWORD MATCH INTELLIGENCE ===== */}
-<div className="mb-12">
-
-  <h3 className="text-lg font-semibold mb-6">
-    Keyword Alignment Intelligence
-  </h3>
-
-  <div className="grid md:grid-cols-2 gap-8">
-
-    {/* MATCHED KEYWORDS */}
-    <div className="border border-emerald-500/20
-                    bg-emerald-500/5
-                    rounded-xl p-6">
-
-      <h4 className="text-sm font-semibold text-emerald-400 mb-4">
-        ✅ Matched Keywords
-      </h4>
-
-      <div className="flex flex-wrap gap-2">
-        {analysis.matched_keywords?.map((k, i) => (
-          <span
-            key={i}
-            className="px-3 py-1 text-xs rounded-full
-                       bg-emerald-500/20 text-emerald-300"
-          >
-            {k}
-          </span>
-        ))}
-      </div>
+      </p>
 
     </div>
-
-
-    {/* MISSING KEYWORDS */}
-    <div className="border border-red-500/20
-                    bg-red-500/5
-                    rounded-xl p-6">
-
-      <h4 className="text-sm font-semibold text-red-400 mb-4">
-        ❌ Missing Keywords
-      </h4>
-
-      <div className="flex flex-wrap gap-2">
-        {analysis.missing_keywords?.map((k, i) => (
-          <span
-            key={i}
-            className="px-3 py-1 text-xs rounded-full
-                       bg-red-500/20 text-red-300"
-          >
-            {k}
-          </span>
-        ))}
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-{/* ===== RESUME SECTION SCORING ===== */}
-<div className="mb-12">
-
-  <h3 className="text-lg font-semibold mb-6">
-    Resume Structure Evaluation
-  </h3>
-
-  <div className="grid md:grid-cols-3 gap-6">
-
-    {analysis.section_scores?.map((sec, i) => (
-
-      <div
-        key={i}
-        className="border border-white/10
-                   rounded-xl p-5
-                   bg-white/[0.03]"
-      >
-
-        <div className="text-sm text-slate-400">
-          {sec.section}
-        </div>
-
-        <div className="text-2xl font-bold text-cyan-400 mt-1">
-          {sec.score}%
-        </div>
-
-      </div>
-
-    ))}
 
   </div>
 
@@ -667,13 +577,17 @@ useEffect(() => {
 
 
 {/* ===== BEFORE / AFTER COMPARISON ===== */}
-<div className="grid md:grid-cols-2 gap-8 mb-12">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
+  {/* BEFORE */}
   <div className="border border-red-500/30
                   bg-red-500/5
-                  rounded-xl p-6">
+                  rounded-xl
+                  p-6
+                  transition-all
+                  hover:border-red-400/40">
 
-    <h3 className="text-sm font-semibold text-red-400 mb-4">
+    <h3 className="text-sm font-semibold text-red-400 mb-4 flex items-center gap-2">
       ❌ Current Resume Analysis
     </h3>
 
@@ -681,11 +595,16 @@ useEffect(() => {
 
   </div>
 
+
+  {/* AFTER */}
   <div className="border border-emerald-500/30
                   bg-emerald-500/5
-                  rounded-xl p-6">
+                  rounded-xl
+                  p-6
+                  transition-all
+                  hover:border-emerald-400/40">
 
-    <h3 className="text-sm font-semibold text-emerald-400 mb-4">
+    <h3 className="text-sm font-semibold text-emerald-400 mb-4 flex items-center gap-2">
       ✅ Optimized Resume Projection
     </h3>
 
@@ -696,42 +615,20 @@ useEffect(() => {
 </div>
 
 
-{/* ===== AI FIX SUGGESTIONS ===== */}
-<div className="mb-12">
-
-  <h3 className="text-lg font-semibold mb-6">
-    AI Resume Fix Suggestions
-  </h3>
-
-  <div className="space-y-4">
-
-    {analysis.ai_suggestions?.map((s, i) => (
-
-      <div
-        key={i}
-        className="border border-white/10
-                   rounded-lg p-4
-                   bg-white/[0.02]"
-      >
-        {s}
-      </div>
-
-    ))}
-
-  </div>
-
-</div>
-
-
 {/* ===== SKILL CONFIDENCE GROWTH ===== */}
-<div>
+<div className="mt-16">
 
   <h3 className="text-lg font-semibold mb-6">
     Skill Confidence Trajectory
   </h3>
 
-  <div className="border border-white/10 rounded-xl p-6 bg-white/[0.02]">
+  <div className="border border-white/10
+                  rounded-xl
+                  p-6
+                  bg-white/[0.02]">
+
     <SkillConfidenceGrowth />
+
   </div>
 
 </div>
