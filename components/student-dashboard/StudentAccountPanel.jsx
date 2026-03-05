@@ -46,40 +46,40 @@ useEffect(() => {
 }, [open]);
 
   /* ================= SAVE PROFILE ================= */
-  const handleSave = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return alert("Not authenticated");
+ const handleSave = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) return alert("Not authenticated");
 
-    setSaving(true);
+  setSaving(true);
 
-    const fd = new FormData();
-    fd.append("name", name);
-    fd.append("college", college);
-    fd.append("bio", bio);
-    if (profileFile) fd.append("profile_pic", profileFile);
+  const fd = new FormData();
+  fd.append("name", name);
+  fd.append("college", college);
+  fd.append("bio", bio);
 
-    try {
-      const res = await apiFetch(
-          "/api/auth/update-profile",
+  if (profileFile) {
+    fd.append("profile_pic", profileFile);
+  }
 
-        {
-          method: "PUT",
-          headers: { Authorization: `Bearer ${token}` },
-          body: fd,
-        }
-      );
+  try {
+    const data = await apiFetch("/api/auth/update-profile", {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: fd,
+    });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+    setUser(data);
+    alert("Profile updated successfully");
 
-      setUser(data);
-      alert("Profile updated successfully");
-    } catch {
-      alert("Profile update failed");
-    } finally {
-      setSaving(false);
-    }
-  };
+  } catch (err) {
+    console.error("Profile update error:", err);
+    alert("Profile update failed");
+  } finally {
+    setSaving(false);
+  }
+};
 
   /* ================= DELETE ================= */
 const handleDelete = async () => {
