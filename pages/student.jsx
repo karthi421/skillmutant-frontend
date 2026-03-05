@@ -541,44 +541,86 @@ useEffect(() => {
 <div className="mb-14">
 
   <div
-    className="grid md:grid-cols-[180px_1fr] gap-8 items-center
+    className="relative overflow-hidden
                border border-cyan-500/20
-               bg-cyan-500/5
-               rounded-xl p-6
+               bg-gradient-to-b from-cyan-500/10 to-transparent
+               rounded-xl p-8
                transition-all duration-500
                hover:border-cyan-400/40"
   >
 
-    {/* SCORE */}
-    <div className="text-center md:text-left">
-      <div className="text-6xl font-bold text-cyan-400 tracking-tight">
-        {analysis.ats_score}%
+    {/* subtle glow */}
+    <div className="absolute -top-10 -right-10 w-40 h-40 bg-cyan-500/20 blur-3xl opacity-40"></div>
+
+    <div className="grid md:grid-cols-[200px_1fr] gap-10 items-center relative">
+
+      {/* SCORE VISUAL */}
+      <div className="flex flex-col items-center md:items-start">
+
+        <div className="relative w-32 h-32 flex items-center justify-center">
+
+          {/* ring */}
+          <div
+            className="absolute inset-0 rounded-full
+                       border-4 border-cyan-500/20"
+          />
+
+          {/* score */}
+          <div className="text-4xl font-bold text-cyan-400">
+            {analysis.ats_score}%
+          </div>
+
+        </div>
+
+        <div className="text-xs text-slate-400 mt-4 text-center md:text-left">
+          ATS Compatibility Score
+        </div>
+
       </div>
 
-      <div className="text-xs text-slate-400 mt-2">
-        ATS Compatibility
+
+      {/* DESCRIPTION */}
+      <div className="space-y-4">
+
+        <p className="text-slate-200 text-sm leading-relaxed">
+          {analysis.ats_verdict}
+        </p>
+
+        <p className="text-slate-400 text-xs leading-relaxed">
+          Applicant Tracking Systems evaluate resumes based on structural
+          clarity, keyword alignment, semantic role matching, and
+          machine-readable formatting rather than visual styling.
+        </p>
+
+        {/* score status */}
+        <div className="flex items-center gap-3 mt-4">
+
+          <div
+            className={`px-3 py-1 text-xs rounded-full
+              ${
+                analysis.ats_score >= 85
+                  ? "bg-green-500/10 border border-green-500/30 text-green-400"
+                  : analysis.ats_score >= 70
+                  ? "bg-yellow-500/10 border border-yellow-500/30 text-yellow-400"
+                  : "bg-red-500/10 border border-red-500/30 text-red-400"
+              }`}
+          >
+            {analysis.ats_score >= 85
+              ? "High ATS Compatibility"
+              : analysis.ats_score >= 70
+              ? "Moderate ATS Compatibility"
+              : "Low ATS Compatibility"}
+          </div>
+
+        </div>
+
       </div>
-    </div>
-
-    {/* DESCRIPTION */}
-    <div className="text-sm text-slate-300 leading-relaxed">
-
-      <p className="text-slate-200">
-        {analysis.ats_verdict}
-      </p>
-
-      <p className="mt-3 text-slate-400 text-xs">
-        Applicant Tracking Systems evaluate resumes based on
-        structural clarity, keyword alignment, semantic role matching,
-        and machine-readable formatting rather than visual styling.
-      </p>
 
     </div>
 
   </div>
 
 </div>
-
 
 {/* ===== AI RESUME OPTIMIZATION ANALYSIS ===== */}
 <div className="mb-16">
