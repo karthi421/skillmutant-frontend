@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CourseCarousel from "./CourseCarousel";
 import { logProgress } from "../../lib/logProgress";
 import { apiFetch } from "../../lib/api";
-import AIRoadmap from "../student-dashboard/AIRoadmap";
+import AIRoadmapPanel from "./AIRoadmapPanel";
 const PLATFORMS = [
   "All",
   "freeCodeCamp",
@@ -95,7 +95,7 @@ const markCourseCompleted = async (courseId) => {
       </p>
 
 
-     <AIRoadmap roadmap={roadmap} />
+     <AIRoadmapPanel roadmap={roadmap} />
       {/* SEARCH */}
       <div className="flex gap-3 mb-4">
         <input
