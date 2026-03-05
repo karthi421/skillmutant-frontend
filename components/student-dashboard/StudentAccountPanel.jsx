@@ -47,6 +47,7 @@ useEffect(() => {
 
   /* ================= SAVE PROFILE ================= */
   const handleSave = async () => {
+    const token = localStorage.getItem("token");
     if (!token) return alert("Not authenticated");
 
     setSaving(true);
