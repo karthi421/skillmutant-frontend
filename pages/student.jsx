@@ -16,7 +16,7 @@ import SkillVisualization from "../components/SkillVisualization";
 import SkillGraph from "../components/SkillGraph";
 import SkillGraphAnalysis from "../components/SkillGapAnalysis";
 import ProjectIntelligence from "../components/ProjectIntelligence";
-import ATSScore from "../components/ATSScore";
+
 import LearningPath from "../components/LearningPath";
 import { logProgress } from "../lib/logProgress";
 
