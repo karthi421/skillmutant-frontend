@@ -49,11 +49,12 @@ export default function Home() {
 
   /* ================= LOGIN ================= */
   const handlePasswordLogin = async () => {
-    if (!form.email || !form.password) {
-      alert("Email and password required");
-      return;
-    }
+  if (!form.email || !form.password) {
+    alert("Email and password required");
+    return;
+  }
 
+  try {
     const data = await apiFetch("/api/auth/login", {
       method: "POST",
       body: JSON.stringify({
@@ -63,14 +64,19 @@ export default function Home() {
     });
 
     if (!data?.token) {
-      alert(data?.error || "Login failed");
+      alert("Login failed");
       return;
     }
 
     localStorage.setItem("token", data.token);
     router.push("/dashboard");
-  };
 
+  } catch (err) {
+    console.error("Login error:", err);
+
+    alert("Invalid email or password");
+  }
+};
   /* ================= REGISTER ================= */
   const handleRegister = async () => {
     if (!form.email || !form.username || !form.password || !form.confirmPassword) {
