@@ -74,7 +74,7 @@ export default function Home() {
   } catch (err) {
     console.error("Login error:", err);
 
-    alert("Invalid email or password");
+      alert(err.message);
   }
 };
   /* ================= REGISTER ================= */

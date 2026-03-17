@@ -93,6 +93,14 @@ const [showParticipants, setShowParticipants] = useState(false);
   }, 2000);
 };
 
+
+const bottomRef = useRef(null);
+
+useEffect(() => {
+  bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+}, [aiMessages]);
+
+
 const toggleHand = () => {
   const raised = !handsRaised[USER_ID];
 
@@ -594,11 +602,13 @@ pc.oniceconnectionstatechange = () => {
 
   /* ================= GRID ================= */
   const tiles = members.length || 1;
-  const gridCols =
-    tiles <= 2 ? "grid-cols-2" :
-    tiles <= 4 ? "grid-cols-2" :
-    tiles <= 6 ? "grid-cols-3" :
-    "grid-cols-4";
+  const getGridCols = (count) => {
+  if (count <= 1) return "grid-cols-1";
+  if (count === 2) return "grid-cols-2";
+  if (count <= 4) return "grid-cols-2";
+  if (count <= 6) return "grid-cols-3";
+  return "grid-cols-4";
+};
 const attachStream = (videoEl, stream) => {
   if (!videoEl || !stream) return;
   if (videoEl.srcObject !== stream) {
@@ -856,7 +866,7 @@ if (!nameConfirmed) {
 
           </div>
         ) : (
-          <div className={`grid ${gridCols} gap-4 h-full`}>
+          <div className={`grid ${getGridCols(members.length)} gap-4 h-full`}>
            {members.map(member => (
             <div key={member.id}>
               {renderTile(member.id)}
@@ -907,8 +917,8 @@ if (!nameConfirmed) {
         )}
 
         {activePanel === "ai" && (
-          <div className="flex flex-col flex-1">
-            <div className="flex-1 overflow-y-auto p-4 text-sm space-y-3">
+          <div className="flex flex-col flex-1 min-h-0">
+            <div className="flex-1 overflow-y-auto min-h-0 p-4 text-sm space-y-3">
               {aiMessages.map((m, i) => (
                 <div key={i} className={m.role === "assistant" ? "text-cyan-400" : ""}>
                   <b>{m.role === "user" ? "Q:" : "AI:"}</b> {m.content}
@@ -1033,6 +1043,7 @@ if (!nameConfirmed) {
         </button>
 
       </div>
+      <div ref={bottomRef} />
     </div>
 
   </div>
